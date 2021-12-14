@@ -6,8 +6,13 @@ import './assets/scss/layout.scss'
 
 const vueApp = createApp(App)
 
+// vue router
 import router from './router'
 vueApp.use(router)
+
+// vuex
+import store from './store'
+vueApp.use(store)
 
 // マウント
 vueApp.mount('#app')
