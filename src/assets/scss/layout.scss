@@ -1,0 +1,228 @@
+
+body {
+    height: 100vh;
+    width: 100vw;
+    overflow: scroll;
+}
+.app-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+#canvas {
+    width: 800px;
+    height: 600px;
+    background-color: lightgray;
+    position: relative;
+}
+.rotate {
+  transform: rotate(-90deg);
+}
+.reverse {
+  transform: rotate(180deg);
+}
+
+.hidden {
+    display: none;
+}
+/* card */
+// card-info の切替
+.card {
+    .card-info {
+    }
+    .cost {
+        display: none;
+    }
+    .power {
+        display: none;
+    }
+    .mana {
+    }
+}
+
+.card {
+    position: relative;
+    
+    .card-info {
+        background-color: black;
+        position: absolute;
+        font-size: 12px;
+        font-weight: bold;
+        color: beige;
+    }
+    .cost {
+        top: 2px;
+        left: 2px;
+    }
+    .power {
+        bottom: 2px;
+        left: 2px;
+    }
+    .card-id {
+        bottom: 2px;
+        right: 2px;
+    }
+}
+
+// message
+.message-box {
+    position: absolute;
+    top: 200px;
+    left: 10px;
+    .upper {
+        width: fit-content;
+        padding: 5px;
+        border-radius: 10px;
+        background-color: white;
+        transform: rotate(180deg);
+        color: rgb(211, 158, 58);
+    }
+    .lower {
+        width: fit-content;
+        padding: 5px;
+        border-radius: 10px;
+        background-color: orange;
+        color: whitesmoke;
+        margin-top: 40px;
+    }
+}
+
+.message-buttons {
+    position: absolute;
+    top: 340px;
+    left: 10px;
+    .click {
+        background-color: rgb(224, 224, 80);
+        border: 1px solid green;
+        color: black;
+        font-size: 14px;
+        cursor: pointer;
+    }
+    .click:hover {
+        color: rgb(122, 117, 117);
+    }
+}
+/* display */
+#display {
+    position: absolute;
+    top: 10px;
+    /* left: 10px; */
+    z-index: 2;
+}
+.blur {
+    opacity: 0.6;
+}
+.not-blur {
+    opacity: 2;
+}
+#display:hover {
+    opacity: 0.6;
+}
+#display .card-image img {
+    width: 300px;
+}
+
+/* work-space */
+#work-space {
+    background-color: rgba(255, 255, 255, 0.5);
+    width: 600px;
+    max-height: 300px;
+    display: flex;
+    overflow: scroll;
+    flex-wrap: wrap;
+    position: absolute;
+    top: 300px;
+    left: 50px;
+    z-index: 1;
+}
+.close-button-work-space  {
+    background-color: rgba(255, 255, 255, 0.5);
+    width: 40px;
+    text-align: center;
+    font-size: 40px;
+    position: absolute;
+    left: 600px;
+    top:   260px;
+    cursor: pointer;
+}
+#work-space .card {
+    margin: 8px 4px;
+    /* float: left; */
+}
+#work-space .card img {
+    width: 70px;
+}
+
+/* mana-zone */
+.mana-zone {
+    position: absolute;
+}
+.mana-zone.upper {
+    left: 100px;
+    top: 20px;
+}
+.mana-zone.lower {
+    left: 100px;
+    top: 520px;
+}
+.mana-counter.upper {
+    left: -80px;
+    top: 10px;
+}
+.mana-counter.lower {
+    left: -80px;
+    top: 10px;
+}
+
+/* player-zone */
+
+.player-zone {
+    position: absolute;
+}
+.player-counter {
+    position: absolute;
+}
+.player-zone.upper {
+    left: 100px;
+    top: 100px;
+}
+.player-zone.lower {
+    left: 100px;
+    top: 435px;
+}
+.player-counter.upper {
+    left: -80px;
+    top: 10px;
+}
+.player-counter.lower {
+    left: -80px;
+    top: 10px;
+}
+
+/* battle-zone */
+
+.battle-zone {
+    position: absolute;
+}
+.battle-zone.upper {
+    top: 190px;
+    left: 150px;
+}
+.battle-zone.lower {
+    top: 320px;
+    left: 150px;
+}
+
+/* tefuda-zone */
+
+.tefuda-zone {
+    position: absolute;
+}
+.tefuda-zone.upper {
+    top: 5px;
+    left: 500px;
+}
+.tefuda-zone.lower {
+    left: 500px;
+    top: 500px;
+}
