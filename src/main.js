@@ -11,13 +11,21 @@ vueApp.use(router)
 
 // マウント
 vueApp.mount('#app')
-console.log('VUE_APP_WS_ENABLED', process.env.VUE_APP_WS_ENABLED)
 // global properties
+function parseBool(val) {
+  if (!val) {
+    return false
+  }
+  if (val === 'false' || val === '0') {
+    return false
+  }
+  return true
+}
 vueApp.config.globalProperties.useConfig = () => {
   // クライアント側の環境変数は閲覧可能なため、秘密の情報は使ってはいけない。
   // VUE_APP_が着いているものはクライアント側で使用可能。
   return {
     IMAGE_HOST: process.env.VUE_APP_IMAGE_HOST || 'http://localhost:3000',
-    WS_ENABLED: process.env.VUE_APP_WS_ENABLED ? true : false,
+    WS_ENABLED: parseBool(process.env.VUE_APP_WS_ENABLED),
   }
 }
