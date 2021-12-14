@@ -62,7 +62,7 @@ export default {
         from = 'childCards';
       }
       // workSpaceに限っては、自身のデータを変更したいだけなので、$parentを使用
-      this.$parent.workSpace.cards = this.workSpace.cards.filter((c) => {
+      this.$parent.$parent.workSpace.cards = this.workSpace.cards.filter((c) => {
         return c.id !== card.id;
       })
 
@@ -88,7 +88,7 @@ export default {
             return c.id !== card.id;
           });
           // これは、相手にも見える操作のため、move-cardsであるべき
-          this.$emit('move-cards', from, from, this.$parent[this.player]['cards'][from], this.player);
+          this.$emit('move-cards', from, from, this.$parent.$parent.players[this.player]['cards'][from], this.player);
         }
         card.parentId = null;
         return true;
