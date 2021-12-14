@@ -1,52 +1,53 @@
 <template>
-    <div class="battle-zone-wrapper"
+  <div class="battle-zone-wrapper">
+    <div
+      class="battle-zone"
+      :class="{
+        reverse: side === 'upper',
+        [side]: true,
+      }"
     >
-        <div class="battle-zone"
-            :class="{
-                reverse: side === 'upper',
-                [side]: true,
-            }"
-        >
-            <div class="card in-battle"
-                v-for="(card, index) in battleCards"
-                :key="index"
-                :class="{ tapped: card.tapped }"
-                draggable="true"
-                @dragstart="dragCard(card)"
-                @dragend="dragCard(null)"
-                @drop="dropCard(card)"
-                @dragover="dragOver"
-                @dragleave="dragLeave"
-            >
-                <span class="cost card-info">10</span>
-                <span class="power card-info">12000</span>
-                <img :src="card.imageUrl" draggable="false"/>
-                <div class="menu-list hidden"
-                    :class="{ reverse: side === 'upper' }"
-                >
-                    <div
-                        v-if="card.tapped"
-                        v-on:click="tapCard(card)"
-                    ><span>アンタップ</span></div>
-                    <div
-                        v-else
-                        v-on:click="tapCard(card)"
-                    ><span>タップ</span></div>
-                    <div
-                        v-if="!lastCard(card.childCards)"
-                        v-on:click="moveCard('battleCards', 'tefudaCards', card)"
-                    ><span>手札へ</span></div>
-                    <div
-                        v-if="!lastCard(card.childCards)"
-                        v-on:click="moveCard('battleCards', 'bochiCards', card)"
-                    ><span>墓地へ</span></div>
-                    <div
-                        v-on:click="openWorkSpace(battleCards, 'battleCards')"
-                    ><span>開く(表)</span></div>
-                </div>
-            </div>
+      <div
+        class="card in-battle"
+        v-for="(card, index) in battleCards"
+        :key="index"
+        :class="{ tapped: card.tapped }"
+        draggable="true"
+        @dragstart="dragCard(card)"
+        @dragend="dragCard(null)"
+        @drop="dropCard(card)"
+        @dragover="dragOver"
+        @dragleave="dragLeave"
+      >
+        <span class="cost card-info">10</span>
+        <span class="power card-info">12000</span>
+        <img :src="card.imageUrl" draggable="false" />
+        <div class="menu-list hidden" :class="{ reverse: side === 'upper' }">
+          <div v-if="card.tapped" v-on:click="tapCard(card)">
+            <span>アンタップ</span>
+          </div>
+          <div v-else v-on:click="tapCard(card)">
+            <span>タップ</span>
+          </div>
+          <div
+            v-if="!lastCard(card.childCards)"
+            v-on:click="moveCard('battleCards', 'tefudaCards', card)"
+          >
+            <span>手札へ</span>
+          </div>
+          <div
+            v-if="!lastCard(card.childCards)"
+            v-on:click="moveCard('battleCards', 'bochiCards', card)"
+          >
+            <span>墓地へ</span>
+          </div>
+          <div v-on:click="openWorkSpace(battleCards, 'battleCards')">
+            <span>開く(表)</span>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -54,91 +55,90 @@
 import mixin from '@/helpers/mixin.js';
 
 export default {
-    props: ['player', 'battleCards', 'side'],
-    mixins: [mixin.zone],
-    methods: {
-        lastCard: function (cards) {
-            const length = cards.length;
-            if (length && 0 < length) {
-                return cards[length - 1];
-            }
-            return null;
-        },
-        dragCard: function (card) {
-            this.$emit('drag-card', 'battleCards', card);
-        },
-        dropCard: function (card) {
-            event.target.style.opacity = 1;
-            this.$emit('drop-card', 'battleCards', card, this.player);
-        },
-        dragOver: function () {
-            event.preventDefault();
-            event.target.style.opacity = 0.5;
-        },
-        dragLeave: function () {
-            event.target.style.opacity = 1;
-        },
+  props: ['player', 'battleCards', 'side'],
+  mixins: [mixin.zone],
+  methods: {
+    lastCard: function (cards) {
+      const length = cards.length;
+      if (length && 0 < length) {
+        return cards[length - 1];
+      }
+      return null;
+    },
+    dragCard: function (card) {
+      this.$emit('drag-card', 'battleCards', card);
+    },
+    dropCard: function (card) {
+      event.target.style.opacity = 1;
+      this.$emit('drop-card', 'battleCards', card, this.player);
+    },
+    dragOver: function () {
+      event.preventDefault();
+      event.target.style.opacity = 0.5;
+    },
+    dragLeave: function () {
+      event.target.style.opacity = 1;
+    },
 
-        tapCard: function (card) {
-            card.tapped = !card.tapped;
-            // this.$forceUpdate();
-            this.$emit('move-cards', 'battleCards', 'battleCards', this.battleCards, this.player);
-        },
+    tapCard: function (card) {
+      card.tapped = !card.tapped;
+      // this.$forceUpdate();
+      this.$emit('move-cards', 'battleCards', 'battleCards', this.battleCards, this.player);
+    },
 
-    }
+  }
 }
 </script>
 
 <style lang="scss">
 @import "@/assets/scss/mixin.scss";
 .battle-zone-wrapper {
-    img {
-        width: 70px;
-    }
-    .battle-zone {
-        display: flex;
-        overflow: scroll;
-        max-width: 600px;
-    }
-    .battle-zone .card {
-        margin-right: 10px;
+  img {
+    width: 70px;
+  }
+  .battle-zone {
+    display: flex;
+    overflow: scroll;
+    max-width: 600px;
+  }
+  .battle-zone .card {
+    margin-right: 10px;
+  }
+  .battle-zone .tapped {
+    /* 見た目だけが変わるみたい */
+    transform: scale(0.8, 0.8) rotate(-90deg);
+  }
 
+  .card.in-battle {
+    position: relative;
+  }
+  .card:hover {
+    .menu-list {
+      @include menu-list-hover;
+      position: absolute;
+      left: 0px;
+      top: 20px;
+      div {
+        height: 18px;
+        line-height: 18px;
+        font-size: 13px;
+      }
     }
-    .battle-zone .tapped {
-        /* 見た目だけが変わるみたい */
-        transform: scale(0.8, 0.8) rotate(-90deg);
-    }
-
-    .card.in-battle {
-        position: relative;
-    }
-    .card:hover {
-        .menu-list {
-            @include menu-list-hover;
-            position: absolute;
-            left: 0px;
-            top: 20px;
-            div {
-                height: 18px;
-                line-height: 18px;
-                font-size: 13px;
-            }
-        }
-    }
-    .card .card-info {
+  }
+  .card .card-info {
     background-color: black;
     position: absolute;
     font-size: 12px;
     font-weight: bold;
     color: beige;
-    }
-    .card .cost {
+  }
+  .card .cost {
     top: 2px;
     left: 2px;
-    }
-    .card .power {
+  }
+  .card .power {
     bottom: 2px;
     left: 2px;
-    }
+  }
 }
 </style>
