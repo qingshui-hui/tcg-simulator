@@ -2,7 +2,6 @@
   <Room
     :upper-player="upperPlayer"
     :lower-player="lowerPlayer"
-    :config="config"
     :deck-list="deckList"
     :socket="socket"
   ></Room>
@@ -14,9 +13,8 @@ import Room from '../components/Room.vue';
 const config = {
   development: false,
 }
-if (!config.development) {
-  // var io = require('socket.io-client')()
-}
+import { io } from 'socket.io-client'
+
 export default {
   components: { Room },
   data() {
@@ -25,7 +23,7 @@ export default {
       lowerPlayer: this.$route.query.player,
       config: config,
       deckList: data.deckList,
-      socket: null,
+      socket: config.development ? null : io(process.env.VUE_APP_WS_HOST),
     };
   },
 }

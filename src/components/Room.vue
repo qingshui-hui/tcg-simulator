@@ -237,9 +237,10 @@ export default {
           this.scrollZone("tefuda-zone" + player, "left");
         }, 300);
       }
-      if (this.config.development)
+      const config = this.useConfig()
+      if (!config.WS_ENABLED)
         return;
-      this.socket.emit("cards-moved", this.players[player]);
+      this.socket.broadcast.emit("cards-moved", this.players[player]);
     },
     shuffleCards: function (from, cards, player) {
       this.players[player]["cards"][from] = Deck.shuffle(cards);
@@ -286,35 +287,39 @@ export default {
       const deckId = formData.get("deck");
       this.pullDeck(deckId);
     },
+    setMessage() {
+      //
+    },
     pullDeck(deckId) {
       const config = this.useConfig();
-      if (this.config.development) {
-        let deck = Deck.getDeckById(config.IMAGE_HOST, deckId, this.lowerPlayer === "a");
-        this.players[this.lowerPlayer]["cards"]["shieldCards"] = deck.slice(0, 5);
-        this.players[this.lowerPlayer]["cards"]["tefudaCards"] = deck.slice(5, 10);
-        this.players[this.lowerPlayer]["cards"]["yamafudaCards"] = deck.slice(10, 40);
-        this.players[this.lowerPlayer]["isReady"] = true;
-        // this[this.lowerPlayer]['cards']['childCards'] = deck.slice(10,13).map((card) => {
-        //     card.parentId = deck[0].id;
-        //     return card;
-        // });
-        deck = Deck.getDeckById(config.IMAGE_HOST, 6, this.lowerPlayer !== "a");
-        this.players[this.upperPlayer]["cards"]["shieldCards"] = deck.slice(0, 5);
-        this.players[this.upperPlayer]["cards"]["tefudaCards"] = deck.slice(5, 10);
-        this.players[this.upperPlayer]["cards"]["yamafudaCards"] = deck.slice(10, 40);
-        this.players[this.upperPlayer]["isReady"] = true;
-        return;
-      }
-      else {
-        // const data = {};
-        // data.deckId = deckId;
-        // data.playerData = this[this.lowerPlayer];
-        // this.socket.emit("pull-deck", data);
-        return;
-      }
+      // if (this.config.development) {
+      let deck = Deck.getDeckById(config.IMAGE_HOST, deckId, this.lowerPlayer === "a");
+      this.players[this.lowerPlayer]["cards"]["shieldCards"] = deck.slice(0, 5);
+      this.players[this.lowerPlayer]["cards"]["tefudaCards"] = deck.slice(5, 10);
+      this.players[this.lowerPlayer]["cards"]["yamafudaCards"] = deck.slice(10, 40);
+      this.players[this.lowerPlayer]["isReady"] = true;
+      // this[this.lowerPlayer]['cards']['childCards'] = deck.slice(10,13).map((card) => {
+      //     card.parentId = deck[0].id;
+      //     return card;
+      // });
+      deck = Deck.getDeckById(config.IMAGE_HOST, 6, this.lowerPlayer !== "a");
+      this.players[this.upperPlayer]["cards"]["shieldCards"] = deck.slice(0, 5);
+      this.players[this.upperPlayer]["cards"]["tefudaCards"] = deck.slice(5, 10);
+      this.players[this.upperPlayer]["cards"]["yamafudaCards"] = deck.slice(10, 40);
+      this.players[this.upperPlayer]["isReady"] = true;
+      return;
+      // }
+      // else {
+      // const data = {};
+      // data.deckId = deckId;
+      // data.playerData = this[this.lowerPlayer];
+      // this.socket.emit("pull-deck", data);
+      // return;
+      // }
     },
     connectSocket: function () {
       this.socket.emit("room", this.roomId);
+      console.log("room" + this.roomId + "に入室しました")
       this.setMessage("room" + this.roomId + "に入室しました", this.lowerPlayer);
       this.socket.on("cards-moved", (playerData) => {
         this.players[playerData.name] = playerData;
@@ -329,10 +334,11 @@ export default {
     if (this.$route.query.deckId) {
       this.pullDeck(this.$route.query.deckId);
     }
-    if (this.config.development)
+    const config = this.useConfig()
+    if (!config.WS_ENABLED)
       return;
-    // console.log("connected");
-    // this.connectSocket();
+    console.log("connected");
+    this.connectSocket();
   },
 };
 </script>

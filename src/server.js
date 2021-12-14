@@ -7,8 +7,15 @@ const express = require('express');
 const app = express();
 app.use(express.static(filepath + "/"))
 
-const http = require('http').createServer(app);
-let io = require('socket.io')(http);
+const server = require('http').createServer(app);
+
+let io = require('socket.io')(server, {
+  // https://socket.io/docs/v4/handling-cors/
+  cors: {
+    origin: process.env.CLIENT_ORIGIN || 'http://localhost:8080',
+    methods: ["GET", "POST"],
+  }
+});
 
 app.get('/', function (req, res) {
   res.sendFile(filepath + '/index.html');
@@ -38,6 +45,6 @@ io.on('connection', function (socket) {
 })
 
 const port = process.env.PORT || 8080;
-http.listen(port, () => {
+server.listen(port, () => {
   console.log(`listening on *:${port}`);
 })
