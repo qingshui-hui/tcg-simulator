@@ -31,6 +31,6 @@ vueApp.config.globalProperties.useConfig = () => {
   // VUE_APP_が着いているものはクライアント側で使用可能。
   return {
     IMAGE_HOST: process.env.VUE_APP_IMAGE_HOST || 'http://localhost:3000',
-    WS_ENABLED: parseBool(process.env.VUE_APP_WS_ENABLED),
+    WS_ENABLED: parseBool(process.env.VUE_APP_WS_ENABLED || true),
   }
 }
