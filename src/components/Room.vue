@@ -240,7 +240,7 @@ export default {
       const config = this.useConfig()
       if (!config.WS_ENABLED)
         return;
-      this.socket.broadcast.emit("cards-moved", this.players[player]);
+      this.socket.emit("cards-moved", this.players[player]);
     },
     shuffleCards: function (from, cards, player) {
       this.players[player]["cards"][from] = Deck.shuffle(cards);

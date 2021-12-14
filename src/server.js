@@ -27,10 +27,12 @@ io.on('connection', function (socket) {
     // console.log('room'+roomid+'に入室しました')
   })
   socket.on('cards-moved', (data) => {
-    io.to('room' + data.roomId).emit('cards-moved', data);
+    // 送信者を除いく部屋のユーザーに送信。
+    socket.to('room' + data.roomId).emit('cards-moved', data);
   })
   socket.on('set-message', (data) => {
-    io.to('room' + data.roomId).emit('set-message', data);
+    // 部屋の全てのユーザーに送信
+    io.in('room' + data.roomId).emit('set-message', data);
   })
   // socket.on('pull-deck', (data) => {
   //     const isPlayerA = data.playerData.name === 'a';
@@ -42,6 +44,9 @@ io.on('connection', function (socket) {
   //     playerData['isReady'] = true;
   //     io.to('room'+playerData.roomId).emit('cards-moved', playerData);
   // })
+  socket.on("disconnect", () => {
+    console.log('ソケットの接続が切断されました。')
+  });
 })
 
 const port = process.env.PORT || 8080;
