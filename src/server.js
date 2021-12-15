@@ -23,14 +23,31 @@ app.get('/', function (req, res) {
   res.sendFile(filepath + '/index.html');
 });
 
+app.get('/api/rooms/:roomId', async function (req, res) {
+  // dbアダプタを取得
+  const db = (await import('./server/db.mjs')).default
+  await db.read()
+  const data = db.data.rooms[req.params.roomId] || {}
+  res.json(data)
+})
+
 io.on('connection', function (socket) {
   socket.on('room', (roomid) => {
     socket.join('room' + roomid);
     // console.log('room'+roomid+'に入室しました')
   })
-  socket.on('cards-moved', (data) => {
+  socket.on('cards-moved', async (data) => {
     // 送信者を除いく部屋のユーザーに送信。
     socket.to('room' + data.roomId).emit('cards-moved', data);
+    // dbアダプタを取得
+    const db = (await import('./server/db.mjs')).default
+    await db.read()
+    // data.nameはプレイヤー名
+    if (!db.data.rooms[data.roomId]) {
+      db.data.rooms[data.roomId] = { a: null, b: null }
+    }
+    db.data.rooms[data.roomId][data.name] = data
+    await db.write()
   })
   socket.on('set-message', (data) => {
     // 部屋の全てのユーザーに送信
