@@ -2,10 +2,9 @@ const root = __dirname.split('/')
 root.pop()
 const filepath = root.join('/') + "/dist";
 
-
 const express = require('express');
 const app = express();
-app.use(express.static(filepath + "/"))
+app.use(express.static(filepath))
 
 // cors
 if (process.env.CLIENT_ORIGIN) {
@@ -27,6 +26,10 @@ const socketIoConfig = process.env.CLIENT_ORIGIN ?
 const io = require('socket.io')(server, socketIoConfig);
 
 app.get('/', function (req, res) {
+  res.sendFile(filepath + '/index.html');
+});
+// /roomへの直接アクセスを許可する。
+app.get('/room', function (req, res) {
   res.sendFile(filepath + '/index.html');
 });
 
