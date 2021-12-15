@@ -2,38 +2,12 @@
   <div id="app">
     <div class="app-wrapper">
       <ImageViewer>
-        <form
-          action
-          method="get"
-          id="deck-form"
-          v-on:submit="selectDeck"
-          v-if="players[lowerPlayer]['isReady'] === false"
-        >
-          <p>デッキを選択してください</p>
-          <select name="deck">
-            <option
-              v-for="(value, deckId) in deckList"
-              :key="deckId"
-              :value="deckId"
-            >{{ value.name }}</option>
-          </select>
-          <button>選択</button>
-        </form>
 
-        <div id="waiting-player" v-if="onPreparing">
-          <span>プレイヤー{{ upperPlayer.toUpperCase() }}が</span>
-          <br />
-          <span>デッキを選択するのを待つか、</span>
-          <br />
-          <span>ウィンドウをもう一つ開いて、</span>
-          <br />
-          <span>同じ部屋番号の</span>
-          <br />
-          <span>プレイヤー{{ upperPlayer.toUpperCase() }}として、</span>
-          <br />
-          <span>デッキを選択してください</span>
-          <br />
-        </div>
+        <DeckSelector :player="lowerPlayer"
+          :isReady="players[lowerPlayer].isReady"
+          @moveCards="moveCards"
+          @selected="players[lowerPlayer].isReady = true"
+        ></DeckSelector>
 
         <WorkSpace
           :workSpace="workSpace"
@@ -134,11 +108,12 @@ import TefudaZone from './TefudaZone.vue';
 import ManaZone from './ManaZone.vue';
 import PlayerZone from './PlayerZone.vue';
 import BattleZone from './BattleZone.vue';
+import DeckSelector from './DeckSelector.vue';
 
 export default {
   name: "c-app",
-  props: ["upperPlayer", "lowerPlayer", "deckList", "socket", "config"],
-  components: { WorkSpace, ImageViewer, TefudaZone, ManaZone, PlayerZone, BattleZone },
+  props: ["upperPlayer", "lowerPlayer", "socket", "config"],
+  components: { WorkSpace, ImageViewer, TefudaZone, ManaZone, PlayerZone, BattleZone, DeckSelector },
   data() {
     const roomId = this.$route.query.roomId;
     return {
@@ -283,41 +258,8 @@ export default {
       this.selectedZone = "";
       this.workSpace.hidden = true;
     },
-    selectDeck() {
-      event.preventDefault();
-      const formData = new FormData(event.target);
-      const deckId = formData.get("deck");
-      this.pullDeck(deckId);
-    },
     setMessage() {
       //
-    },
-    pullDeck(deckId) {
-      const config = this.useConfig();
-      // if (this.config.development) {
-      let deck = Deck.getDeckById(config.IMAGE_HOST, deckId, this.lowerPlayer === "a");
-      this.players[this.lowerPlayer]["cards"]["shieldCards"] = deck.slice(0, 5);
-      this.players[this.lowerPlayer]["cards"]["tefudaCards"] = deck.slice(5, 10);
-      this.players[this.lowerPlayer]["cards"]["yamafudaCards"] = deck.slice(10, 40);
-      this.players[this.lowerPlayer]["isReady"] = true;
-      // this[this.lowerPlayer]['cards']['childCards'] = deck.slice(10,13).map((card) => {
-      //     card.parentId = deck[0].id;
-      //     return card;
-      // });
-      deck = Deck.getDeckById(config.IMAGE_HOST, 6, this.lowerPlayer !== "a");
-      this.players[this.upperPlayer]["cards"]["shieldCards"] = deck.slice(0, 5);
-      this.players[this.upperPlayer]["cards"]["tefudaCards"] = deck.slice(5, 10);
-      this.players[this.upperPlayer]["cards"]["yamafudaCards"] = deck.slice(10, 40);
-      this.players[this.upperPlayer]["isReady"] = true;
-      return;
-      // }
-      // else {
-      // const data = {};
-      // data.deckId = deckId;
-      // data.playerData = this[this.lowerPlayer];
-      // this.socket.emit("pull-deck", data);
-      // return;
-      // }
     },
     async getRoomState() {
       const res = await fetch(`${this.useConfig().API_HOST}/api/rooms/${this.roomId}`)
@@ -343,9 +285,6 @@ export default {
     },
   },
   mounted() {
-    if (this.$route.query.deckId) {
-      this.pullDeck(this.$route.query.deckId);
-    }
     const config = this.useConfig()
     if (!config.WS_ENABLED)
       return;
@@ -355,29 +294,3 @@ export default {
 };
 </script>
 
-<style lang="scss">
-#deck-form {
-  position: absolute;
-  text-align: center;
-  width: 300px;
-  height: 150px;
-  top: 200px;
-  left: 200px;
-  border-radius: 20px;
-  background-color: aqua;
-  p {
-    font-size: 20px;
-    margin: 20px 0;
-  }
-}
-#waiting-player {
-  position: absolute;
-  text-align: center;
-  width: 300px;
-  top: 200px;
-  left: 200px;
-  border-radius: 20px;
-  background-color: lightgreen;
-  line-height: 30px;
-}
-</style>
