@@ -5,6 +5,7 @@
 
         <DeckSelector :player="lowerPlayer"
           :isReady="players[lowerPlayer].isReady"
+          :partnerIsReady="players[this.upperPlayer].isReady"
           @moveCards="moveCards"
           @selected="players[lowerPlayer].isReady = true"
         ></DeckSelector>
@@ -162,13 +163,6 @@ export default {
   computed: {
     roomId() {
       return this.$route.query.roomId;
-    },
-    onPreparing() {
-      // 相手が準備できているか
-      if (!this.players[this.lowerPlayer]["isReady"]) {
-        return false;
-      }
-      return !this.players[this.upperPlayer]["isReady"];
     },
   },
   methods: {

@@ -7,8 +7,8 @@
     <button @click="selectDeck">選択</button>
   </div>
 
-  <!-- <div id="waiting-player" v-if="onPreparing">
-    <span>プレイヤー{{ upperPlayer.toUpperCase() }}が</span>
+  <div v-else-if="!partnerIsReady" id="waiting-player">
+    <span>相手プレイヤーが</span>
     <br />
     <span>デッキを選択するのを待つか、</span>
     <br />
@@ -16,11 +16,11 @@
     <br />
     <span>同じ部屋番号の</span>
     <br />
-    <span>プレイヤー{{ upperPlayer.toUpperCase() }}として、</span>
+    <span>相手プレイヤーとして、</span>
     <br />
     <span>デッキを選択してください</span>
     <br />
-  </div>-->
+  </div>
 </template>
 
 <script>
@@ -28,7 +28,7 @@ import { data } from '@/helpers/data';
 import { Deck } from '@/helpers/Deck'
 
 export default {
-  props: ['isReady', 'player'],
+  props: ['isReady', 'player', 'partnerIsReady'],
   data() {
     const deckList = data.deckList
     return {

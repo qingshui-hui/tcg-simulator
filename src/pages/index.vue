@@ -1,35 +1,40 @@
 <template>
   <div>
     <div id="app" style="padding: 20px">
-      <p>部屋とデッキを選択してください</p>
-      <div style="margin-top: 10px;">
+      <p>部屋を選択してください</p>
+      <div v-for="room in rooms" :key="room.id" style="margin-top: 10px;">
         <router-link
           class="send"
           :to="{
             path: '/room',
-            query: { roomId: 1, player: 'a' },
+            query: { roomId: room.id, player: 'a' },
           }"
-        >room1 プレイヤーA</router-link>
+        >room{{ room.id }} プレイヤーA</router-link>
         <router-link
           class="send"
           :to="{
             path: '/room',
-            query: { roomId: 1, player: 'b' },
+            query: { roomId: room.id, player: 'b' },
           }"
-        >room1 プレイヤーB</router-link>
-      </div>
-      <div style="margin-top: 10px;">
-        <router-link
-          class="send"
-          :to="{
-            path: '/room',
-            query: { roomId: 1, player: 'a', deckId: 5 },
-          }"
-        >room1 プレイヤーA デッキ5</router-link>
+        >room{{ room.id }} プレイヤーB</router-link>
       </div>
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      rooms: [
+        { id: '1' },
+        { id: '2' },
+        { id: '3' },
+      ]
+    }
+  }
+}
+</script>
 
 <style lang="scss">
 .send {
