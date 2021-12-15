@@ -7,7 +7,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const rootdir = __dirname.split('/').slice(0, -2).join('/')
 
 // Use JSON file for storage
-const file = join(rootdir, 'db.json')
+const file = join(rootdir, process.env.DB_NAME || 'db.json')
 const adapter = new JSONFile(file)
 const db = new Low(adapter)
 
