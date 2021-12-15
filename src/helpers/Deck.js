@@ -14,7 +14,7 @@ export class Deck {
         if (!data.imageUrl) {
           // 環境変数で、カード画像のサーバーを設定する。
           card.imageUrl =
-          imageHost + `/${prefix + data.imageId}.jpg`;
+            imageHost + `/${prefix + data.imageId}.jpg`;
         } else {
           card.imageUrl = data.imageUrl;
         }
@@ -28,6 +28,22 @@ export class Deck {
       deck[i].id = i + startId;
       deck[i].childCards = [];
     }
+    return deck;
+  }
+
+  static formatData(deckD, imageHost) {
+    // urlPrefixは廃止
+    const deck = Object.assign({}, deckD);
+    const prefix = deck["urlPrefix"] || '';
+
+    for (let card of deck.cards) {
+      if (card.imageId && !card.imageId.includes('https://')) {
+        card.imageUrl = imageHost + `/${prefix + card.imageId}.jpg`;
+      }
+    }
+    deck.cards.sort((a, b) => {
+      return b.time - a.time;
+    })
     return deck;
   }
 

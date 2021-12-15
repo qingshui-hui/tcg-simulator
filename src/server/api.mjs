@@ -14,7 +14,8 @@ router.get('/api/decks', async function (req, res) {
   // dbアダプタを取得
   // const data = require('./data')
   // const data = (await import('../helpers/data.js')).data
-  res.json(data.deckList)
+  const decks = Object.keys(data.deckList).map(k => data.deckList[k])
+  res.json(decks)
 })
 
 export default router

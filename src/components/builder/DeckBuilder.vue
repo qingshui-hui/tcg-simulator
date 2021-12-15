@@ -155,11 +155,11 @@ export default {
     this.message = 'データを\n取得中です'
     axios.get('/api/decks')
       .then(function (res) {
-        console.log(res.data.items);
-        const deckList = res.data.items;
+        console.log(res.data);
+        const deckList = res.data;
         this.deckList['custom'] = deckList;
-        this.left.deckData = Deck.formatData(deckList[0]);
-        this.right.deckData = Deck.formatData(deckList[1]);
+        this.left.deckData = Deck.formatData(deckList[0], this.useConfig().IMAGE_HOST);
+        this.right.deckData = Deck.formatData(deckList[1], this.useConfig().IMAGE_HOST);
 
         this.message = '';
       }.bind(this));
@@ -318,7 +318,7 @@ export default {
     changeDeck(deckType, index, side) {
       if (deckType === 'custom') {
         this[side]['deckData'] =
-          Deck.formatData(this.deckList['custom'][index]);
+          Deck.formatData(this.deckList['custom'][index], this.useConfig().IMAGE_HOST);
 
       }
     },

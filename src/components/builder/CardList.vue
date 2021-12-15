@@ -4,6 +4,7 @@
       class="card-list"
       :id="side + 'draggable'"
       :list="cards"
+      item-key="id"
       @start="dragCardStart"
       @end="drag = false"
       :group="{ name: 'deck', pull: 'clone', put: true }"
