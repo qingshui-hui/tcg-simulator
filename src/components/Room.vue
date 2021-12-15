@@ -119,6 +119,8 @@
           v-on:open-work-space="openWorkSpace"
         ></tefuda-zone>
       </ImageViewer>
+
+      <button @click="getRoomState">サーバーからデータを取得</button>
     </div>
   </div>
 </template>
@@ -316,6 +318,16 @@ export default {
       // this.socket.emit("pull-deck", data);
       // return;
       // }
+    },
+    async getRoomState() {
+      const res = await fetch(`${this.useConfig().API_HOST}/api/rooms/${this.roomId}`)
+      const room = await res.json()
+      if (room.a) {
+        this.players.a = room.a
+      }
+      if (room.b) {
+        this.players.b = room.b
+      }
     },
     connectSocket: function () {
       this.socket.emit("room", this.roomId);
