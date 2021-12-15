@@ -1,6 +1,11 @@
-const root = __dirname.split('/')
-root.pop()
-const filepath = root.join('/') + "/dist";
+// これによりほぼcjsの構文で、部分的にejsのimportが使える。
+import { createRequire } from 'module'
+const require = createRequire(import.meta.url);
+
+// const root = __dirname.split('/')
+// root.pop()
+// const filepath = root.join('/') + "/dist";
+const filepath = 'dist'
 
 const express = require('express');
 const app = express();
@@ -40,6 +45,9 @@ app.get('/api/rooms/:roomId', async function (req, res) {
   const data = db.data.rooms[req.params.roomId] || {}
   res.json(data)
 })
+
+import apiRouter from './server/api.mjs'
+app.use(apiRouter)
 
 io.on('connection', function (socket) {
   socket.on('room', (roomid) => {
