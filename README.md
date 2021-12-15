@@ -15,6 +15,14 @@ ngrokを使いたいときに便利。
 避けるためには、ファイルの拡張子をmjsにする。そのファイルを普通のjsファイルに取り込むには、
 `db = import('./test.mjs')`
 
+## 準備
+db.jsonを作成する。
+```
+{
+  "rooms": {}
+}
+```
+
 ## Project setup
 ```
 yarn install
