@@ -38,14 +38,6 @@ app.get('/room', function (req, res) {
   res.sendFile(filepath + '/index.html');
 });
 
-app.get('/api/rooms/:roomId', async function (req, res) {
-  // dbアダプタを取得
-  const db = (await import('./server/db.mjs')).default
-  await db.read()
-  const data = db.data.rooms[req.params.roomId] || {}
-  res.json(data)
-})
-
 import apiRouter from './server/api.mjs'
 app.use(apiRouter)
 

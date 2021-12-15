@@ -153,7 +153,7 @@ export default {
   },
   created() {
     this.message = 'データを\n取得中です'
-    axios.get('/api/cards')
+    axios.get('/api/decks')
       .then(function (res) {
         console.log(res.data.items);
         const deckList = res.data.items;
@@ -364,7 +364,7 @@ export default {
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .hidden {
   display: none;
 }

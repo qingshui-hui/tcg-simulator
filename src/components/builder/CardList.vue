@@ -11,31 +11,33 @@
       :move="checkMove"
       :data-side="side"
     >
-      <div class="card-wrapper" v-for="(card, index) in cards" :key="index">
-        <div class="card">
-          <!-- insted of prevent default -->
-          <div draggable="true">
-            <img :src="card.imageUrl" draggable="false" />
-          </div>
-
-          <div class="card-tool">
-            <div class="num-card">
-              <span>{{ 'x ' + card.time }}</span>
+      <template #item>
+        <div class="card-wrapper" v-for="(card, index) in cards" :key="index">
+          <div class="card">
+            <!-- insted of prevent default -->
+            <div draggable="true">
+              <img :src="card.imageUrl" draggable="false" />
             </div>
 
-            <div class="buttons">
-              <div class="click" @click="addCardNum(card)">
-                <span>▲</span>
+            <div class="card-tool">
+              <div class="num-card">
+                <span>{{ 'x ' + card.time }}</span>
               </div>
-              <div class="click" @click="decrementCardNum(card)">
-                <span>▼</span>
+
+              <div class="buttons">
+                <div class="click" @click="addCardNum(card)">
+                  <span>▲</span>
+                </div>
+                <div class="click" @click="decrementCardNum(card)">
+                  <span>▼</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="delele-button hidden" @click="deleteCard(card)">X</div>
+            <div class="delele-button hidden" @click="deleteCard(card)">X</div>
+          </div>
         </div>
-      </div>
+      </template>
     </draggable>
   </div>
 </template>

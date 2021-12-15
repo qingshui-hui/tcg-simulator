@@ -36,3 +36,10 @@ vueApp.config.globalProperties.useConfig = () => {
     API_HOST: process.env.VUE_APP_WS_HOST || '',
   }
 }
+
+// axios
+import axios from 'axios'
+if (process.env.VUE_APP_WS_HOST) {
+  axios.defaults.baseURL = process.env.VUE_APP_WS_HOST
+}
+
