@@ -1,11 +1,13 @@
 // これによりほぼcjsの構文で、部分的にejsのimportが使える。
 import { createRequire } from 'module'
+import { dirname } from 'path'
+import { fileURLToPath } from 'url'
 const require = createRequire(import.meta.url);
 
-// const root = __dirname.split('/')
-// root.pop()
-// const filepath = root.join('/') + "/dist";
-const filepath = 'dist'
+const __dirname = dirname(fileURLToPath(import.meta.url));
+// 1階層上がルートディレクトリ
+const root = __dirname.split('/').slice(0, -1).join('/')
+const filepath = root + '/dist'
 
 const express = require('express');
 const app = express();
