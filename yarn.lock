@@ -2767,6 +2767,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"axios@npm:^0.24.0":
+  version: 0.24.0
+  resolution: "axios@npm:0.24.0"
+  dependencies:
+    follow-redirects: ^1.14.4
+  checksum: 468cf496c08a6aadfb7e699bebdac02851e3043d4e7d282350804ea8900e30d368daa6e3cd4ab83b8ddb5a3b1e17a5a21ada13fc9cebd27b74828f47a4236316
+  languageName: node
+  linkType: hard
+
 "babel-eslint@npm:^10.1.0":
   version: 10.1.0
   resolution: "babel-eslint@npm:10.1.0"
@@ -4686,6 +4695,7 @@ __metadata:
     "@vue/cli-plugin-eslint": ~4.5.0
     "@vue/cli-service": ~4.5.0
     "@vue/compiler-sfc": ^3.0.0
+    axios: ^0.24.0
     babel-eslint: ^10.1.0
     core-js: ^3.6.5
     cors: ^2.8.5
@@ -4699,6 +4709,7 @@ __metadata:
     socket.io-client: ^4.4.0
     vue: ^3.2.26
     vue-router: ^4.0.12
+    vuedraggable: next
     vuex: ^4.0.2
   languageName: unknown
   linkType: soft
@@ -5619,7 +5630,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.0.0":
+"follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.14.4":
   version: 1.14.6
   resolution: "follow-redirects@npm:1.14.6"
   peerDependenciesMeta:
@@ -10613,6 +10624,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"sortablejs@npm:1.14.0":
+  version: 1.14.0
+  resolution: "sortablejs@npm:1.14.0"
+  checksum: 7b9d2cbb0331f3f259b8703a17174ff46a941b6d59c77c75ca05a5bd484bf2b409a9c1d21344f9c933939880450803b254825c7c7d7f88034e8c7e675420b389
+  languageName: node
+  linkType: hard
+
 "source-list-map@npm:^2.0.0":
   version: 2.0.1
   resolution: "source-list-map@npm:2.0.1"
@@ -11821,6 +11839,17 @@ __metadata:
     "@vue/server-renderer": 3.2.26
     "@vue/shared": 3.2.26
   checksum: e9423c5eb106b0c821f43eb4a0c8c1e2f42b78861a8b488479108641b46a19fd88cff278e9645a6e2fcaa6a2865cfe5c63044a936a4a2876963789634740230c
+  languageName: node
+  linkType: hard
+
+"vuedraggable@npm:next":
+  version: 4.1.0
+  resolution: "vuedraggable@npm:4.1.0"
+  dependencies:
+    sortablejs: 1.14.0
+  peerDependencies:
+    vue: ^3.0.1
+  checksum: 8b4c5a6b384361df97f7a3595d7772dfbb086bf97c6702a1117b532a9e49db2908cb5d21b7959cb10179714c4c2225e4be0b77b29f778923169ea8a8197a429f
   languageName: node
   linkType: hard
 
