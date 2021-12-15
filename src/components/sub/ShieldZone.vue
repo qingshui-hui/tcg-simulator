@@ -10,7 +10,10 @@
     >
       <div class="shield-wrapper">
         <div class="menu-list hidden" :class="{ reverse: side === 'upper' }">
-          <div v-if="lastCard(card.childCards)" @click="openWorkSpace([card], 'shieldCards', true)">
+          <div
+            v-if="lastCard(card.childCards)"
+            @click="openWorkSpace([card], 'shieldCards', true)"
+          >
             <span class="small">開く(うら)</span>
           </div>
           <div v-else @click="moveCard('shieldCards', 'tefudaCards', card)">
@@ -18,8 +21,12 @@
           </div>
         </div>
         <span class="shield-id">{{ card.shieldId }}</span>
-        <img v-if="lastCard(card.childCards)" :src="lastCard(card.childCards).imageUrl" />
+        <!-- 裏向きのカードの場合表示されない。 -->
+        <img v-if="lastCard(card.childCards) && !lastCard(card.childCards).faceDown"
+          :src="lastCard(card.childCards).imageUrl"
+        />
         <img src="@/assets/images/shield.jpg" v-else />
+        <div v-if="lastCard(card.childCards)" class="shield-num" >{{ card.childCards.length + 1 }}</div>
       </div>
     </div>
   </div>

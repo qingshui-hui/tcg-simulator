@@ -148,6 +148,13 @@ export default {
     //     position: absolute;
     //     bottom: 0px;
     // }
+    .shield-num {
+      color: whitesmoke;
+      position: absolute;
+      bottom: 3px;
+      right: 5px;
+      font-size: 10px;
+    }
   }
   .player-zone .yamafuda-zone {
     width: 60px;

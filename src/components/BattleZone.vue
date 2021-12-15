@@ -21,7 +21,13 @@
       >
         <span class="cost card-info">10</span>
         <span class="power card-info">12000</span>
-        <img :src="card.imageUrl" draggable="false" />
+        <img
+          v-if="card.faceDown === true"
+          src="@/assets/images/card-back.jpg"
+          draggable="false"
+        />
+        <img v-else :src="card.imageUrl" draggable="false" />
+        <!-- <img :src="card.imageUrl" draggable="false" /> -->
         <div class="menu-list hidden" :class="{ reverse: side === 'upper' }">
           <div v-if="card.tapped" v-on:click="tapCard(card)">
             <span>アンタップ</span>
