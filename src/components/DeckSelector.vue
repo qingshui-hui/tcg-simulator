@@ -45,11 +45,9 @@ export default {
   },
   methods: {
     selectDeck() {
-      console.log(this.deckId)
       const config = this.useConfig()
       const deck = Deck.getDeckById(config.IMAGE_HOST, this.deckId, this.player === "a");
 
-      console.log(deck.slice(0, 5))
       // fromのカードは存在しなくても良いため、仮にyamafudaCardsにしている。
       this.$emit('move-cards', 'yamafudaCards', 'shieldCards', deck.slice(0, 5), this.player);
       this.$emit('move-cards', 'yamafudaCards', 'tefudaCards', deck.slice(5, 10), this.player);
