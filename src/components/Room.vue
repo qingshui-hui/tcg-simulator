@@ -94,7 +94,7 @@
         ></tefuda-zone>
       </ImageViewer>
 
-      <button @click="getRoomState">サーバーからデータを取得</button>
+      <button v-if="!players[lowerPlayer].isReady" @click="getRoomState">サーバーからデータを取得</button>
     </div>
   </div>
 </template>
