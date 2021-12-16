@@ -7,7 +7,7 @@ mixin.zone = {
     shuffleCards: function (from, cards) {
       this.$emit('shuffle-cards', from, cards, this.player)
     },
-    openWorkSpace: function (cards, from, faceDown = false) {
+    openWorkSpace: function (cards, from, faceDown = null) {
       this.$emit('open-work-space', cards, from, this.player, faceDown);
     },
   }

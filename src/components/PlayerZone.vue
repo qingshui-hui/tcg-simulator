@@ -8,7 +8,7 @@
               <span class="draw">シールド</span>
             </div>
             <div>
-              <span class="small" @click="openWorkSpace(shieldCards, 'shieldCards', true)">開く(うら)</span>
+              <span class="small" @click="openWorkSpace(shieldCards, 'shieldCards')">開く</span>
             </div>
             <div>
               <span @click="shuffleCards('shieldCards', shieldCards)">シャッフル</span>
@@ -16,7 +16,7 @@
           </div>
           <div class="shield-info">
             <p class="small-text">シールド</p>
-            <p>{{ shieldCards.length }}</p>
+            <p>{{ countableShieldCards.length }}</p>
           </div>
         </div>
         <div class="yamafuda">
@@ -34,7 +34,7 @@
               <div @click="moveCard('yamafudaCards', 'tefudaCards', yamafudaCards[0])">
                 <span class="small">ドロー</span>
               </div>
-              <div @click="openWorkSpace(yamafudaCards, 'yamafudaCards')">
+              <div @click="openWorkSpace(yamafudaCards, 'yamafudaCards', false)">
                 <span class="small">開く(表)</span>
               </div>
               <div @click="openWorkSpace(yamafudaCards, 'yamafudaCards', true)">
@@ -66,8 +66,17 @@
 
 import mixin from '@/helpers/mixin.js';
 export default {
-  props: ['player', 'bochiCards', 'shieldCards', 'yamafudaCards', 'side'],
+  props: ['player', 'bochiCards', 'shieldCards', 'shieldCardGroups', 'yamafudaCards', 'side'],
   mixins: [mixin.zone],
+  computed: {
+    countableShieldCards() {
+      // グループ化されているカードは一つとカウントする。
+      const firstCardIds = this.shieldCardGroups.map(g => g.cardIds[0])
+      return this.shieldCards.filter((c) => {
+        return !c.groupId || firstCardIds.includes(c.id)
+      })
+    }
+  },
   methods: {
     lastCard: function (cards) {
       const length = cards.length;

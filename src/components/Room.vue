@@ -36,6 +36,7 @@
           :bochiCards="players[upperPlayer]['cards']['bochiCards']"
           :yamafudaCards="players[upperPlayer]['cards']['yamafudaCards']"
           :shieldCards="players[upperPlayer]['cards']['shieldCards']"
+          :shieldCardGroups="players[upperPlayer]['cards']['shieldCardGroups']"
           v-on:move-cards="moveCards"
           v-on:open-work-space="openWorkSpace"
           v-on:shuffle-cards="shuffleCards"
@@ -45,9 +46,10 @@
               side="lower"
               :player="upperPlayer"
               :shieldCards="players[upperPlayer]['cards']['shieldCards']"
+              :shieldCardGroups="players[upperPlayer]['cards']['shieldCardGroups']"
               v-on:move-cards="moveCards"
               v-on:open-work-space="openWorkSpace"
-              v-on:drop-card="dropCard"
+              @group-card="groupCard"
             ></ShieldZone>
           </template>
         </PlayerZone>
@@ -57,8 +59,6 @@
           :battleCards="players[upperPlayer]['cards']['battleCards']"
           :battleCardGroups="players[upperPlayer]['cards']['battleCardGroups']"
           v-on:move-cards="moveCards"
-          v-on:drag-card="dragCard"
-          v-on:drop-card="dropCard"
           v-on:open-work-space="openWorkSpace"
           @group-card="groupCard"
         ></BattleZone>
@@ -76,8 +76,6 @@
           :battleCards="players[lowerPlayer]['cards']['battleCards']"
           :battleCardGroups="players[lowerPlayer]['cards']['battleCardGroups']"
           v-on:move-cards="moveCards"
-          v-on:drag-card="dragCard"
-          v-on:drop-card="dropCard"
           v-on:open-work-space="openWorkSpace"
           @group-card="groupCard"
         ></BattleZone>
@@ -88,6 +86,7 @@
           :bochiCards="players[lowerPlayer]['cards']['bochiCards']"
           :yamafudaCards="players[lowerPlayer]['cards']['yamafudaCards']"
           :shieldCards="players[lowerPlayer]['cards']['shieldCards']"
+          :shieldCardGroups="players[lowerPlayer]['cards']['shieldCardGroups']"
           v-on:move-cards="moveCards"
           v-on:open-work-space="openWorkSpace"
           v-on:shuffle-cards="shuffleCards"
@@ -97,9 +96,10 @@
               side="lower"
               :player="lowerPlayer"
               :shieldCards="players[lowerPlayer]['cards']['shieldCards']"
+              :shieldCardGroups="players[lowerPlayer]['cards']['shieldCardGroups']"
               v-on:move-cards="moveCards"
               v-on:open-work-space="openWorkSpace"
-              v-on:drop-card="dropCard"
+              @group-card="groupCard"
             ></ShieldZone>
           </template>
         </player-zone>
@@ -154,6 +154,7 @@ export default {
             yamafudaCards: [],
             childCards: [],
             battleCardGroups: [],
+            shieldCardGroups: [],
           },
           name: "a",
           roomId: roomId,
@@ -169,6 +170,7 @@ export default {
             yamafudaCards: [],
             childCards: [],
             battleCardGroups: [],
+            shieldCardGroups: [],
           },
           name: "b",
           roomId: roomId,
@@ -240,15 +242,16 @@ export default {
         toCard.groupId = groupId
       }
       // 並べ替え
-      if (to === 'battleCardGroups') {
+      if (['battleCardGroups', 'shieldCardGroups'].includes(to)) {
         // fromCardをtoCardの前に移す。
         Util.arrayInsertBefore(this.players[player]["cards"][from], toCard, fromCard)
       }
+      console.log(this.players[player]["cards"][to])
       // 状態の変更を送信する
       if (!this.useConfig().WS_ENABLED) return;
       this.socket.emit("cards-moved", this.players[player]);
     },
-    // groupはbattleCardGroupsかshieldCardGroups
+    // groupNameはbattleCardGroupsかshieldCardGroups
     ungroupCard({groupName, card, player}) {
       // シールドのグループの場合はカードの行き先がわからず、注意が必要。
       const groupIndex = this.players[player]["cards"][groupName].findIndex(g => g.id === card.groupId)
@@ -323,13 +326,13 @@ export default {
         // 'top': scrolled.scrollHeight
       });
     },
-    openWorkSpace: function (cards, from, player, faceDown = false) {
-      if (faceDown) {
+    openWorkSpace: function (cards, from, player, faceDown = null) {
+      if (faceDown === true) {
         for (let card of cards) {
           card.faceDown = true;
         }
       }
-      else {
+      else if (faceDown === false) {
         for (let card of cards) {
           card.faceDown = false;
         }

@@ -11,23 +11,19 @@
         class="card in-battle"
         v-for="(card, index) in battleZoneCards"
         :key="index"
-        :class="{ tapped: card.tapped }"
+        :class="{ tapped: card.tapped, 'is-group': !!card.groupId }"
         :draggable="!card.groupId"
         @dragstart="dragCard(card)"
         @dragend="dragCard(null)"
         @drop="dropCard(card)"
-        @dragover="dragOver"
+        @dragover.prevent="dragOver"
         @dragleave="dragLeave"
       >
         <span class="cost card-info">10</span>
         <span class="power card-info">12000</span>
-        <img
-          v-if="card.faceDown === true"
-          src="@/assets/images/card-back.jpg"
-          draggable="false"
-        />
+        <img v-if="card.faceDown === true" src="@/assets/images/card-back.jpg" draggable="false" />
         <img v-else :src="card.imageUrl" draggable="false" />
-        <!-- <img :src="card.imageUrl" draggable="false" /> -->
+
         <div class="menu-list hidden" :class="{ reverse: side === 'upper' }">
           <div v-if="card.tapped" v-on:click="tapCard(card)">
             <span>アンタップ</span>
@@ -50,7 +46,7 @@
             </div>
           </template>
           <div v-on:click="openWorkSpace(battleCards, 'battleCards')">
-            <span>開く(表)</span>
+            <span>開く</span>
           </div>
         </div>
       </div>
@@ -89,13 +85,10 @@ export default {
       return null;
     },
     dragCard: function (card) {
-      this.draggingCard = card
       this.$store.commit('setDraggingCard', card)
-      console.log(this.$store.state.draggingCard)
-      // this.$emit('drag-card', 'battleCards', card)
     },
     dropCard: function (card) {
-      // const selectedCards = [card, this.draggingCard]
+      if (card.id === this.$store.state.draggingCard.id) return
       this.$emit('group-card', {
         from: 'battleCards',
         to: 'battleCardGroups',
@@ -104,10 +97,8 @@ export default {
         player: this.player,
       })
       event.target.style.opacity = 1;
-      // this.$emit('drop-card', 'battleCards', card, this.player);
     },
     dragOver: function () {
-      event.preventDefault();
       event.target.style.opacity = 0.5;
     },
     dragLeave: function () {
@@ -131,8 +122,10 @@ export default {
     width: 70px;
   }
   .battle-zone {
+    // box-shadowが見えるようにするため。
+    padding-bottom: 10px;
     display: flex;
-    overflow: scroll;
+    overflow-x: scroll;
     max-width: 600px;
   }
   .battle-zone .card {
@@ -145,6 +138,14 @@ export default {
 
   .card.in-battle {
     position: relative;
+    display: flex;
+    &.is-group {
+      border: lightgray 1px solid;
+      border-top-width: 0;
+      border-left-width: 0;
+      box-shadow: 2px 3px black;
+      border-radius: 3px;
+    }
   }
   .card:hover {
     .menu-list {

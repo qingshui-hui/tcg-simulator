@@ -49,7 +49,11 @@ export default {
       const deck = Deck.getDeckById(config.IMAGE_HOST, this.deckId, this.player === "a");
 
       // fromのカードは存在しなくても良いため、仮にyamafudaCardsにしている。
-      this.$emit('move-cards', 'yamafudaCards', 'shieldCards', deck.slice(0, 5), this.player);
+      const shieldCards = deck.slice(0, 5)
+      shieldCards.forEach(c => {
+        c.faceDown = true
+      });
+      this.$emit('move-cards', 'yamafudaCards', 'shieldCards', shieldCards, this.player);
       this.$emit('move-cards', 'yamafudaCards', 'tefudaCards', deck.slice(5, 10), this.player);
       this.$emit('move-cards', 'yamafudaCards', 'yamafudaCards', deck.slice(10, 40), this.player);
       this.$emit('selected', true)

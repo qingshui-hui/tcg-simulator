@@ -2,17 +2,17 @@
   <div class="shield-zone">
     <div
       class="shield"
-      v-for="(card, index) in shieldCards"
+      v-for="(card, index) in countableShieldCards"
       :key="index"
-      @dragover="dragOver"
-      @dragleave="dragLeave"
-      @drop="dropCard(card, 'shieldCards')"
+      @dragover.prevent="dragOver($event)"
+      @dragleave="dragLeave($event)"
+      @drop="dropCard($event, card, 'shieldCards')"
     >
       <div class="shield-wrapper">
         <div class="menu-list hidden" :class="{ reverse: side === 'upper' }">
           <div
-            v-if="lastCard(card.childCards)"
-            @click="openWorkSpace([card], 'shieldCards', true)"
+            v-if="card.groupId"
+            @click="openWorkSpace([card], 'shieldCards')"
           >
             <span class="small">開く(うら)</span>
           </div>
@@ -22,8 +22,8 @@
         </div>
         <span class="shield-id">{{ card.shieldId }}</span>
         <!-- 裏向きのカードの場合表示されない。 -->
-        <img v-if="lastCard(card.childCards) && !lastCard(card.childCards).faceDown"
-          :src="lastCard(card.childCards).imageUrl"
+        <img v-if="!card.faceDown"
+          :src="card.imageUrl"
         />
         <img src="@/assets/images/shield.jpg" v-else />
         <div v-if="lastCard(card.childCards)" class="shield-num" >{{ card.childCards.length + 1 }}</div>
@@ -37,8 +37,17 @@
 import mixin from "../helpers/mixin";
 // このcomponentは、今のところ、playerを知っている必要がない
 export default {
-  props: ['player', 'shieldCards', 'side'],
+  props: ['player', 'shieldCards', 'shieldCardGroups', 'side'],
   mixins: [mixin.zone],
+  computed: {
+    countableShieldCards() {
+      // グループ化されているカードは一つとカウントする。
+      const firstCardIds = this.shieldCardGroups.map(g => g.cardIds[0])
+      return this.shieldCards.filter((c) => {
+        return !c.groupId || firstCardIds.includes(c.id)
+      })
+    }
+  },
   methods: {
     lastCard: function (cards) {
       const length = cards.length;
@@ -47,18 +56,23 @@ export default {
       }
       return null;
     },
-    dragOver: function () {
-      event.preventDefault();
+    dragOver: function (event) {
       event.target.style.opacity = 0.5;
     },
-    dragLeave: function () {
+    dragLeave: function (event) {
       event.target.style.opacity = 1;
     },
-    dropCard: function (card, droppedIn) {
+    dropCard: function (event, card) {
       event.target.style.opacity = 1;
-      this.$emit('drop-card', droppedIn, card, this.player);
-      // event.target.style.opacity = 1;
-      // this.$emit('drop-card', card, droppedIn);
+      if (card.id === this.$store.state.draggingCard.id) return
+      this.moveCard('battleCards', 'shieldCards', this.$store.state.draggingCard)
+      this.$emit('group-card', {
+        from: 'shieldCards',
+        to: 'shieldCardGroups',
+        fromCard: this.$store.state.draggingCard,
+        toCard: card,
+        player: this.player,
+      })
     },
   }
 }

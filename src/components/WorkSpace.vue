@@ -11,7 +11,7 @@
         <span class="cost card-info">10</span>
         <span class="power card-info">12000</span>
         <span class="card-id card-info" v-if="card.groupId">{{ card.groupId }}</span>
-        <span v-else class="card-id card-info">{{ card.id }}</span>
+        <!-- <span v-else class="card-id card-info">{{ card.id }}</span> -->
         <img src="@/assets/images/card-back.jpg" v-if="card.faceDown === true" />
         <img :src="card.imageUrl" v-else />
         <div class="menu-list hidden">
@@ -68,6 +68,10 @@ export default {
       this.$parent.$parent.workSpace.cards = this.workSpace.cards.filter((c) => {
         return c.id !== card.id;
       })
+      // バトルゾーン以外からシールドへ移動するときは裏向きにする。
+      if (to === 'shieldCards' && from !== 'battleCards') {
+        card.faceDown = true
+      }
       this.$emit('move-cards', from, to, [card], this.workSpace.player, prepend);
     },
     closeWorkSpace: function () {
