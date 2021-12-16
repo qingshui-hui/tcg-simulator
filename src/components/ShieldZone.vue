@@ -33,9 +33,12 @@
 </template>
 
 <script>
+
+import mixin from "../helpers/mixin";
 // このcomponentは、今のところ、playerを知っている必要がない
 export default {
   props: ['player', 'shieldCards', 'side'],
+  mixins: [mixin.zone],
   methods: {
     lastCard: function (cards) {
       const length = cards.length;
@@ -53,13 +56,9 @@ export default {
     },
     dropCard: function (card, droppedIn) {
       event.target.style.opacity = 1;
-      this.$emit('drop-card', card, droppedIn);
-    },
-    moveCard: function (from, to, card) {
-      this.$emit('move-card', from, to, card);
-    },
-    openWorkSpace: function (cards, from, faceDown = false) {
-      this.$emit('open-work-space', cards, from, faceDown);
+      this.$emit('drop-card', droppedIn, card, this.player);
+      // event.target.style.opacity = 1;
+      // this.$emit('drop-card', card, droppedIn);
     },
   }
 }

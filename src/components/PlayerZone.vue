@@ -25,14 +25,8 @@
         </div>
       </div>
       <div class="blue-wrapper" :class="{ 'reverse': side === 'upper' }">
-        <shield-zone
-          :side="side"
-          :player="player"
-          :shieldCards="shieldCards"
-          v-on:move-card="moveCard"
-          v-on:open-work-space="openWorkSpace"
-          v-on:drop-card="dropCard"
-        ></shield-zone>
+        <!-- シールドゾーン -->
+        <slot name="shield-zone"></slot>
 
         <div class="yamafuda-zone">
           <div v-if="yamafudaCards.length > 0">
@@ -71,13 +65,9 @@
 <script>
 
 import mixin from '@/helpers/mixin.js';
-import ShieldZone from './sub/ShieldZone.vue'
 export default {
   props: ['player', 'bochiCards', 'shieldCards', 'yamafudaCards', 'side'],
   mixins: [mixin.zone],
-  components: {
-    ShieldZone,
-  },
   methods: {
     lastCard: function (cards) {
       const length = cards.length;
@@ -85,10 +75,6 @@ export default {
         return cards[length - 1];
       }
       return null;
-    },
-    dropCard: function (card, droppedIn) {
-      event.target.style.opacity = 1;
-      this.$emit('drop-card', droppedIn, card, this.player);
     },
   }
 }

@@ -39,8 +39,18 @@
           v-on:move-cards="moveCards"
           v-on:open-work-space="openWorkSpace"
           v-on:shuffle-cards="shuffleCards"
-          v-on:drop-card="dropCard"
-        ></PlayerZone>
+        >
+          <template #shield-zone>
+            <ShieldZone
+              side="lower"
+              :player="upperPlayer"
+              :shieldCards="players[upperPlayer]['cards']['shieldCards']"
+              v-on:move-cards="moveCards"
+              v-on:open-work-space="openWorkSpace"
+              v-on:drop-card="dropCard"
+            ></ShieldZone>
+          </template>
+        </PlayerZone>
         <BattleZone
           :side="'upper'"
           :player="upperPlayer"
@@ -77,8 +87,18 @@
           v-on:move-cards="moveCards"
           v-on:open-work-space="openWorkSpace"
           v-on:shuffle-cards="shuffleCards"
-          v-on:drop-card="dropCard"
-        ></player-zone>
+        >
+          <template #shield-zone>
+            <ShieldZone
+              side="lower"
+              :player="lowerPlayer"
+              :shieldCards="players[lowerPlayer]['cards']['shieldCards']"
+              v-on:move-cards="moveCards"
+              v-on:open-work-space="openWorkSpace"
+              v-on:drop-card="dropCard"
+            ></ShieldZone>
+          </template>
+        </player-zone>
         <mana-zone
           :side="'lower'"
           :player="lowerPlayer"
@@ -110,11 +130,12 @@ import ManaZone from './ManaZone.vue';
 import PlayerZone from './PlayerZone.vue';
 import BattleZone from './BattleZone.vue';
 import DeckSelector from './DeckSelector.vue';
+import ShieldZone from './ShieldZone.vue';
 
 export default {
   name: "c-app",
   props: ["upperPlayer", "lowerPlayer", "socket", "config"],
-  components: { WorkSpace, ImageViewer, TefudaZone, ManaZone, PlayerZone, BattleZone, DeckSelector },
+  components: { WorkSpace, ImageViewer, TefudaZone, ManaZone, PlayerZone, BattleZone, DeckSelector, ShieldZone },
   data() {
     const roomId = this.$route.query.roomId;
     return {
