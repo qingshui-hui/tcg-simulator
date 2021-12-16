@@ -10,10 +10,7 @@
     >
       <div class="shield-wrapper">
         <div class="menu-list hidden" :class="{ reverse: side === 'upper' }">
-          <div
-            v-if="card.groupId"
-            @click="openWorkSpace([card], 'shieldCards')"
-          >
+          <div v-if="card.groupId" @click="openWorkSpace(group(card).cards, 'shieldCards')">
             <span class="small">開く(うら)</span>
           </div>
           <div v-else @click="moveCard('shieldCards', 'tefudaCards', card)">
@@ -22,11 +19,9 @@
         </div>
         <span class="shield-id">{{ card.shieldId }}</span>
         <!-- 裏向きのカードの場合表示されない。 -->
-        <img v-if="!card.faceDown"
-          :src="card.imageUrl"
-        />
+        <img v-if="!card.faceDown" :src="card.imageUrl" />
         <img src="@/assets/images/shield.jpg" v-else />
-        <div v-if="lastCard(card.childCards)" class="shield-num" >{{ card.childCards.length + 1 }}</div>
+        <div v-if="card.groupId" class="shield-num">{{ group(card).cardIds.length }}</div>
       </div>
     </div>
   </div>
@@ -46,15 +41,19 @@ export default {
       return this.shieldCards.filter((c) => {
         return !c.groupId || firstCardIds.includes(c.id)
       })
-    }
+    },
   },
   methods: {
-    lastCard: function (cards) {
-      const length = cards.length;
-      if (length && 0 < length) {
-        return cards[length - 1];
+    // リレーション
+    group(card) {
+      if (!card.groupId) {
+        return null
       }
-      return null;
+      const group = {
+        ...this.shieldCardGroups.find(g => g.id === card.groupId)
+      }
+      group.cards = this.shieldCards.filter(c => c.groupId === group.id)
+      return group
     },
     dragOver: function (event) {
       event.target.style.opacity = 0.5;
