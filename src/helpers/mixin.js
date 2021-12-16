@@ -1,18 +1,20 @@
+import { mapMutations } from "vuex/dist/vuex.cjs";
+
 const mixin = {}
 mixin.zone = {
   methods: {
-    moveCard: function (from, to, card, prepend = false) {
+    moveCard(from, to, card, prepend = false) {
       this.$emit('move-cards', from, to, [card], this.player, prepend);
     },
-    shuffleCards: function (from, cards) {
+    shuffleCards(from, cards) {
       this.$emit('shuffle-cards', from, cards, this.player)
     },
-    openWorkSpace: function (cards, from, faceDown = null) {
-      this.$emit('open-work-space', cards, from, this.player, faceDown);
-    },
+    // openWorkSpace: function (cards, from, faceDown = null) {
+    //   this.$emit('open-work-space', cards, from, this.player, faceDown);
+    // },
+    ...mapMutations(['openWorkSpace']),
   }
 }
-
 mixin.droppable = {
   methods: {
     dragOver: function () {

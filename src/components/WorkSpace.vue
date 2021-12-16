@@ -1,11 +1,11 @@
 <template>
-  <div :class="{ hidden: workSpace.hidden }">
-    <div class="close-button-work-space" v-on:click="closeWorkSpace">x</div>
+  <div :class="{ hidden: !workSpace.active }">
+    <div class="close-button-work-space" @click="closeWorkSpace">x</div>
 
     <div id="work-space" class>
       <div>
         <p>player:{{ workSpace.player }}</p>
-        <p>from:{{ workSpace.selectedZone }}</p>
+        <p>from:{{ workSpace.zone }}</p>
       </div>
       <div class="card with-info" v-for="(card, index) in workSpace.cards" :key="index">
         <span class="cost card-info">10</span>
@@ -38,67 +38,46 @@
           </div>
         </div>
       </div>
+      <button v-if="workSpace.zone === 'yamafudaCards'" @click="openAllCards">全て表にする</button>
     </div>
   </div>
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
+
 export default {
-  props: ['workSpace', 'side'],
   computed: {
+    workSpace() {
+      return this.$store.state.workSpace
+    },
     player() {
-      return this.workSpace.player;
+      return this.$store.state.workSpace.player;
     },
   },
   methods: {
-    ungroupCard(card) {
-      console.log(card)
-    },
+    ...mapMutations(['closeWorkSpace', 'openWorkSpace']),
     openCard(card) {
       card.faceDown = !card.faceDown;
       this.$forceUpdate();
     },
-    moveCard(card, to, prepend = false) {
-      let from = this.workSpace.selectedZone;
-      // childCardsはworkSpaceからしか移動できない使用
-      if (this.handleParentCard(card)) {
-        from = 'childCards';
-      }
-      // workSpaceに限っては、自身のデータを変更したいだけなので、$parentを使用
-      this.$parent.$parent.workSpace.cards = this.workSpace.cards.filter((c) => {
-        return c.id !== card.id;
+    openAllCards() {
+      this.workSpace.cards.forEach(c => {
+        c.faceDown = false
       })
+    },
+    moveCard(card, to, prepend = false) {
+      // ワークスペースから移動したカードを消す。
+      this.openWorkSpace({
+        ...this.workSpace,
+        cards: this.workSpace.cards.filter(c => c.id !== card.id),
+      })
+      const from = this.workSpace.zone;
       // バトルゾーン以外からシールドへ移動するときは裏向きにする。
       if (to === 'shieldCards' && from !== 'battleCards') {
         card.faceDown = true
       }
       this.$emit('move-cards', from, to, [card], this.workSpace.player, prepend);
-    },
-    closeWorkSpace: function () {
-      this.$emit('close-work-space');
-    },
-    handleParentCard: function (card) {
-      // parentId は card の drop 時にのみ、つけられる
-      const from = this.workSpace.selectedZone;
-      if (card.parentId) {
-        let parentCard;
-        for (let c of this.workSpace.cards) {
-          if (c.id === card.parentId) {
-            parentCard = c;
-            break;
-          }
-        }
-        if (parentCard) {
-          parentCard.childCards = parentCard.childCards.filter((c) => {
-            return c.id !== card.id;
-          });
-          // これは、相手にも見える操作のため、move-cardsであるべき
-          this.$emit('move-cards', from, from, this.$parent.$parent.players[this.player]['cards'][from], this.player);
-        }
-        card.parentId = null;
-        return true;
-      }
-      return false;
     },
   }
 }

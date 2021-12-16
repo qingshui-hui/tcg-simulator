@@ -40,7 +40,13 @@
               <span>墓地へ</span>
             </div>
           </template>
-          <div @click="openWorkSpace(battleCards, 'battleCards')">
+          <div
+            @click="openWorkSpace({
+              zone: 'battleCards',
+              cards: battleCards,
+              player: player,
+            })"
+          >
             <span>開く</span>
           </div>
         </div>

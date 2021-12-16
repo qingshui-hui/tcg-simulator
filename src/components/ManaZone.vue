@@ -6,7 +6,14 @@
           <div class="uptap-button" @click="untapAll">
             <span>アンタップ</span>
           </div>
-          <div class="not-visible" @click="openWorkSpace(manaCards, 'manaCards')">
+          <div
+            class="not-visible"
+            @click="openWorkSpace({
+              zone: 'manaCards',
+              cards: manaCards,
+              player: player
+            })"
+          >
             <span>開く</span>
           </div>
         </div>

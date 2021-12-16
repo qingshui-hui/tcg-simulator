@@ -11,9 +11,7 @@
         ></DeckSelector>
 
         <WorkSpace
-          :workSpace="workSpace"
-          v-on:close-work-space="closeWorkSpace"
-          v-on:move-cards="moveCards"
+          @move-cards="moveCards"
         ></WorkSpace>
 
         <TefudaZone
@@ -21,14 +19,12 @@
           :player="upperPlayer"
           :tefudaCards="players[upperPlayer]['cards']['tefudaCards']"
           v-on:move-cards="moveCards"
-          v-on:open-work-space="openWorkSpace"
         ></TefudaZone>
         <ManaZone
           :side="'upper'"
           :player="upperPlayer"
           :manaCards="players[upperPlayer]['cards']['manaCards']"
           v-on:move-cards="moveCards"
-          v-on:open-work-space="openWorkSpace"
         ></ManaZone>
         <PlayerZone
           :side="'upper'"
@@ -38,7 +34,6 @@
           :shieldCards="players[upperPlayer]['cards']['shieldCards']"
           :shieldCardGroups="players[upperPlayer]['cards']['shieldCardGroups']"
           v-on:move-cards="moveCards"
-          v-on:open-work-space="openWorkSpace"
           v-on:shuffle-cards="shuffleCards"
         >
           <template #shield-zone>
@@ -48,7 +43,6 @@
               :shieldCards="players[upperPlayer]['cards']['shieldCards']"
               :shieldCardGroups="players[upperPlayer]['cards']['shieldCardGroups']"
               v-on:move-cards="moveCards"
-              v-on:open-work-space="openWorkSpace"
               @group-card="groupCard"
             ></ShieldZone>
           </template>
@@ -59,7 +53,6 @@
           :battleCards="players[upperPlayer]['cards']['battleCards']"
           :battleCardGroups="players[upperPlayer]['cards']['battleCardGroups']"
           v-on:move-cards="moveCards"
-          v-on:open-work-space="openWorkSpace"
           @group-card="groupCard"
         ></BattleZone>
 
@@ -76,7 +69,6 @@
           :battleCards="players[lowerPlayer]['cards']['battleCards']"
           :battleCardGroups="players[lowerPlayer]['cards']['battleCardGroups']"
           v-on:move-cards="moveCards"
-          v-on:open-work-space="openWorkSpace"
           @group-card="groupCard"
         ></BattleZone>
 
@@ -88,7 +80,6 @@
           :shieldCards="players[lowerPlayer]['cards']['shieldCards']"
           :shieldCardGroups="players[lowerPlayer]['cards']['shieldCardGroups']"
           v-on:move-cards="moveCards"
-          v-on:open-work-space="openWorkSpace"
           v-on:shuffle-cards="shuffleCards"
         >
           <template #shield-zone>
@@ -98,7 +89,6 @@
               :shieldCards="players[lowerPlayer]['cards']['shieldCards']"
               :shieldCardGroups="players[lowerPlayer]['cards']['shieldCardGroups']"
               v-on:move-cards="moveCards"
-              v-on:open-work-space="openWorkSpace"
               @group-card="groupCard"
             ></ShieldZone>
           </template>
@@ -108,14 +98,12 @@
           :player="lowerPlayer"
           :manaCards="players[lowerPlayer]['cards']['manaCards']"
           v-on:move-cards="moveCards"
-          v-on:open-work-space="openWorkSpace"
         ></mana-zone>
         <tefuda-zone
           :side="'lower'"
           :player="lowerPlayer"
           :tefudaCards="players[lowerPlayer]['cards']['tefudaCards']"
           v-on:move-cards="moveCards"
-          v-on:open-work-space="openWorkSpace"
         ></tefuda-zone>
       </ImageViewer>
 
@@ -138,7 +126,7 @@ import ShieldZone from './ShieldZone.vue';
 
 export default {
   name: "c-app",
-  props: ["upperPlayer", "lowerPlayer", "socket", "config"],
+  props: ["upperPlayer", "lowerPlayer", "socket"],
   components: { WorkSpace, ImageViewer, TefudaZone, ManaZone, PlayerZone, BattleZone, DeckSelector, ShieldZone },
   data() {
     const roomId = this.$route.query.roomId;
@@ -152,7 +140,7 @@ export default {
             shieldCards: [],
             tefudaCards: [],
             yamafudaCards: [],
-            childCards: [],
+            // cardGroups
             battleCardGroups: [],
             shieldCardGroups: [],
           },
@@ -168,7 +156,7 @@ export default {
             shieldCards: [],
             tefudaCards: [],
             yamafudaCards: [],
-            childCards: [],
+            // cardGroups
             battleCardGroups: [],
             shieldCardGroups: [],
           },
@@ -176,16 +164,6 @@ export default {
           roomId: roomId,
           isReady: false,
         },
-      },
-      workSpace: {
-        hidden: true,
-        cards: [],
-        selectedZone: "",
-        player: "",
-      },
-      drag: {
-        from: null,
-        draggingCard: null,
       },
     };
   },
@@ -195,30 +173,6 @@ export default {
     },
   },
   methods: {
-    dragCard: function (from, card) {
-      this.drag["from"] = from;
-      this.drag["draggingCard"] = card;
-    },
-    dropCard: function (parentFrom, parentCard, player) {
-      const childCard = this.drag.draggingCard;
-      if (!childCard) {
-        return;
-      }
-      if (childCard.id === parentCard.id) {
-        return;
-      }
-      // このプロパティの寿命をどうするか、
-      // 今のところshieldでのみ使う予定
-      parentCard.childCards.push(childCard);
-      childCard.parentId = parentCard.id;
-      this.drag.draggingCard = null;
-      this.moveCards(this.drag.from, "childCards", [childCard], player);
-      // シールドの上側のカードを更新するために付け加えた
-      if (parentFrom === "shieldCards") {
-        // parentCardはずっと参照渡しのため、childCardsの増加が反映される
-        this.moveCards(parentFrom, parentFrom, this.players[player]["cards"][parentFrom], player);
-      }
-    },
     groupCard({from, to, fromCard, toCard, player}) {
       // 情報をカードに追加
       // card.groupはできれば使いたくない。moveCards内でのみ使用。
@@ -303,8 +257,7 @@ export default {
           this.scrollZone("tefuda-zone" + player, "left");
         }, 300);
       }
-      const config = this.useConfig()
-      if (!config.WS_ENABLED)
+      if (!this.useConfig().WS_ENABLED)
         return;
       this.socket.emit("cards-moved", this.players[player]);
     },
@@ -325,27 +278,6 @@ export default {
         [direction]: target.scrollWidth,
         // 'top': scrolled.scrollHeight
       });
-    },
-    openWorkSpace: function (cards, from, player, faceDown = null) {
-      if (faceDown === true) {
-        for (let card of cards) {
-          card.faceDown = true;
-        }
-      }
-      else if (faceDown === false) {
-        for (let card of cards) {
-          card.faceDown = false;
-        }
-      }
-      this.workSpace.cards = Util.arrayAppendChildren(cards, this.players[player]["cards"]["childCards"]);
-      this.workSpace.selectedZone = from;
-      this.workSpace.player = player;
-      this.workSpace.hidden = false;
-    },
-    closeWorkSpace: function () {
-      this.cards = [];
-      this.selectedZone = "";
-      this.workSpace.hidden = true;
     },
     setMessage() {
       //

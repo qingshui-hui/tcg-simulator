@@ -28,18 +28,6 @@ export class Util {
     return cards.concat(array);
   }
 
-  static arrayAppendChildren(parentCards, childCards) {
-    const result = [];
-    for (let parent of parentCards) {
-      for (let child of childCards) {
-        if (child.parentId === parent.id) {
-          result.push(child);
-        }
-      }
-    }
-    return parentCards.concat(result);
-  }
-
   static arrayInsertBefore(array, targetCard, card) {
     const targetIndex = array.findIndex(c => c.id === targetCard.id)
     // 削除してから挿入しないと一時的にidがかぶる状態ができてしまう。

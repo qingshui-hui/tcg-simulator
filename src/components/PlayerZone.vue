@@ -8,7 +8,14 @@
               <span class="draw">シールド</span>
             </div>
             <div>
-              <span class="small" @click="openWorkSpace(shieldCards, 'shieldCards')">開く</span>
+              <span
+                class="small"
+                @click="openWorkSpace({
+                  zone: 'shieldCards',
+                  cards: shieldCards,
+                  player: player,
+                })"
+              >開く</span>
             </div>
             <div>
               <span @click="shuffleCards('shieldCards', shieldCards)">シャッフル</span>
@@ -24,7 +31,7 @@
           <p>{{ yamafudaCards.length }}</p>
         </div>
       </div>
-      <div class="blue-wrapper" :class="{ 'reverse': side === 'upper' }">
+      <div class="blue-wrapper" :class="{ reverse: side === 'upper' }">
         <!-- シールドゾーン -->
         <slot name="shield-zone"></slot>
 
@@ -34,11 +41,8 @@
               <div @click="moveCard('yamafudaCards', 'tefudaCards', yamafudaCards[0])">
                 <span class="small">ドロー</span>
               </div>
-              <div @click="openWorkSpace(yamafudaCards, 'yamafudaCards', false)">
-                <span class="small">開く(表)</span>
-              </div>
-              <div @click="openWorkSpace(yamafudaCards, 'yamafudaCards', true)">
-                <span class="small">開く(うら)</span>
+              <div @click="openDeck">
+                <span class="small">開く</span>
               </div>
               <div @click="shuffleCards('yamafudaCards', yamafudaCards)">
                 <span class="small">シャッフル</span>
@@ -51,8 +55,14 @@
 
         <div class="bochi">
           <div class="menu-list hidden" :class="{ reverse: side === 'upper' }">
-            <div @click="openWorkSpace(bochiCards, 'bochiCards')">
-              <span class="small">開く(表)</span>
+            <div
+              @click="openWorkSpace({
+                zone: 'bochiCards',
+                cards: bochiCards,
+                player: player,
+              })"
+            >
+              <span class="small">開く</span>
             </div>
           </div>
           <img v-if="lastCard(bochiCards)" :src="lastCard(bochiCards).imageUrl" />
@@ -63,19 +73,26 @@
 </template>
 
 <script>
+import mixin from "@/helpers/mixin.js";
 
-import mixin from '@/helpers/mixin.js';
 export default {
-  props: ['player', 'bochiCards', 'shieldCards', 'shieldCardGroups', 'yamafudaCards', 'side'],
+  props: [
+    "player",
+    "bochiCards",
+    "shieldCards",
+    "shieldCardGroups",
+    "yamafudaCards",
+    "side",
+  ],
   mixins: [mixin.zone],
   computed: {
     countableShieldCards() {
       // グループ化されているカードは一つとカウントする。
-      const firstCardIds = this.shieldCardGroups.map(g => g.cardIds[0])
+      const firstCardIds = this.shieldCardGroups.map((g) => g.cardIds[0]);
       return this.shieldCards.filter((c) => {
-        return !c.groupId || firstCardIds.includes(c.id)
-      })
-    }
+        return !c.groupId || firstCardIds.includes(c.id);
+      });
+    },
   },
   methods: {
     lastCard: function (cards) {
@@ -85,8 +102,19 @@ export default {
       }
       return null;
     },
-  }
-}
+    // デッキを開くときはデフォルトで全て裏にする。
+    openDeck() {
+      this.yamafudaCards.forEach(c => {
+        c.faceDown = true
+      })
+      this.openWorkSpace({
+        zone: 'yamafudaCards',
+        cards: this.yamafudaCards,
+        player: this.player,
+      })
+    }
+  },
+};
 </script>
 
 <style lang="scss">

@@ -4,7 +4,11 @@
       <div
         class="open-tefuda"
         v-if="side === 'lower'"
-        v-on:click="openWorkSpace(tefudaCards, 'tefudaCards')"
+        @click="openWorkSpace({
+          zone: 'tefudaCards',
+          cards: tefudaCards,
+          player: player
+        })"
       >
         <span>開く</span>
       </div>
@@ -21,8 +25,8 @@
           <span class="power card-info">12000</span>
           <!-- 対戦相手の手札は常に裏向き -->
           <img v-if="side === 'upper'" src="@/assets/images/card-back.jpg" />
-          <img v-else-if="card.faceDown" src="@/assets/images/card-back.jpg"  />
-          <img v-else :src="card.imageUrl"  />
+          <img v-else-if="card.faceDown" src="@/assets/images/card-back.jpg" />
+          <img v-else :src="card.imageUrl" />
           <div class="menu-list hidden" :class="{ reverse: side === 'upper' }">
             <div>
               <span @click="moveCard('tefudaCards', 'battleCards', card)">出す</span>

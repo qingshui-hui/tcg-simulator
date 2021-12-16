@@ -5,13 +5,35 @@ const store = createStore({
   state () {
     return {
       draggingCard: null,
-      cards: {},
+      workSpace: {
+        active: false,
+        cards: [],
+        zone: '',
+        player: '',
+      },
     }
   },
   mutations: {
     setDraggingCard(state, card) {
       state.draggingCard = card
     },
+    // 第二引数のプロパティは全て必須。
+    openWorkSpace(state, {cards, zone, player}) {
+      state.workSpace = {
+        cards,
+        zone,
+        player,
+        active: true,
+      }
+    },
+    closeWorkSpace(state) {
+      state.workSpace = {
+        cards: [],
+        zone: '',
+        player: '',
+        active: false,
+      }
+    }
   },
 })
 

@@ -10,8 +10,15 @@
     >
       <div class="shield-wrapper">
         <div class="menu-list hidden" :class="{ reverse: side === 'upper' }">
-          <div v-if="card.groupId" @click="openWorkSpace(group(card).cards, 'shieldCards')">
-            <span class="small">開く(うら)</span>
+          <div
+            v-if="card.groupId"
+            @click="openWorkSpace({
+              zone: 'shieldCards',
+              cards: group(card).cards,
+              player: player
+            })"
+          >
+            <span class="small">開く</span>
           </div>
           <div v-else @click="moveCard('shieldCards', 'tefudaCards', card)">
             <span class="small">ブレイク</span>

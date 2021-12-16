@@ -26,7 +26,6 @@ export class Deck {
     for (let i = 0; i < deck.length; i++) {
       const startId = playerA ? START_ID_A : START_ID_B;
       deck[i].id = i + startId;
-      deck[i].childCards = [];
     }
     return deck;
   }
