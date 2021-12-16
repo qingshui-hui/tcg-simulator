@@ -39,4 +39,19 @@ export class Util {
     }
     return parentCards.concat(result);
   }
+
+  static arrayInsertBefore(array, targetCard, card) {
+    const targetIndex = array.findIndex(c => c.id === targetCard.id)
+    // 削除してから挿入しないと一時的にidがかぶる状態ができてしまう。
+    array.splice(
+      array.findIndex(c => c.id === card.id),
+      1
+    )
+    array.splice(
+      targetIndex,
+      0,
+      card
+    )
+    return array
+  }
 }

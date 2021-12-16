@@ -9,10 +9,10 @@
     >
       <div
         class="card in-battle"
-        v-for="(card, index) in battleCards"
+        v-for="(card, index) in battleZoneCards"
         :key="index"
         :class="{ tapped: card.tapped }"
-        draggable="true"
+        :draggable="!card.groupId"
         @dragstart="dragCard(card)"
         @dragend="dragCard(null)"
         @drop="dropCard(card)"
@@ -35,18 +35,20 @@
           <div v-else v-on:click="tapCard(card)">
             <span>タップ</span>
           </div>
-          <div
-            v-if="!lastCard(card.childCards)"
-            v-on:click="moveCard('battleCards', 'tefudaCards', card)"
-          >
-            <span>手札へ</span>
-          </div>
-          <div
-            v-if="!lastCard(card.childCards)"
-            v-on:click="moveCard('battleCards', 'bochiCards', card)"
-          >
-            <span>墓地へ</span>
-          </div>
+          <template v-if="!card.groupId">
+            <div
+              v-if="!lastCard(card.childCards)"
+              v-on:click="moveCard('battleCards', 'tefudaCards', card)"
+            >
+              <span>手札へ</span>
+            </div>
+            <div
+              v-if="!lastCard(card.childCards)"
+              v-on:click="moveCard('battleCards', 'bochiCards', card)"
+            >
+              <span>墓地へ</span>
+            </div>
+          </template>
           <div v-on:click="openWorkSpace(battleCards, 'battleCards')">
             <span>開く(表)</span>
           </div>
@@ -61,7 +63,22 @@
 import mixin from '@/helpers/mixin.js';
 
 export default {
-  props: ['player', 'battleCards', 'side'],
+  props: ['player', 'battleCards', 'battleCardGroups', 'side'],
+  data() {
+    return {
+      draggingCard: null,
+    }
+  },
+  computed: {
+    battleZoneCards() {
+      // 表示するカードのIDのリスト
+      const firstCardIds = this.battleCardGroups.map(g => g.cardIds[0])
+      const visibleCards = this.battleCards.filter((c) => {
+        return !c.groupId || firstCardIds.includes(c.id)
+      })
+      return visibleCards
+    },
+  },
   mixins: [mixin.zone],
   methods: {
     lastCard: function (cards) {
@@ -72,11 +89,22 @@ export default {
       return null;
     },
     dragCard: function (card) {
-      this.$emit('drag-card', 'battleCards', card);
+      this.draggingCard = card
+      this.$store.commit('setDraggingCard', card)
+      console.log(this.$store.state.draggingCard)
+      // this.$emit('drag-card', 'battleCards', card)
     },
     dropCard: function (card) {
+      // const selectedCards = [card, this.draggingCard]
+      this.$emit('group-card', {
+        from: 'battleCards',
+        to: 'battleCardGroups',
+        fromCard: this.$store.state.draggingCard,
+        toCard: card,
+        player: this.player,
+      })
       event.target.style.opacity = 1;
-      this.$emit('drop-card', 'battleCards', card, this.player);
+      // this.$emit('drop-card', 'battleCards', card, this.player);
     },
     dragOver: function () {
       event.preventDefault();

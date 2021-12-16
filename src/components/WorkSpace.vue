@@ -10,8 +10,8 @@
       <div class="card with-info" v-for="(card, index) in workSpace.cards" :key="index">
         <span class="cost card-info">10</span>
         <span class="power card-info">12000</span>
-        <span class="card-id card-info" v-if="card.parentId">{{ card.parentId + '&lt;&lt;' + card.id }}</span>
-        <span class="card-id card-info">{{ card.id }}</span>
+        <span class="card-id card-info" v-if="card.groupId">{{ card.groupId }}</span>
+        <span v-else class="card-id card-info">{{ card.id }}</span>
         <img src="@/assets/images/card-back.jpg" v-if="card.faceDown === true" />
         <img :src="card.imageUrl" v-else />
         <div class="menu-list hidden">
@@ -51,6 +51,9 @@ export default {
     },
   },
   methods: {
+    ungroupCard(card) {
+      console.log(card)
+    },
     openCard(card) {
       card.faceDown = !card.faceDown;
       this.$forceUpdate();
@@ -65,9 +68,7 @@ export default {
       this.$parent.$parent.workSpace.cards = this.workSpace.cards.filter((c) => {
         return c.id !== card.id;
       })
-
-      const cards = [card];
-      this.$emit('move-cards', from, to, cards, this.workSpace.player, prepend);
+      this.$emit('move-cards', from, to, [card], this.workSpace.player, prepend);
     },
     closeWorkSpace: function () {
       this.$emit('close-work-space');

@@ -55,10 +55,12 @@
           :side="'upper'"
           :player="upperPlayer"
           :battleCards="players[upperPlayer]['cards']['battleCards']"
+          :battleCardGroups="players[upperPlayer]['cards']['battleCardGroups']"
           v-on:move-cards="moveCards"
           v-on:drag-card="dragCard"
           v-on:drop-card="dropCard"
           v-on:open-work-space="openWorkSpace"
+          @group-card="groupCard"
         ></BattleZone>
 
         <!-- <MessageBox :upper-player="upperPlayer"
@@ -72,10 +74,12 @@
           :side="'lower'"
           :player="lowerPlayer"
           :battleCards="players[lowerPlayer]['cards']['battleCards']"
+          :battleCardGroups="players[lowerPlayer]['cards']['battleCardGroups']"
           v-on:move-cards="moveCards"
           v-on:drag-card="dragCard"
           v-on:drop-card="dropCard"
           v-on:open-work-space="openWorkSpace"
+          @group-card="groupCard"
         ></BattleZone>
 
         <player-zone
@@ -149,6 +153,7 @@ export default {
             tefudaCards: [],
             yamafudaCards: [],
             childCards: [],
+            battleCardGroups: [],
           },
           name: "a",
           roomId: roomId,
@@ -163,6 +168,7 @@ export default {
             tefudaCards: [],
             yamafudaCards: [],
             childCards: [],
+            battleCardGroups: [],
           },
           name: "b",
           roomId: roomId,
@@ -211,11 +217,68 @@ export default {
         this.moveCards(parentFrom, parentFrom, this.players[player]["cards"][parentFrom], player);
       }
     },
+    groupCard({from, to, fromCard, toCard, player}) {
+      // 情報をカードに追加
+      // card.groupはできれば使いたくない。moveCards内でのみ使用。
+      fromCard.group = to
+      toCard.group = to
+      if (toCard.groupId) {
+        // ターゲットのカードが既にグループ化されていた場合、
+        // 既存のグループに追加する。
+        const group = this.players[player]["cards"][to].find(g => g.id === toCard.groupId)
+        group.cardIds.unshift(fromCard.id)
+        fromCard.groupId = toCard.groupId
+      } else {
+        // 新しくグループを作成する。
+        // TODO: 被らない文字列にする。
+        const groupId = `${toCard.id}-${fromCard.id}`
+        this.players[player]["cards"][to].push({
+          id: groupId,
+          cardIds: [fromCard.id, toCard.id]
+        })
+        fromCard.groupId = groupId
+        toCard.groupId = groupId
+      }
+      // 並べ替え
+      if (to === 'battleCardGroups') {
+        // fromCardをtoCardの前に移す。
+        Util.arrayInsertBefore(this.players[player]["cards"][from], toCard, fromCard)
+      }
+      // 状態の変更を送信する
+      if (!this.useConfig().WS_ENABLED) return;
+      this.socket.emit("cards-moved", this.players[player]);
+    },
+    // groupはbattleCardGroupsかshieldCardGroups
+    ungroupCard({groupName, card, player}) {
+      // シールドのグループの場合はカードの行き先がわからず、注意が必要。
+      const groupIndex = this.players[player]["cards"][groupName].findIndex(g => g.id === card.groupId)
+      const group = this.players[player]["cards"][groupName].find(g => g.id === card.groupId)
+      this.players[player]["cards"][groupName][groupIndex].cardIds.splice(
+        group.cardIds.findIndex(id => id === card.id),
+        1
+      )
+      // cardIdsが0になったグループは自動で消す。
+      if (group.cardIds.length === 0) {
+        this.players[player]["cards"][groupName].splice(groupIndex, 1)
+      }
+      card.groupId = null
+      card.group = null
+    },
     moveCard: function (from, to, card, player, prepend = false) {
       // GRゾーン, 超次元ゾーンを考えると、一枚ずつの方が、処理しやすい
       this.moveCards(from, to, [card], player, prepend);
     },
     moveCards: function (from, to, selectedCards, player, prepend = false) {
+      // 先頭のカードがグループに属していた場合、そのグループから抜ける。
+      const card = selectedCards[0]
+      if (card.groupId) {
+        this.ungroupCard({
+          groupName: card.group,
+          card,
+          player,
+        })
+        card.group = null
+      }
       // 手札、マナ、墓地へ行く場合は表向きにする。
       if (['tefudaCards', 'manaCards', 'bochiCards'].includes(to)
         && to !== from

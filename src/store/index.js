@@ -4,8 +4,14 @@ import { createStore } from 'vuex'
 const store = createStore({
   state () {
     return {
+      draggingCard: null,
       cards: {},
     }
+  },
+  mutations: {
+    setDraggingCard(state, card) {
+      state.draggingCard = card
+    },
   },
 })
 
