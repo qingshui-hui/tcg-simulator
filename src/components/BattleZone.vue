@@ -15,9 +15,9 @@
         :draggable="!card.groupId"
         @dragstart="dragCard(card)"
         @dragend="dragCard(null)"
-        @drop="dropCard(card)"
-        @dragover.prevent="dragOver"
-        @dragleave="dragLeave"
+        @drop="dropCard($event, card)"
+        @dragover.prevent="dragOver($event)"
+        @dragleave="dragLeave($event)"
       >
         <span class="cost card-info">10</span>
         <span class="power card-info">12000</span>
@@ -25,27 +25,22 @@
         <img v-else :src="card.imageUrl" draggable="false" />
 
         <div class="menu-list hidden" :class="{ reverse: side === 'upper' }">
-          <div v-if="card.tapped" v-on:click="tapCard(card)">
+          <!-- グループ化されている場合は、タップかアンタップしかできない -->
+          <div v-if="card.tapped" @click="tapCard(card)">
             <span>アンタップ</span>
           </div>
-          <div v-else v-on:click="tapCard(card)">
+          <div v-else @click="tapCard(card)">
             <span>タップ</span>
           </div>
           <template v-if="!card.groupId">
-            <div
-              v-if="!lastCard(card.childCards)"
-              v-on:click="moveCard('battleCards', 'tefudaCards', card)"
-            >
+            <div @click="moveCard('battleCards', 'tefudaCards', card)">
               <span>手札へ</span>
             </div>
-            <div
-              v-if="!lastCard(card.childCards)"
-              v-on:click="moveCard('battleCards', 'bochiCards', card)"
-            >
+            <div @click="moveCard('battleCards', 'bochiCards', card)">
               <span>墓地へ</span>
             </div>
           </template>
-          <div v-on:click="openWorkSpace(battleCards, 'battleCards')">
+          <div @click="openWorkSpace(battleCards, 'battleCards')">
             <span>開く</span>
           </div>
         </div>
@@ -77,17 +72,10 @@ export default {
   },
   mixins: [mixin.zone],
   methods: {
-    lastCard: function (cards) {
-      const length = cards.length;
-      if (length && 0 < length) {
-        return cards[length - 1];
-      }
-      return null;
-    },
-    dragCard: function (card) {
+    dragCard(card) {
       this.$store.commit('setDraggingCard', card)
     },
-    dropCard: function (card) {
+    dropCard(event, card) {
       if (card.id === this.$store.state.draggingCard.id) return
       this.$emit('group-card', {
         from: 'battleCards',
@@ -98,14 +86,14 @@ export default {
       })
       event.target.style.opacity = 1;
     },
-    dragOver: function () {
+    dragOver(event) {
       event.target.style.opacity = 0.5;
     },
-    dragLeave: function () {
+    dragLeave(event) {
       event.target.style.opacity = 1;
     },
 
-    tapCard: function (card) {
+    tapCard(card) {
       card.tapped = !card.tapped;
       // this.$forceUpdate();
       this.$emit('move-cards', 'battleCards', 'battleCards', this.battleCards, this.player);
