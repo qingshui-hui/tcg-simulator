@@ -42,5 +42,27 @@ export const data = {
         { imageId: "014", time: 4 },
       ],
     },
+    '7': {
+      // seikenshinwa
+      name: 'dmsd-19 ハイドのディスペクターN・EXT',
+      urlPrefix: '',
+      cards: [
+        { imageId: "dmsd19-001", time: 1 },
+        { imageId: "dmsd19-002", time: 4 },
+        { imageId: "dmsd19-003", time: 2 },
+        { imageId: "dmsd19-004", time: 2 },
+        { imageId: "dmsd19-005", time: 2 },
+        { imageId: "dmsd19-006", time: 3 },
+        { imageId: "dmsd19-007", time: 2 },
+        { imageId: "dmsd19-008", time: 1 },
+        { imageId: "dmsd19-009", time: 2 },
+        { imageId: "dmsd19-010", time: 4 },
+        { imageId: "dmsd19-011", time: 2 },
+        { imageId: "dmsd19-012", time: 4 },
+        { imageId: "dmsd19-013", time: 4 },
+        { imageId: "dmsd19-014", time: 3 },
+        { imageId: "dmsd19-015", time: 4 },
+      ],
+    },
   }
 }
