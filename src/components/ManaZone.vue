@@ -21,7 +21,7 @@
             :key="index"
             :style="{ top: (index) * 50 + 'px' }"
           >
-            <span class="mana-num card-info">1</span>
+            <!-- <span class="mana-num card-info">1</span> -->
 
             <div class="menu-list hidden" :class="{ reverse: side === 'lower' }">
               <div v-on:click="tapCard(card, false)">
@@ -31,7 +31,8 @@
                 <span>手札へ</span>
               </div>
             </div>
-            <img :src="card.imageUrl" />
+            <img v-if="!card.faceDown" :src="card.imageUrl" />
+            <img v-else src="@/assets/images/card-back.jpg" />
           </div>
         </div>
         <div class="normal">
@@ -42,7 +43,7 @@
             :style="{ right: (index) * 30 + 'px' }"
             :class="{ 'selected': card.selected }"
           >
-            <span class="mana card-info">1</span>
+            <!-- <span class="mana card-info">1</span> -->
 
             <div class="menu-list hidden" :class="{ reverse: side === 'lower' }">
               <div v-on:click="tapCard(card)">
@@ -52,7 +53,8 @@
                 <span>手札へ</span>
               </div>
             </div>
-            <img :src="card.imageUrl" />
+            <img v-if="!card.faceDown" :src="card.imageUrl" />
+            <img v-else src="@/assets/images/card-back.jpg" />
           </div>
         </div>
       </div>

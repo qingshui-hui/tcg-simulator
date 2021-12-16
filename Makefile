@@ -3,3 +3,5 @@ dev:
 static:
 	cd ~/projects/duelma/card-storage
 	make start
+start:
+	DB_NAME=db.local.json node ./src/server.mjs

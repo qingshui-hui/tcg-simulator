@@ -19,31 +19,20 @@
         <div class="card in-battle" v-for="(card, index) in tefudaCards" :key="index">
           <span class="cost card-info">10</span>
           <span class="power card-info">12000</span>
-          <img :src="card.imageUrl" v-if="side === 'lower'" />
-          <img src="@/assets/images/card-back.jpg" v-else />
+          <!-- 対戦相手の手札は常に裏向き -->
+          <img v-if="side === 'upper'" src="@/assets/images/card-back.jpg" />
+          <img v-else-if="card.faceDown" src="@/assets/images/card-back.jpg"  />
+          <img v-else :src="card.imageUrl"  />
           <div class="menu-list hidden" :class="{ reverse: side === 'upper' }">
             <div>
-              <span>|</span>
-              <span class="click" v-on:click="moveCard('tefudaCards', 'battleCards', card)">f</span>
-              <span>|</span>
-              <span class="click" v-on:click="moveCard('tefudaCards', 'shieldCards', card)">s</span>
-              <span>|</span>
-              <span class="click" v-on:click="moveCard('tefudaCards', 'manaCards', card)">m</span>
+              <span @click="moveCard('tefudaCards', 'battleCards', card)">出す</span>
             </div>
             <div>
-              <span>|</span>
-              <span class="click" v-on:click="moveCard('tefudaCards', 'bochiCards', card)">b</span>
-              <span>|</span>
-              <span
-                class="click"
-                v-on:click="moveCard('tefudaCards', 'yamafudaCards', card, true)"
-              >yt</span>
-              <span>|</span>
-              <span class="click" v-on:click="moveCard('tefudaCards', 'yamafudaCards', card)">yb</span>
+              <span @click="moveCard('tefudaCards', 'manaCards', card)">マナへ</span>
             </div>
-            <!-- <div
-                        ><span
-            >bomb</span></div>-->
+            <div>
+              <span @click="moveCard('tefudaCards', 'bochiCards', card)">墓地へ</span>
+            </div>
           </div>
         </div>
       </div>
@@ -103,7 +92,7 @@ export default {
         border: lightgray 1px solid;
         color: whitesmoke;
       }
-      div span.click:hover {
+      div span:hover {
         color: orange;
         cursor: pointer;
       }

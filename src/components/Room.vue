@@ -195,6 +195,14 @@ export default {
       this.moveCards(from, to, [card], player, prepend);
     },
     moveCards: function (from, to, selectedCards, player, prepend = false) {
+      // 手札、マナ、墓地へ行く場合は表向きにする。
+      if (['tefudaCards', 'manaCards', 'bochiCards'].includes(to)
+        && to !== from
+      ) {
+        selectedCards.forEach((card) => {
+          card.faceDown = false
+        })
+      }
       this.players[player]["cards"][from] = Util.arrayRemoveCards(this.players[player]["cards"][from], selectedCards);
       if (prepend) {
         this.players[player]["cards"][to] = Util.arrayPrependCards(this.players[player]["cards"][to], selectedCards);
