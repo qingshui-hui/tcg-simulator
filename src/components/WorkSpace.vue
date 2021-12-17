@@ -8,8 +8,6 @@
         <p>from:{{ workSpace.zone }}</p>
       </div>
       <div class="card with-info" v-for="(card, index) in workSpace.cards" :key="index">
-        <span class="cost card-info">10</span>
-        <span class="power card-info">12000</span>
         <span class="card-id card-info" v-if="card.groupId">{{ card.groupId }}</span>
         <!-- <span v-else class="card-id card-info">{{ card.id }}</span> -->
         <img src="@/assets/images/card-back.jpg" v-if="card.faceDown === true" />
@@ -107,6 +105,18 @@ export default {
         cursor: pointer;
       }
     }
+  }
+  .card {
+    position: relative;
+  }
+  .card-info {
+    background-color: black;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: 12px;
+    font-weight: bold;
+    color: beige;
   }
 }
 </style>

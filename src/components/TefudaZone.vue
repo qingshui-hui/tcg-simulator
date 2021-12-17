@@ -1,5 +1,5 @@
 <template>
-  <div class="tefuda-zone-wrapper">
+  <div class="tefuda-zone-wrapper" :class="side">
     <div class="tefuda-zone" :class="side">
       <div
         class="open-tefuda"
@@ -13,21 +13,13 @@
         <span>開く</span>
       </div>
 
-      <div
-        class="scrollable-wrapper"
-        :id="'tefuda-zone' + player"
-        :class="{
-          reverse: side === 'upper',
-        }"
-      >
+      <div class="scrollable-wrapper" :id="'tefuda-zone' + player">
         <div class="card in-battle" v-for="(card, index) in tefudaCards" :key="index">
-          <span class="cost card-info">10</span>
-          <span class="power card-info">12000</span>
           <!-- 対戦相手の手札は常に裏向き -->
           <img v-if="side === 'upper'" src="@/assets/images/card-back.jpg" />
           <img v-else-if="card.faceDown" src="@/assets/images/card-back.jpg" />
           <img v-else :src="card.imageUrl" />
-          <div class="menu-list hidden" :class="{ reverse: side === 'upper' }">
+          <div class="menu-list hidden">
             <div>
               <span @click="moveCard('tefudaCards', 'battleCards', card)">出す</span>
             </div>
@@ -55,6 +47,14 @@ export default {
 
 <style lang="scss">
 .tefuda-zone-wrapper {
+  &.upper {
+    .card {
+      transform: rotate(180deg);
+    }
+    .menu-list {
+      transform: rotate(180deg);
+    }
+  }
   img {
     width: 70px;
   }
@@ -82,6 +82,7 @@ export default {
     max-width: 300px;
   }
   .tefuda-zone .card {
+    position: relative;
     margin-right: 5px;
   }
   .card:hover {
@@ -100,25 +101,6 @@ export default {
         cursor: pointer;
       }
     }
-  }
-
-  .card.in-battle {
-    position: relative;
-  }
-  .card .card-info {
-    background-color: black;
-    position: absolute;
-    font-size: 12px;
-    font-weight: bold;
-    color: beige;
-  }
-  .card .cost {
-    top: 2px;
-    left: 2px;
-  }
-  .card .power {
-    bottom: 2px;
-    left: 2px;
   }
 }
 </style>

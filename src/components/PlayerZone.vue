@@ -2,33 +2,16 @@
   <div class="player-zone-wrapper">
     <div class="player-zone" :class="side">
       <div class="player-counter" :class="side">
-        <div class="shield">
-          <div class="menu-list hidden" :class="{ reverse: side === 'upper' }">
-            <div>
-              <span class="draw">シールド</span>
-            </div>
-            <div>
-              <span
-                class="small"
-                @click="openWorkSpace({
-                  zone: 'shieldCards',
-                  cards: shieldCards,
-                  player: player,
-                })"
-              >開く</span>
-            </div>
-            <div>
-              <span @click="shuffleCards('shieldCards', shieldCards)">シャッフル</span>
-            </div>
-          </div>
-          <div class="shield-info">
-            <p class="small-text">シールド</p>
-            <p>{{ countableShieldCards.length }}</p>
-          </div>
-        </div>
-        <div class="yamafuda">
-          <p class="small-text">山札</p>
-          <p>{{ yamafudaCards.length }}</p>
+        <div
+          class="shieldButton"
+          @click="openWorkSpace({
+            zone: 'shieldCards',
+            cards: shieldCards,
+            player: player,
+          })"
+        >
+          <div class="shieldButton_text">シールド</div>
+          <div class="shieldButton_count">{{ countableShieldCards.length }}</div>
         </div>
       </div>
       <div class="blue-wrapper" :class="{ reverse: side === 'upper' }">
@@ -119,43 +102,55 @@ export default {
 
 <style lang="scss">
 @import "@/assets/scss/mixin.scss";
+@function cardHeight($value) {
+  @return calc($value * 908 / 650);
+}
+$card-width: 50px;
 .player-zone-wrapper {
   .player-zone {
-    background-color: blue;
+    // background-color: blue;
     display: flex;
     width: 380px;
+    > * {
+      align-self: center;
+    }
+    margin-left: 20px;
+    &.upper {
+      margin-top: 20px;
+    }
+    &.lower {
+      margin-top: 10px;
+    }
   }
   .blue-wrapper {
+    margin-left: 10px;
     background-color: blue;
     display: flex;
+    align-items: center;
     width: 380px;
+    > * {
+      align-self: center;
+    }
   }
   .player-zone img {
     width: 50px;
   }
-  .player-counter {
-    position: absolute;
-    display: flex;
-    height: 50px;
-    line-height: 25px;
-    text-align: center;
-  }
-  .player-counter .small-text {
-    /* 10が最小値 */
-    /* 折り返さない */
-    white-space: nowrap;
-    font-size: 10px;
-    transform: scale(0.8);
-  }
-  .player-counter .shield {
+  .shieldButton {
+    align-self: center;
     background-color: blue;
     color: white;
-    width: 35px;
-  }
-  .player-counter .yamafuda {
-    background-color: black;
-    color: white;
-    width: 35px;
+    border-radius: 50%;
+    width: 70px;
+    height: 50px;
+    text-align: center;
+    cursor: pointer;
+    &_text {
+      padding-top: 10px;
+      margin: 0px 0 5px;
+      font-size: 10px;
+    }
+    &_count {
+    }
   }
   .player-zone .shield-zone {
     width: 275px;
@@ -166,11 +161,6 @@ export default {
   .player-zone .shield-zone .shield {
     position: relative;
     margin-right: 5px;
-    // .shield-id {
-    //     color: aliceblue;
-    //     position: absolute;
-    //     bottom: 0px;
-    // }
     .shield-num {
       color: whitesmoke;
       position: absolute;
@@ -181,12 +171,13 @@ export default {
     .shield-reverse {
       display: block;
       width: 50px;
-      height: 75px;
+      height: cardHeight(50px);
       background-color: rgb(79, 205, 255);
     }
   }
   .player-zone .yamafuda-zone {
     width: 60px;
+    height: cardHeight(50px);
     text-align: center;
   }
 
@@ -229,11 +220,10 @@ export default {
     position: relative;
     text-align: center;
     width: 60px;
-    height: 100%;
+    height: cardHeight(50px);
     background-color: purple;
     margin-left: 5px;
     img {
-      margin-top: 2px;
     }
   }
 }

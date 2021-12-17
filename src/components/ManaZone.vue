@@ -1,6 +1,6 @@
 <template>
   <div class="mana-zone-wrapper">
-    <div class="mana-zone" :class="side">
+    <div class="mana-zone manaZone" :class="side">
       <div
         class="mana-counter manaButton"
         :class="side"
@@ -118,17 +118,35 @@ export default {
 
 <style lang="scss">
 @import "@/assets/scss/mixin.scss";
+@function cardHeight($value) {
+  @return calc($value * 908 / 650);
+}
+$card-width: 50px;
+
+.manaZone {
+  display: flex;
+  margin-left: 20px;
+  &.upper {
+    padding-top: 20px;
+  }
+  &.lower {
+    margin-top: 20px;
+  }
+}
+
 .mana-zone-wrapper {
   .green-wrapper {
+    margin-left: 10px;
     background-color: lightgreen;
     width: 330px;
-    height: 75px;
-    position: absolute;
+    height: cardHeight($card-width);
+    position: relative;
+    // position: absolute;
     display: flex;
   }
 
   .mana-zone img {
-    width: 50px;
+    width: $card-width;
   }
 
   .manaButton {
@@ -137,7 +155,6 @@ export default {
     border-radius: 50%;
     height: 50px;
     width: 70px;
-    position: absolute;
     color: beige;
     text-align: center;
 
@@ -179,11 +196,6 @@ export default {
   .mana-zone .normal .card {
     transform: rotate(180deg);
     position: absolute;
-  }
-  .card .card-info {
-    position: absolute;
-    font-size: 12px;
-    font-weight: bold;
   }
   .card {
     position: relative;

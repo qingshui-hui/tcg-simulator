@@ -3,7 +3,6 @@
     <div
       class="battle-zone"
       :class="{
-        reverse: side === 'upper',
         [side]: true,
       }"
     >
@@ -19,8 +18,6 @@
         @dragover.prevent="dragOver($event)"
         @dragleave="dragLeave($event)"
       >
-        <span class="cost card-info">10</span>
-        <span class="power card-info">12000</span>
         <img v-if="card.faceDown === true" src="@/assets/images/card-back.jpg" draggable="false" />
         <img v-else :src="card.imageUrl" draggable="false" />
 
@@ -82,6 +79,7 @@ export default {
       this.$store.commit('setDraggingCard', card)
     },
     dropCard(event, card) {
+      event.target.style.opacity = 1;
       if (card.id === this.$store.state.draggingCard.id) return
       this.$emit('group-card', {
         from: 'battleCards',
@@ -90,7 +88,6 @@ export default {
         toCard: card,
         player: this.player,
       })
-      event.target.style.opacity = 1;
     },
     dragOver(event) {
       event.target.style.opacity = 0.5;
@@ -111,29 +108,54 @@ export default {
 
 <style lang="scss">
 @import "@/assets/scss/mixin.scss";
+@function cardHeight($value) {
+  @return calc($value * 908 / 650);
+}
+$card-width: 50px;
 .battle-zone-wrapper {
   img {
     width: 120px;
   }
   .battle-zone {
-    // box-shadowが見えるようにするため。
-    padding-bottom: 10px;
     display: flex;
     overflow-x: scroll;
-    max-width: 600px;
+    max-width: 700px; // 800 - margin-left
+    > * {
+      flex-shrink: 0;
+    }
+    &.upper {
+      margin-left: 100px;
+      margin-top: 10px;
+      // box-shadowが見えるようにするため。
+      padding-top: 10px;
+      .card {
+        transform: rotate(180deg);
+        &.tapped {
+          // 回転中心が左下の時ちょうど、回転後の位置がx軸方向について中心になる。
+          // あとはtranslateXでy座標を調整する。
+          transform: rotate(90deg) translateX(-100%);
+          transform-origin: left bottom;
+          width: cardHeight(120px);
+        }
+      }
+    }
+    &.lower {
+      margin-left: 100px;
+      margin-top: 40px;
+      // box-shadowが見えるようにするため。
+      padding-bottom: 10px;
+      .card.tapped {
+        transform: rotate(-90deg);
+        transform-origin: center;
+        width: cardHeight(120px);
+      }
+    }
   }
-  .battle-zone .card {
-    margin-right: 10px;
-  }
-  .battle-zone .tapped {
-    /* 見た目だけが変わるみたい */
-    transform: scale(0.8, 0.8) rotate(-90deg);
-  }
-
   .card.in-battle {
     position: relative;
     display: flex;
-    &.is-group {
+    margin-right: 10px;
+    &.is-group img {
       border: lightgray 1px solid;
       border-top-width: 0;
       border-left-width: 0;
@@ -153,21 +175,6 @@ export default {
         font-size: 13px;
       }
     }
-  }
-  .card .card-info {
-    background-color: black;
-    position: absolute;
-    font-size: 12px;
-    font-weight: bold;
-    color: beige;
-  }
-  .card .cost {
-    top: 2px;
-    left: 2px;
-  }
-  .card .power {
-    bottom: 2px;
-    left: 2px;
   }
 }
 </style>

@@ -1,7 +1,5 @@
 
 body {
-    height: 100vh;
-    width: 100vw;
     background-color: lightgray;
 }
 .app-wrapper {
@@ -12,7 +10,8 @@ body {
 #canvas {
     margin: 0 auto;
     width: 800px;
-    height: 600px;
+    padding: 20px 0px;
+    // height: 600px;
     background-color: rgb(241, 241, 241);
     position: relative;
 }
@@ -25,44 +24,6 @@ body {
 
 .hidden {
     display: none;
-}
-/* card */
-// card-info の切替
-.card {
-    .card-info {
-    }
-    .cost {
-        display: none;
-    }
-    .power {
-        display: none;
-    }
-    .mana {
-    }
-}
-
-.card {
-    position: relative;
-
-    .card-info {
-        background-color: black;
-        position: absolute;
-        font-size: 12px;
-        font-weight: bold;
-        color: beige;
-    }
-    .cost {
-        top: 2px;
-        left: 2px;
-    }
-    .power {
-        bottom: 2px;
-        left: 2px;
-    }
-    .card-id {
-        bottom: 2px;
-        right: 2px;
-    }
 }
 
 // message
@@ -154,76 +115,15 @@ body {
     width: 70px;
 }
 
-/* mana-zone */
-.mana-zone {
-    position: absolute;
-}
-.mana-zone.upper {
-    left: 100px;
-    top: 20px;
-}
-.mana-zone.lower {
-    left: 100px;
-    top: 520px;
-}
-.mana-counter.upper {
-    left: -80px;
-    top: 10px;
-}
-.mana-counter.lower {
-    left: -80px;
-    top: 10px;
-}
-
-/* player-zone */
-
-.player-zone {
-    position: absolute;
-}
-.player-counter {
-    position: absolute;
-}
-.player-zone.upper {
-    left: 100px;
-    top: 100px;
-}
-.player-zone.lower {
-    left: 100px;
-    top: 435px;
-}
-.player-counter.upper {
-    left: -80px;
-    top: 10px;
-}
-.player-counter.lower {
-    left: -80px;
-    top: 10px;
-}
-
-/* battle-zone */
-
-.battle-zone {
-    position: absolute;
-}
-.battle-zone.upper {
-    top: 190px;
-    left: 150px;
-}
-.battle-zone.lower {
-    top: 320px;
-    left: 150px;
-}
-
 /* tefuda-zone */
 
-.tefuda-zone {
+.tefuda-zone-wrapper.upper {
     position: absolute;
-}
-.tefuda-zone.upper {
     top: 5px;
     left: 500px;
 }
-.tefuda-zone.lower {
+.tefuda-zone-wrapper.lower {
+    position: absolute;
+    bottom: 100px;
     left: 500px;
-    top: 500px;
 }
