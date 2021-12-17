@@ -64,5 +64,131 @@ export const data = {
         { imageId: "dmsd19-015", time: 4 },
       ],
     },
+    '8': {
+      name: '5c コントロール',
+      cards: [
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100237868_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100237868_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100237868_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100237868_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100221042_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100221042_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100221042_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100040482_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100040482_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100040482_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100040482_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100221054_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100221054_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100221054_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100229147_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100229147_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100229147_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100161903_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100161903_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100161903_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100229708_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100229708_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100229708_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100229699_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100229699_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100229699_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100246376_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100246376_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100246376_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100147566_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100048474_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100048474_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100048474_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100048474_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100229123_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100229123_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100237670_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100237670_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100246253_1.jpg"
+        },
+        {
+          "imageUrl": "https://storage.googleapis.com/ka-nabell-card-images/img/card/card100246253_1.jpg"
+        }
+
+      ],
+    }
   }
 }

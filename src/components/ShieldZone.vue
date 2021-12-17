@@ -27,8 +27,8 @@
         <span class="shield-id">{{ card.shieldId }}</span>
         <!-- 裏向きのカードの場合表示されない。 -->
         <img v-if="!card.faceDown" :src="card.imageUrl" />
-        <img src="@/assets/images/shield.jpg" v-else />
-        <div v-if="card.groupId" class="shield-num">{{ group(card).cardIds.length }}</div>
+        <span class="shield-reverse" v-else />
+        <div v-if="card.groupId && group(card).cardIds.length > 1" class="shield-num">{{ group(card).cardIds.length }}</div>
       </div>
     </div>
   </div>

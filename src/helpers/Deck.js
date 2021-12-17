@@ -9,7 +9,9 @@ export class Deck {
     let deck = [];
     const prefix = deckData[`${deckId}`]["urlPrefix"];
     for (let data of deckData[`${deckId}`]["cards"]) {
-      for (let i = 0; i < data.time; i++) {
+      // デッキメーカーから取り込んだデータにはtimeがないことによる対応。
+      const times = data.time || 1
+      for (let i = 0; i < times; i++) {
         let card = {};
         if (!data.imageUrl) {
           // 環境変数で、カード画像のサーバーを設定する。

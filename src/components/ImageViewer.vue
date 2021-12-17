@@ -49,7 +49,6 @@ export default {
   },
   methods: {
     traceMouseMove(event) {
-      const config = this.useConfig()
       if (this.display.hidden) {
         return;
       }
@@ -58,8 +57,8 @@ export default {
         this.display.imageUrl = "";
         return;
       }
-      // 表向きのカードだけ拡大表示する。
-      if (imageSrc.includes(config.IMAGE_HOST)) {
+      // ホストが異なる画像だけ拡大することで、カード画像だけが拡大できるようにする。
+      if (!imageSrc.includes(window.location.origin)) {
         this.display.imageUrl = imageSrc;
       } else {
         this.display.imageUrl = "";

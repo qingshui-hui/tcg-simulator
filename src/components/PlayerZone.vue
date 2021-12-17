@@ -178,6 +178,12 @@ export default {
       right: 5px;
       font-size: 10px;
     }
+    .shield-reverse {
+      display: block;
+      width: 50px;
+      height: 75px;
+      background-color: rgb(79, 205, 255);
+    }
   }
   .player-zone .yamafuda-zone {
     width: 60px;
