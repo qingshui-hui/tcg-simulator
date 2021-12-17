@@ -76,7 +76,6 @@ export default {
     color: orange;
   }
   .scrollable-wrapper {
-    background-color: aqua;
     position: absolute;
     display: flex;
     overflow: scroll;

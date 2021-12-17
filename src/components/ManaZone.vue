@@ -1,24 +1,17 @@
 <template>
   <div class="mana-zone-wrapper">
     <div class="mana-zone" :class="side">
-      <div class="mana-counter" :class="side">
-        <div class="menu-list hidden">
-          <div class="uptap-button" @click="untapAll">
-            <span>アンタップ</span>
-          </div>
-          <div
-            class="not-visible"
-            @click="openWorkSpace({
-              zone: 'manaCards',
-              cards: manaCards,
-              player: player
-            })"
-          >
-            <span>開く</span>
-          </div>
-        </div>
-
-        <span class="mana-info">{{ countNormal }}/{{ manaCards.length }}</span>
+      <div
+        class="mana-counter manaButton"
+        :class="side"
+        @click="openWorkSpace({
+          zone: 'manaCards',
+          cards: manaCards,
+          player: player
+        })"
+      >
+        <div class="manaButton_text">マナ</div>
+        <div class="mana-info manaButton_count">{{ countNormal }}/{{ manaCards.length }}</div>
       </div>
       <div class="green-wrapper" :class="{ 'reverse': side === 'upper' }">
         <div class="tapped">
@@ -28,8 +21,6 @@
             :key="index"
             :style="{ top: (index) * 50 + 'px' }"
           >
-            <!-- <span class="mana-num card-info">1</span> -->
-
             <div class="menu-list hidden" :class="{ reverse: side === 'lower' }">
               <div v-on:click="tapCard(card, false)">
                 <span>アンタップ</span>
@@ -50,8 +41,6 @@
             :style="{ right: (index) * 30 + 'px' }"
             :class="{ 'selected': card.selected }"
           >
-            <!-- <span class="mana card-info">1</span> -->
-
             <div class="menu-list hidden" :class="{ reverse: side === 'lower' }">
               <div v-on:click="tapCard(card)">
                 <span>タップ</span>
@@ -102,12 +91,6 @@ export default {
       card.tapped = tap;
       this.moveCard('manaCards', 'manaCards', card);
     },
-    untapAll: function () {
-      for (let card of this.manaCards) {
-        card.tapped = false;
-      }
-      this.moveCard('manaCards', 'manaCards', this.manaCards[this.countAll - 1]);
-    },
     selectNormal: function (index) {
       const card = this.normalCards[index];
       if (card.selected) {
@@ -147,56 +130,26 @@ export default {
   .mana-zone img {
     width: 50px;
   }
-  .uptap-button {
-    // background-color: green;
-    // position: absolute;
-    // top: -10px;
-    // left: -15px;
-    // height: 15px;
-    // width: fit-content;
-    // line-height: 15px;
-    // font-size: 12px;
-    // border: 1px solid white;
-    // cursor: pointer;
-    // &:hover {
-    //     color: orange;
-    //     border: 1px solid orange;
-    // }
-  }
-  .mana-counter {
-    .menu-list {
-      @include menu-list-hover;
-      position: absolute;
-      left: -5px;
-      top: -5px;
-      background-color: green;
-      .not-visible {
-        display: none;
-      }
-    }
-    &:hover {
-      .menu-list {
-        @include menu-list-hover;
-        position: absolute;
-        left: -5px;
-        top: -5px;
-        background-color: green;
-        .not-visible {
-          display: block;
-        }
-      }
-      .mana-info {
-        display: none;
-      }
-    }
+
+  .manaButton {
+    cursor: pointer;
     background-color: green;
+    border-radius: 50%;
     height: 50px;
     width: 70px;
     position: absolute;
     color: beige;
-    line-height: 50px;
     text-align: center;
+
+    &_count {
+    }
+    &_text {
+      padding: 5px 0;
+      line-height: 10px;
+      font-size: 10px;
+    }
   }
+
   .mana-zone .tapped {
     width: 110px;
     height: 100%;
@@ -246,13 +199,6 @@ export default {
         font-size: 12px;
       }
     }
-  }
-  .card .mana {
-    background-color: beige;
-    color: green;
-    transform: rotate(180deg);
-    bottom: 2px;
-    left: 8px;
   }
 }
 </style>

@@ -113,7 +113,7 @@ export default {
 @import "@/assets/scss/mixin.scss";
 .battle-zone-wrapper {
   img {
-    width: 70px;
+    width: 120px;
   }
   .battle-zone {
     // box-shadowが見えるようにするため。

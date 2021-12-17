@@ -39,6 +39,7 @@
         </div>
       </div>
       <button v-if="workSpace.zone === 'yamafudaCards'" @click="openAllCards">全て表にする</button>
+      <button v-if="workSpace.zone === 'manaCards'" @click="untapAllCards">全てアンタップする</button>
     </div>
   </div>
 </template>
@@ -64,6 +65,11 @@ export default {
     openAllCards() {
       this.workSpace.cards.forEach(c => {
         c.faceDown = false
+      })
+    },
+    untapAllCards() {
+      this.workSpace.cards.forEach(c => {
+        c.tapped = false
       })
     },
     moveCard(card, to, prepend = false) {
