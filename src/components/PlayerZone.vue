@@ -17,26 +17,8 @@
       <div class="blue-wrapper" :class="side">
         <!-- シールドゾーン -->
         <slot name="shield-zone"></slot>
-
-        <Dropdown :triggers="dropdownTriggers" position="top-left">
-          <template v-slot:trigger>
-            <div class="yamafuda-zone">
-              <div v-if="yamafudaCards.length > 0">
-                <img v-if="side === 'upper'" src="@/assets/images/deck1.png" />
-                <img v-else src="@/assets/images/deck2.png" />
-              </div>
-            </div>
-          </template>
-          <o-dropdown-item
-            aria-role="listitem"
-            @click="moveCard('yamafudaCards', 'tefudaCards', yamafudaCards[0])"
-          >ドロー</o-dropdown-item>
-          <o-dropdown-item aria-role="listitem" @click="openDeck">開く</o-dropdown-item>
-          <o-dropdown-item
-            aria-role="listitem"
-            @click="shuffleCards('yamafudaCards', yamafudaCards)"
-          >シャッフル</o-dropdown-item>
-        </Dropdown>
+        <!-- デッキゾーン -->
+        <slot name="deck-zone"></slot>
 
         <Dropdown :triggers="dropdownTriggers">
           <template v-slot:trigger>
@@ -70,7 +52,6 @@ export default {
     "bochiCards",
     "shieldCards",
     "shieldCardGroups",
-    "yamafudaCards",
     "side",
   ],
   mixins: [mixin.zone],
@@ -95,17 +76,6 @@ export default {
       }
       return null;
     },
-    // デッキを開くときはデフォルトで全て裏にする。
-    openDeck() {
-      this.yamafudaCards.forEach(c => {
-        c.faceDown = true
-      })
-      this.openWorkSpace({
-        zone: 'yamafudaCards',
-        cards: this.yamafudaCards,
-        player: this.player,
-      })
-    }
   },
 };
 </script>
@@ -140,7 +110,7 @@ $card-width: 50px;
     width: 380px;
     &.upper {
       flex-direction: row-reverse;
-      .bochi, .yamafuda-zone {
+      .bochi {
         transform: rotate(180deg);
       }
     }
@@ -166,46 +136,6 @@ $card-width: 50px;
       font-size: 10px;
     }
     &_count {
-    }
-  }
-  .player-zone .yamafuda-zone {
-    width: 60px;
-    height: cardHeight(50px);
-    text-align: center;
-  }
-
-  .yamafuda-zone:hover,
-  .bochi:hover,
-  .shield-zone .shield:hover {
-    .menu-list {
-      @include menu-list-hover;
-      position: absolute;
-    }
-  }
-  .shield-zone:hover {
-    .menu-list {
-      top: 0;
-    }
-  }
-  .bochi:hover {
-    .menu-list {
-      left: 0px;
-    }
-  }
-  .player-counter .shield:hover {
-    .shield-info {
-      display: none;
-    }
-    .menu-list {
-      @include menu-list-hover;
-      position: absolute;
-      left: 0px;
-      background-color: blue;
-      div {
-        height: 15px;
-        line-height: 15px;
-        font-size: 12px;
-      }
     }
   }
 

@@ -7,7 +7,7 @@
       ref="trigger"
       :class="triggerClasses"
       @click="onClick"
-      @contextmenu.prevent="onContextMenu"
+      @contextmenu="false"
       @mouseenter="onHover"
       @mouseleave="onMouseleave"
       @focus.capture="onFocus"

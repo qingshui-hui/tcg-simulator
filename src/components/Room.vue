@@ -47,6 +47,15 @@
               @group-card="groupCard"
             ></ShieldZone>
           </template>
+          <template #deck-zone>
+            <DeckZone
+              side="upper"
+              :player="upperPlayer"
+              :yamafudaCards="players[upperPlayer]['cards']['yamafudaCards']"
+              v-on:move-cards="moveCards"
+              @group-card="groupCard"
+            ></DeckZone>
+          </template>
         </PlayerZone>
         <BattleZone
           :side="'upper'"
@@ -93,6 +102,15 @@
               @group-card="groupCard"
             ></ShieldZone>
           </template>
+          <template #deck-zone>
+            <DeckZone
+              side="lower"
+              :player="lowerPlayer"
+              :yamafudaCards="players[lowerPlayer]['cards']['yamafudaCards']"
+              v-on:move-cards="moveCards"
+              @group-card="groupCard"
+            ></DeckZone>
+          </template>
         </player-zone>
         <mana-zone
           :side="'lower'"
@@ -125,11 +143,12 @@ import BattleZone from './BattleZone.vue';
 import DeckSelector from './DeckSelector.vue';
 import ShieldZone from './ShieldZone.vue';
 import CHeader from './CHeader.vue';
+import DeckZone from './DeckZone.vue';
 
 export default {
   name: "c-app",
   props: ["upperPlayer", "lowerPlayer", "socket"],
-  components: { WorkSpace, ImageViewer, TefudaZone, ManaZone, PlayerZone, BattleZone, DeckSelector, ShieldZone, CHeader },
+  components: { WorkSpace, ImageViewer, TefudaZone, ManaZone, PlayerZone, BattleZone, DeckSelector, ShieldZone, CHeader, DeckZone },
   data() {
     const roomId = this.$route.query.roomId;
     return {
