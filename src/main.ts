@@ -45,12 +45,15 @@ if (process.env.VUE_APP_WS_HOST) {
 
 //
 // oruga ui
-import Oruga from '@oruga-ui/oruga-next'
+import { Modal, Icon, Dropdown, Button, Config } from '@oruga-ui/oruga-next'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import './assets/scss/oruga.scss'
 
 vueApp.component('vue-fontawesome', FontAwesomeIcon)
-vueApp.use(Oruga, {
+vueApp.use(Modal).use(Icon).use(Dropdown).use(Button)
+// https://github.com/oruga-ui/oruga/issues/99#issuecomment-794784783
+// How to set icon pack for Individual components (tree shaking) ?
+vueApp.use(Config, {
   iconComponent: 'vue-fontawesome',
   iconPack: 'fas',
 })
