@@ -103,7 +103,7 @@ export default {
     position: relative;
   }
   .shield-num {
-    color: whitesmoke;
+    color: rgb(37, 37, 37);
     position: absolute;
     bottom: 3px;
     right: 5px;

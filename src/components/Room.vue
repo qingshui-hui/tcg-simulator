@@ -126,7 +126,7 @@
         </div>
       </ImageViewer>
 
-      <button v-if="!players[lowerPlayer].isReady" @click="getRoomState">サーバーからデータを取得</button>
+      <button @click="resetGame">ゲームをリセットする</button>
     </div>
   </div>
 </template>
@@ -145,48 +145,53 @@ import ShieldZone from './ShieldZone.vue';
 import CHeader from './CHeader.vue';
 import DeckZone from './DeckZone.vue';
 
+function initialData({roomId}) {
+  return {
+    players: {
+      a: {
+        cards: {
+          manaCards: [],
+          battleCards: [],
+          bochiCards: [],
+          shieldCards: [],
+          tefudaCards: [],
+          yamafudaCards: [],
+          // cardGroups
+          battleCardGroups: [],
+          shieldCardGroups: [],
+        },
+        name: "a",
+        roomId: roomId,
+        isReady: false,
+      },
+      b: {
+        cards: {
+          manaCards: [],
+          battleCards: [],
+          bochiCards: [],
+          shieldCards: [],
+          tefudaCards: [],
+          yamafudaCards: [],
+          // cardGroups
+          battleCardGroups: [],
+          shieldCardGroups: [],
+        },
+        name: "b",
+        roomId: roomId,
+        isReady: false,
+      },
+    },
+  };
+}
+
 export default {
   name: "c-app",
   props: ["upperPlayer", "lowerPlayer", "socket"],
   components: { WorkSpace, ImageViewer, TefudaZone, ManaZone, PlayerZone, BattleZone, DeckSelector, ShieldZone, CHeader, DeckZone },
   data() {
-    const roomId = this.$route.query.roomId;
-    return {
-      players: {
-        a: {
-          cards: {
-            manaCards: [],
-            battleCards: [],
-            bochiCards: [],
-            shieldCards: [],
-            tefudaCards: [],
-            yamafudaCards: [],
-            // cardGroups
-            battleCardGroups: [],
-            shieldCardGroups: [],
-          },
-          name: "a",
-          roomId: roomId,
-          isReady: false,
-        },
-        b: {
-          cards: {
-            manaCards: [],
-            battleCards: [],
-            bochiCards: [],
-            shieldCards: [],
-            tefudaCards: [],
-            yamafudaCards: [],
-            // cardGroups
-            battleCardGroups: [],
-            shieldCardGroups: [],
-          },
-          name: "b",
-          roomId: roomId,
-          isReady: false,
-        },
-      },
-    };
+    return initialData({
+      roomId: this.roomId
+    })
   },
   computed: {
     roomId() {
@@ -318,10 +323,21 @@ export default {
         this.players.b = room.b
       }
     },
-    connectSocket: function () {
-      this.socket.emit("room", this.roomId);
-      console.log("room" + this.roomId + "に入室しました")
-      this.setMessage("room" + this.roomId + "に入室しました", this.lowerPlayer);
+    resetGame() {
+      this.players = initialData({roomId: this.roomId}).players
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      })
+    },
+  },
+  created() {
+    if (this.socket) {
+      // サーバーからデータを取得する。
+      this.getRoomState()
+
+      //
+      // イベントをリッスン
       this.socket.on("cards-moved", (playerData) => {
         this.players[playerData.name] = playerData;
       });
@@ -329,14 +345,7 @@ export default {
         // this.message[data.player] = data.message;
         this.expireMessage(data.message, data.player);
       }.bind(this));
-    },
-  },
-  mounted() {
-    const config = this.useConfig()
-    if (!config.WS_ENABLED)
-      return;
-    console.log("connected");
-    this.connectSocket();
+    }
   },
 };
 </script>

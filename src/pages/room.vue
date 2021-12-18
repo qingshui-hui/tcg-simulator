@@ -12,6 +12,11 @@ import { io } from 'socket.io-client'
 
 export default {
   components: { Room },
+  beforeRouteLeave (to, from, next) {
+    this.socket.emit('leave-room', this.roomId)
+    console.log("room" + this.roomId + "から退室しました")
+    next()
+  },
   data() {
     const config = this.useConfig()
     let socket
@@ -27,6 +32,18 @@ export default {
       lowerPlayer: this.$route.query.player,
       socket: socket,
     };
+  },
+  computed: {
+    roomId() {
+      return this.$route.query.roomId
+    }
+  },
+  created() {
+    if (this.socket) {
+      // room{Id}チャンネルに接続
+      this.socket.emit("room", this.roomId);
+      console.log("room" + this.roomId + "に入室しました")
+    }
   },
 }
 </script>

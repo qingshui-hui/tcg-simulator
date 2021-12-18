@@ -20,9 +20,6 @@
         <input type="checkbox" checked @change="switchDisplay" />ホバーで画像拡大
       </label>
       <label>
-        <input type="checkbox" v-model="openDropdownOnHover" />ホバーでメニュー表示
-      </label>
-      <label>
         <input type="checkbox" checked @change="switchDisplayBlur" />画像透過
       </label>
       <label>
@@ -50,22 +47,6 @@ export default {
       explanation: {
         show: true,
       },
-      openDropdownOnHover: false,
-    }
-  },
-  watch: {
-    openDropdownOnHover(newVal) {
-      console.log(newVal)
-      console.log(this.$store.state.settings.dropdownTriggers)
-      if (newVal) {
-        this.$store.commit('updateSettings', {
-          dropdownTriggers: ['hover', 'click'],
-        })
-      } else {
-        this.$store.commit('updateSettings', {
-          dropdownTriggers: ['click'],
-        })
-      }
     }
   },
   methods: {

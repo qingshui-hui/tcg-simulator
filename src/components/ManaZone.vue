@@ -88,7 +88,7 @@ $card-width: 50px;
 .mana-zone-wrapper {
   .green-wrapper {
     margin-left: 10px;
-    background-color: lightgreen;
+    // background-color: lightgreen;
     width: 330px;
     height: cardHeight($card-width);
     position: relative;

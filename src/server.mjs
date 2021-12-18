@@ -41,18 +41,23 @@ app.get('/room', function (req, res) {
 });
 
 import apiRouter from './server/api.mjs'
+import db from './server/db.mjs'
 app.use(apiRouter)
 
 io.on('connection', function (socket) {
-  socket.on('room', (roomid) => {
-    socket.join('room' + roomid);
-    // console.log('room'+roomid+'に入室しました')
+  socket.on('room', (roomId) => {
+    socket.join('room' + roomId);
+    // console.log('room'+roomId+'に入室しました')
+    // console.log(socket.rooms)
+  })
+  socket.on('leave-room', (roomId) => {
+    socket.leave('room' + roomId)
+    // console.log(socket.rooms)
   })
   socket.on('cards-moved', async (data) => {
     // 送信者を除いく部屋のユーザーに送信。
     socket.to('room' + data.roomId).emit('cards-moved', data);
     // dbアダプタを取得
-    const db = (await import('./server/db.mjs')).default
     await db.read()
     // data.nameはプレイヤー名
     if (!db.data.rooms[data.roomId]) {

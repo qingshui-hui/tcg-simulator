@@ -16,12 +16,12 @@
           <template v-if="['battleCards'].includes(workSpace.zone) && workSpace.single">
             <o-button
               v-if="!workSpace.cards[0].tapped"
-              class="bottomMenu__action" variant="primary" size="large"
+              class="bottomMenu__action" variant="primary" size="medium"
               @click="tapAllCards"
             >タップする</o-button>
             <o-button
               v-else
-              class="bottomMenu__action" variant="primary" size="large"
+              class="bottomMenu__action" variant="primary" size="medium"
               @click="untapAllCards"
             >アンタップする</o-button>
           </template>
@@ -57,42 +57,44 @@
                   :style="[{ position: 'absolute', top: '-5px', right: '0px', zIndex: '1' }]"
                 ></o-icon>
                 <span class="card-id card-info" v-if="card.groupId">{{ card.groupId }}</span>
-                <div @click="clickCard(card)">
+                <div>
                   <!-- ワークスペース内だけでみられる状態がある -->
                   <img src="@/assets/images/card-back.jpg" v-if="card.faceDown === true && !card.showInWorkSpace" />
                   <img :src="card.imageUrl" v-else />
                 </div>
               </div>
 
-              <!-- 裏向きのカードを見るボタン -->
-              <o-button
-                class="card_bottomButton"
-                v-if="card.faceDown && !card.showInWorkSpace"
-                @click="card.showInWorkSpace = true"
-              >見る</o-button>
-              <!-- ショートカット -->
-              <o-button
-                class="card_bottomButton"
-                v-else-if="['tefudaCards'].includes(workSpace.zone)"
-                @click="moveCard(card, 'battleCards')"
-              >出す</o-button>
-              <o-button
-                class="card_bottomButton"
-                v-else-if="['bochiCards'].includes(workSpace.zone)"
-                @click="moveCard(card, 'tefudaCards')"
-              >手札へ</o-button>
-              <template v-else-if="['manaCards'].includes(workSpace.zone)">
+              <div class="card_bottomButton">
+                <!-- 裏向きのカードを見るボタン -->
                 <o-button
-                  class="card_bottomButton"
-                  v-if="!card.tapped"
-                  @click="card.tapped = true"
-                >タップ</o-button>
+                  v-if="card.faceDown && !card.showInWorkSpace"
+                  @click="card.showInWorkSpace = true"
+                >見る</o-button>
+
+                <!-- ショートカット -->
+                <template v-else-if="['tefudaCards'].includes(workSpace.zone)">
+                  <o-button
+                    @click="moveCard(card, 'battleCards')"
+                  >出す</o-button>
+                  <o-button
+                    @click="moveCard(card, 'manaCards')"
+                  >マナ</o-button>
+                </template>
                 <o-button
-                  class="card_bottomButton"
-                  v-else
-                  @click="card.tapped = false"
-                >アンタップ</o-button>
-              </template>
+                  v-else-if="['bochiCards'].includes(workSpace.zone)"
+                  @click="moveCard(card, 'tefudaCards')"
+                >手札へ</o-button>
+                <template v-else-if="['manaCards'].includes(workSpace.zone)">
+                  <o-button
+                    v-if="!card.tapped"
+                    @click="card.tapped = true"
+                  >タップ</o-button>
+                  <o-button
+                    v-else
+                    @click="card.tapped = false"
+                  >アンタップ</o-button>
+                </template>
+              </div>
             </template>
             <o-dropdown-item>
               <span class="drop-item-2" @click="moveCard(card, 'battleCards')">出す</span>
@@ -313,6 +315,7 @@ $card-width: 120px;
       bottom: 0;
       left: 50%;
       transform: translateX(-50%);
+      display: flex;
     }
   }
   .card-info {
@@ -347,7 +350,7 @@ $card-width: 120px;
   left: 50%;
   transform: translateX(-50%) translateY(100%);
   &__overlay {
-    padding: 12px 10px;
+    // padding: 12px 10px;
     background-color: rgba(0, 0, 0, 0.35);
     display: flex;
     border-bottom-left-radius: 10px;
