@@ -3,6 +3,9 @@
     <CHeader></CHeader>
     <div class="app-wrapper">
       <ImageViewer>
+        <WorkSpace
+          @move-cards="moveCards"
+        ></WorkSpace>
 
         <DeckSelector :player="lowerPlayer"
           :isReady="players[lowerPlayer].isReady"
@@ -11,119 +14,117 @@
           @selected="players[lowerPlayer].isReady = true"
         ></DeckSelector>
 
-        <WorkSpace
-          @move-cards="moveCards"
-        ></WorkSpace>
+        <div id="js_gameBoard">
+          <TefudaZone
+            :side="'upper'"
+            :player="upperPlayer"
+            :tefudaCards="players[upperPlayer]['cards']['tefudaCards']"
+            v-on:move-cards="moveCards"
+          ></TefudaZone>
+          <ManaZone
+            :side="'upper'"
+            :player="upperPlayer"
+            :manaCards="players[upperPlayer]['cards']['manaCards']"
+            v-on:move-cards="moveCards"
+          ></ManaZone>
+          <PlayerZone
+            :side="'upper'"
+            :player="upperPlayer"
+            :bochiCards="players[upperPlayer]['cards']['bochiCards']"
+            :yamafudaCards="players[upperPlayer]['cards']['yamafudaCards']"
+            :shieldCards="players[upperPlayer]['cards']['shieldCards']"
+            :shieldCardGroups="players[upperPlayer]['cards']['shieldCardGroups']"
+            v-on:move-cards="moveCards"
+            v-on:shuffle-cards="shuffleCards"
+          >
+            <template #shield-zone>
+              <ShieldZone
+                side="upper"
+                :player="upperPlayer"
+                :shieldCards="players[upperPlayer]['cards']['shieldCards']"
+                :shieldCardGroups="players[upperPlayer]['cards']['shieldCardGroups']"
+                v-on:move-cards="moveCards"
+                @group-card="groupCard"
+              ></ShieldZone>
+            </template>
+            <template #deck-zone>
+              <DeckZone
+                side="upper"
+                :player="upperPlayer"
+                :yamafudaCards="players[upperPlayer]['cards']['yamafudaCards']"
+                v-on:move-cards="moveCards"
+                @group-card="groupCard"
+              ></DeckZone>
+            </template>
+          </PlayerZone>
+          <BattleZone
+            :side="'upper'"
+            :player="upperPlayer"
+            :battleCards="players[upperPlayer]['cards']['battleCards']"
+            :battleCardGroups="players[upperPlayer]['cards']['battleCardGroups']"
+            v-on:move-cards="moveCards"
+            @group-card="groupCard"
+          ></BattleZone>
 
-        <TefudaZone
-          :side="'upper'"
-          :player="upperPlayer"
-          :tefudaCards="players[upperPlayer]['cards']['tefudaCards']"
-          v-on:move-cards="moveCards"
-        ></TefudaZone>
-        <ManaZone
-          :side="'upper'"
-          :player="upperPlayer"
-          :manaCards="players[upperPlayer]['cards']['manaCards']"
-          v-on:move-cards="moveCards"
-        ></ManaZone>
-        <PlayerZone
-          :side="'upper'"
-          :player="upperPlayer"
-          :bochiCards="players[upperPlayer]['cards']['bochiCards']"
-          :yamafudaCards="players[upperPlayer]['cards']['yamafudaCards']"
-          :shieldCards="players[upperPlayer]['cards']['shieldCards']"
-          :shieldCardGroups="players[upperPlayer]['cards']['shieldCardGroups']"
-          v-on:move-cards="moveCards"
-          v-on:shuffle-cards="shuffleCards"
-        >
-          <template #shield-zone>
-            <ShieldZone
-              side="upper"
-              :player="upperPlayer"
-              :shieldCards="players[upperPlayer]['cards']['shieldCards']"
-              :shieldCardGroups="players[upperPlayer]['cards']['shieldCardGroups']"
-              v-on:move-cards="moveCards"
-              @group-card="groupCard"
-            ></ShieldZone>
-          </template>
-          <template #deck-zone>
-            <DeckZone
-              side="upper"
-              :player="upperPlayer"
-              :yamafudaCards="players[upperPlayer]['cards']['yamafudaCards']"
-              v-on:move-cards="moveCards"
-              @group-card="groupCard"
-            ></DeckZone>
-          </template>
-        </PlayerZone>
-        <BattleZone
-          :side="'upper'"
-          :player="upperPlayer"
-          :battleCards="players[upperPlayer]['cards']['battleCards']"
-          :battleCardGroups="players[upperPlayer]['cards']['battleCardGroups']"
-          v-on:move-cards="moveCards"
-          @group-card="groupCard"
-        ></BattleZone>
+          <!-- <MessageBox :upper-player="upperPlayer"
+            :lower-player="lowerPlayer"
+          ></MessageBox>-->
 
-        <!-- <MessageBox :upper-player="upperPlayer"
-          :lower-player="lowerPlayer"
-        ></MessageBox>-->
+          <!-- center -->
+          <!-- <MessageButtons :player="lowerPlayer"></MessageButtons> -->
 
-        <!-- center -->
-        <!-- <MessageButtons :player="lowerPlayer"></MessageButtons> -->
+          <BattleZone
+            :side="'lower'"
+            :player="lowerPlayer"
+            :battleCards="players[lowerPlayer]['cards']['battleCards']"
+            :battleCardGroups="players[lowerPlayer]['cards']['battleCardGroups']"
+            v-on:move-cards="moveCards"
+            @group-card="groupCard"
+          ></BattleZone>
 
-        <BattleZone
-          :side="'lower'"
-          :player="lowerPlayer"
-          :battleCards="players[lowerPlayer]['cards']['battleCards']"
-          :battleCardGroups="players[lowerPlayer]['cards']['battleCardGroups']"
-          v-on:move-cards="moveCards"
-          @group-card="groupCard"
-        ></BattleZone>
-
-        <player-zone
-          :side="'lower'"
-          :player="lowerPlayer"
-          :bochiCards="players[lowerPlayer]['cards']['bochiCards']"
-          :yamafudaCards="players[lowerPlayer]['cards']['yamafudaCards']"
-          :shieldCards="players[lowerPlayer]['cards']['shieldCards']"
-          :shieldCardGroups="players[lowerPlayer]['cards']['shieldCardGroups']"
-          v-on:move-cards="moveCards"
-          v-on:shuffle-cards="shuffleCards"
-        >
-          <template #shield-zone>
-            <ShieldZone
-              side="lower"
-              :player="lowerPlayer"
-              :shieldCards="players[lowerPlayer]['cards']['shieldCards']"
-              :shieldCardGroups="players[lowerPlayer]['cards']['shieldCardGroups']"
-              v-on:move-cards="moveCards"
-              @group-card="groupCard"
-            ></ShieldZone>
-          </template>
-          <template #deck-zone>
-            <DeckZone
-              side="lower"
-              :player="lowerPlayer"
-              :yamafudaCards="players[lowerPlayer]['cards']['yamafudaCards']"
-              v-on:move-cards="moveCards"
-              @group-card="groupCard"
-            ></DeckZone>
-          </template>
-        </player-zone>
-        <mana-zone
-          :side="'lower'"
-          :player="lowerPlayer"
-          :manaCards="players[lowerPlayer]['cards']['manaCards']"
-          v-on:move-cards="moveCards"
-        ></mana-zone>
-        <tefuda-zone
-          :side="'lower'"
-          :player="lowerPlayer"
-          :tefudaCards="players[lowerPlayer]['cards']['tefudaCards']"
-          v-on:move-cards="moveCards"
-        ></tefuda-zone>
+          <player-zone
+            :side="'lower'"
+            :player="lowerPlayer"
+            :bochiCards="players[lowerPlayer]['cards']['bochiCards']"
+            :yamafudaCards="players[lowerPlayer]['cards']['yamafudaCards']"
+            :shieldCards="players[lowerPlayer]['cards']['shieldCards']"
+            :shieldCardGroups="players[lowerPlayer]['cards']['shieldCardGroups']"
+            v-on:move-cards="moveCards"
+            v-on:shuffle-cards="shuffleCards"
+          >
+            <template #shield-zone>
+              <ShieldZone
+                side="lower"
+                :player="lowerPlayer"
+                :shieldCards="players[lowerPlayer]['cards']['shieldCards']"
+                :shieldCardGroups="players[lowerPlayer]['cards']['shieldCardGroups']"
+                v-on:move-cards="moveCards"
+                @group-card="groupCard"
+              ></ShieldZone>
+            </template>
+            <template #deck-zone>
+              <DeckZone
+                side="lower"
+                :player="lowerPlayer"
+                :yamafudaCards="players[lowerPlayer]['cards']['yamafudaCards']"
+                v-on:move-cards="moveCards"
+                @group-card="groupCard"
+              ></DeckZone>
+            </template>
+          </player-zone>
+          <mana-zone
+            :side="'lower'"
+            :player="lowerPlayer"
+            :manaCards="players[lowerPlayer]['cards']['manaCards']"
+            v-on:move-cards="moveCards"
+          ></mana-zone>
+          <tefuda-zone
+            :side="'lower'"
+            :player="lowerPlayer"
+            :tefudaCards="players[lowerPlayer]['cards']['tefudaCards']"
+            v-on:move-cards="moveCards"
+          ></tefuda-zone>
+        </div>
       </ImageViewer>
 
       <button v-if="!players[lowerPlayer].isReady" @click="getRoomState">サーバーからデータを取得</button>

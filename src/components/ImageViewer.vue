@@ -1,11 +1,13 @@
 <template>
   <div id="canvas" @mousemove="traceMouseMove">
     <div
-      id="display"
+      class="imageDisplay"
       :class="{ hidden: display.hidden, blur: display.blur }"
-      :style="[display.left ? { left: '5px' } : { right: '5px' }]"
+      :style="[
+        display.left ? { left: '5px' } : { right: '5px' },
+      ]"
     >
-      <div v-if="display.imageUrl" class="card-image">
+      <div v-if="display.imageUrl" class="imageDisplay_image">
         <img :src="display.imageUrl" />
       </div>
     </div>
@@ -84,7 +86,7 @@ export default {
       }
       let mX = event.pageX;
       // let mY = event.pageY;
-      if (mX < 400) {
+      if (mX < 550) {
         this.display.left = false;
       } else {
         this.display.left = true;
@@ -95,9 +97,6 @@ export default {
     },
     switchDisplayBlur() {
       this.display.blur = !this.display.blur
-    },
-    switchDropdownTriggers() {
-
     },
   },
 }

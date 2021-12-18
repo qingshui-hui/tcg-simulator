@@ -21,14 +21,6 @@
             :key="index"
             :style="{ top: (index) * 50 + 'px' }"
           >
-            <div class="menu-list hidden" :class="{ reverse: side === 'lower' }">
-              <div v-on:click="tapCard(card, false)">
-                <span>アンタップ</span>
-              </div>
-              <div v-on:click="moveCard('manaCards', 'tefudaCards', card)">
-                <span>手札へ</span>
-              </div>
-            </div>
             <img v-if="!card.faceDown" :src="card.imageUrl" />
             <img v-else src="@/assets/images/card-back.jpg" />
           </div>
@@ -39,16 +31,7 @@
             v-for="(card, index) in normalCards"
             :key="index"
             :style="{ right: (index) * 30 + 'px' }"
-            :class="{ 'selected': card.selected }"
           >
-            <div class="menu-list hidden" :class="{ reverse: side === 'lower' }">
-              <div v-on:click="tapCard(card)">
-                <span>タップ</span>
-              </div>
-              <div v-on:click="moveCard('manaCards', 'tefudaCards', card)">
-                <span>手札へ</span>
-              </div>
-            </div>
             <img v-if="!card.faceDown" :src="card.imageUrl" />
             <img v-else src="@/assets/images/card-back.jpg" />
           </div>
@@ -65,12 +48,6 @@ import mixin from '@/helpers/mixin.js';
 export default {
   props: ['player', 'manaCards', 'side'],
   mixins: [mixin.zone],
-  data() {
-    return {
-      selectedNormal: [],
-      selectedTapped: [],
-    };
-  },
   computed: {
     normalCards() {
       return this.manaCards.filter((card) => {
@@ -84,33 +61,6 @@ export default {
     },
     countNormal() {
       return this.normalCards.length;
-    },
-  },
-  methods: {
-    tapCard: function (card, tap = true) {
-      card.tapped = tap;
-      this.moveCard('manaCards', 'manaCards', card);
-    },
-    selectNormal: function (index) {
-      const card = this.normalCards[index];
-      if (card.selected) {
-        card.selected = false;
-        const removeIndex = this.selectedNormal.findIndex((item) => item.id === card.id);
-        this.selectedNormal.splice(removeIndex, 1);
-      } else {
-        // selected undefined or
-        card.selected = true;
-        card.index = index;
-        this.selectedNormal.push(card);
-      }
-      this.$forceUpdate()
-    },
-    tapNormal: function () {
-      const selected = this.selectedNormal.map((card) => {
-        card.tapped = true;
-      });
-      this.selectedNormal = [];
-      this.$emit('move-cards', 'manaCards', 'manaCards', selected, this.player);
     },
   },
 }
@@ -190,9 +140,6 @@ $card-width: 50px;
     /* 右へスクロールが可能 */
     flex-direction: row-reverse;
     overflow: scroll;
-    .card.selected {
-      top: -5px;
-    }
   }
   .mana-zone .normal .card {
     transform: rotate(180deg);
@@ -200,18 +147,6 @@ $card-width: 50px;
   }
   .card {
     position: relative;
-  }
-  .card:hover {
-    .menu-list {
-      @include menu-list-hover;
-      position: absolute;
-      top: 0px;
-      background-color: black;
-      div {
-        min-width: unset;
-        font-size: 12px;
-      }
-    }
   }
 }
 </style>

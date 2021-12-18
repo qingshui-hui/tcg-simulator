@@ -65,48 +65,22 @@ body {
     }
 }
 /* display */
-#display {
-    position: absolute;
-    top: 10px;
-    /* left: 10px; */
-    z-index: 2;
-}
-.blur {
-    opacity: 0.6;
-}
-.not-blur {
-    opacity: 2;
-}
-#display:hover {
-    opacity: 0.6;
-}
-#display .card-image img {
+.imageDisplay {
+    // background-image: url('http://localhost:3333/dmbd07-a-010.jpg');
     width: 300px;
-}
-
-/* work-space */
-#work-space {
-    background-color: rgba(255, 255, 255, 0.5);
-    display: flex;
-    overflow: scroll;
-    flex-wrap: wrap;
-}
-.close-button-work-space  {
-    background-color: rgba(255, 255, 255, 0.5);
-    width: 40px;
-    text-align: center;
-    font-size: 40px;
-    position: absolute;
-    left: 600px;
-    top:   260px;
-    cursor: pointer;
-}
-#work-space .card {
-    margin: 8px 4px;
-    /* float: left; */
-}
-#work-space .card img {
-    width: 70px;
+    position: fixed;
+    top: 10px;
+    // left: 10px;
+    z-index: 2;
+    &.blur {
+        opacity: 0.6;
+    }
+    &_image {
+        width: 100%;
+        img {
+            width: 100%;
+        }
+    }
 }
 
 /* tefuda-zone */

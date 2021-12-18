@@ -1,11 +1,21 @@
 <template>
   <div class="battle-zone-wrapper">
-    <div
-      class="battle-zone"
-      :class="{
-        [side]: true,
-      }"
-    >
+    <o-icon
+      class="openZoneButton battleZoneButton"
+      :class="side"
+      pack="fas"
+      size="large"
+      icon="arrow-circle-up"
+      variant="primary"
+      @click="openWorkSpace({
+        zone: 'battleCards',
+        cards: battleCards,
+        player: player,
+      })"
+    ></o-icon>
+    <div class="battle-zone" :class="{
+      [side]: true,
+    }">
       <div
         class="card in-battle"
         v-for="(card, index) in battleZoneCards"
@@ -113,19 +123,36 @@ export default {
 }
 $card-width: 100px;
 .battle-zone-wrapper {
+  display: flex;
   img {
     width: $card-width;
   }
+  .battleZoneButton {
+    transform: rotate(45deg);
+    align-self: flex-end;
+    margin-left: 20px;
+    cursor: pointer;
+    &.upper {
+      margin-top: 20px;
+      align-self: flex-start;
+    }
+    &.lower {
+      margin-bottom: 10px;
+    }
+  }
   .battle-zone {
+    // スクロールをしないUIに変更
     display: flex;
-    overflow-x: scroll;
-    height: cardHeight($card-width);
+    flex-wrap: wrap;
+    margin-left: 30px;
+    // overflow-x: scroll;
+    // height: cardHeight($card-width);
     max-width: 700px; // 800 - margin-left
     > * {
       flex-shrink: 0;
+      margin: 0 10px 10px 0;
     }
     &.upper {
-      margin-left: 100px;
       margin-top: 10px;
       // box-shadowが見えるようにするため。
       padding-top: 10px;
@@ -141,21 +168,19 @@ $card-width: 100px;
       }
     }
     &.lower {
-      margin-left: 100px;
       margin-top: 40px;
       // box-shadowが見えるようにするため。
       padding-bottom: 10px;
       .card.tapped {
-        transform: rotate(-90deg);
-        transform-origin: center;
-        width: cardHeight(120px);
+        transform: rotate(-90deg) translateX(100%);
+        transform-origin: right bottom;
+        width: cardHeight($card-width);
       }
     }
   }
   .card.in-battle {
     position: relative;
     display: flex;
-    margin-right: 10px;
     &.is-group img {
       border: lightgray 1px solid;
       border-top-width: 0;
