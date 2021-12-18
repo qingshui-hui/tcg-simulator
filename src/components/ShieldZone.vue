@@ -1,5 +1,5 @@
 <template>
-  <div class="shield-zone">
+  <div class="shield-zone" :class="side">
     <div
       class="shield"
       v-for="(card, index) in countableShieldCards"
@@ -8,39 +8,44 @@
       @dragleave="dragLeave($event)"
       @drop="dropCard($event, card, 'shieldCards')"
     >
-      <div class="shield-wrapper">
-        <div class="menu-list hidden" :class="{ reverse: side === 'upper' }">
-          <div
-            v-if="card.groupId"
-            @click="openWorkSpace({
-              zone: 'shieldCards',
-              cards: group(card).cards,
-              player: player
-            })"
-          >
-            <span class="small">開く</span>
+      <Dropdown>
+        <template v-slot:trigger>
+          <div class="shield-wrapper">
+            <span class="shield-id">{{ card.shieldId }}</span>
+            <!-- 裏向きのカードの場合表示されない。 -->
+            <img v-if="!card.faceDown" :src="card.imageUrl" />
+            <span class="shield-reverse" v-else />
+            <div
+              v-if="card.groupId && group(card).cardIds.length > 1"
+              class="shield-num"
+            >{{ group(card).cardIds.length }}</div>
           </div>
-          <div v-else @click="moveCard('shieldCards', 'tefudaCards', card)">
-            <span class="small">ブレイク</span>
-          </div>
-        </div>
-        <span class="shield-id">{{ card.shieldId }}</span>
-        <!-- 裏向きのカードの場合表示されない。 -->
-        <img v-if="!card.faceDown" :src="card.imageUrl" />
-        <span class="shield-reverse" v-else />
-        <div v-if="card.groupId && group(card).cardIds.length > 1" class="shield-num">{{ group(card).cardIds.length }}</div>
-      </div>
+        </template>
+        <o-dropdown-item
+          v-if="card.groupId"
+          @click="openWorkSpace({
+            zone: 'shieldCards',
+            cards: group(card).cards,
+            player: player
+          })"
+        >開く</o-dropdown-item>
+        <o-dropdown-item
+          v-else
+          @click="moveCard('shieldCards', 'tefudaCards', card)"
+        >ブレイク</o-dropdown-item>
+      </Dropdown>
     </div>
   </div>
 </template>
 
 <script>
-
 import mixin from "../helpers/mixin";
-// このcomponentは、今のところ、playerを知っている必要がない
+import Dropdown from "./dropdown/Dropdown.vue";
+
 export default {
   props: ['player', 'shieldCards', 'shieldCardGroups', 'side'],
   mixins: [mixin.zone],
+  components: {Dropdown},
   computed: {
     countableShieldCards() {
       // グループ化されているカードは一つとカウントする。
@@ -83,3 +88,40 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+@function cardHeight($value) {
+  @return calc($value * 908 / 650);
+}
+.shield-zone {
+  width: 275px;
+  height: cardHeight(50px);
+  display: flex;
+  flex-direction: row-reverse;
+  position: relative;
+  overflow-x: scroll;
+  overflow-y: visible;
+  &.upper {
+    .shield-wrapper {
+      transform: rotate(180deg);
+    }
+  }
+  .shield {
+    position: relative;
+    margin-right: 5px;
+  }
+  .shield-num {
+    color: whitesmoke;
+    position: absolute;
+    bottom: 3px;
+    right: 5px;
+    font-size: 10px;
+  }
+  .shield-reverse {
+    display: block;
+    width: 50px;
+    height: cardHeight(50px);
+    background-color: rgb(79, 205, 255);
+  }
+}
+</style>
