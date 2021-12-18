@@ -1,51 +1,34 @@
 <template>
   <div class="shield-zone" :class="side">
     <div
+      v-for="(card, index) in countableShieldCards" :key="index"
       class="shield"
-      v-for="(card, index) in countableShieldCards"
-      :key="index"
       @dragover.prevent="dragOver($event)"
       @dragleave="dragLeave($event)"
       @drop="dropCard($event, card, 'shieldCards')"
+      @click="clickShield(card)"
     >
-      <Dropdown>
-        <template v-slot:trigger>
-          <div class="shield-wrapper">
-            <span class="shield-id">{{ card.shieldId }}</span>
-            <!-- 裏向きのカードの場合表示されない。 -->
-            <img v-if="!card.faceDown" :src="card.imageUrl" />
-            <span class="shield-reverse" v-else />
-            <div
-              v-if="card.groupId && group(card).cardIds.length > 1"
-              class="shield-num"
-            >{{ group(card).cardIds.length }}</div>
-          </div>
-        </template>
-        <o-dropdown-item
-          v-if="card.groupId"
-          @click="openWorkSpace({
-            zone: 'shieldCards',
-            cards: group(card).cards,
-            player: player
-          })"
-        >開く</o-dropdown-item>
-        <o-dropdown-item
-          v-else
-          @click="moveCard('shieldCards', 'tefudaCards', card)"
-        >ブレイク</o-dropdown-item>
-      </Dropdown>
+      <div class="shield-wrapper">
+        <span class="shield-id">{{ card.shieldId }}</span>
+        <!-- 裏向きのカードの場合表示されない。 -->
+        <img v-if="!card.faceDown" :src="card.imageUrl" />
+        <span class="shield-reverse" v-else />
+        <div
+          v-if="card.groupId && group(card).cardIds.length > 1"
+          class="shield-num"
+        >{{ group(card).cardIds.length }}</div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+// Dropdownを使うと、スクロールゾーンの中にメニューが表示されて何も見えない問題があった。
 import mixin from "../helpers/mixin";
-import Dropdown from "./dropdown/Dropdown.vue";
 
 export default {
   props: ['player', 'shieldCards', 'shieldCardGroups', 'side'],
   mixins: [mixin.zone],
-  components: {Dropdown},
   computed: {
     countableShieldCards() {
       // グループ化されているカードは一つとカウントする。
@@ -85,6 +68,21 @@ export default {
         player: this.player,
       })
     },
+    clickShield(card) {
+      if (card.groupId) {
+        this.openWorkSpace({
+          zone: 'shieldCards',
+          cards: this.group(card).cards,
+          player: this.player
+        })
+        return
+      }
+      this.openWorkSpace({
+        zone: 'shieldCards',
+        cards: [card],
+        player: this.player
+      })
+    },
   }
 }
 </script>
@@ -100,7 +98,9 @@ export default {
   flex-direction: row-reverse;
   position: relative;
   overflow-x: scroll;
-  overflow-y: visible;
+  > * {
+    margin-right: 5px;
+  }
   &.upper {
     .shield-wrapper {
       transform: rotate(180deg);
@@ -108,7 +108,6 @@ export default {
   }
   .shield {
     position: relative;
-    margin-right: 5px;
   }
   .shield-num {
     color: whitesmoke;

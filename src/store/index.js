@@ -12,7 +12,7 @@ const store = createStore({
         player: '',
       },
       settings: {
-        dropdownTriggers: ['click', 'hover'],
+        dropdownTriggers: ['click'],
       },
     }
   },

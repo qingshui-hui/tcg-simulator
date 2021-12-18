@@ -14,7 +14,7 @@
           <div class="shieldButton_count">{{ countableShieldCards.length }}</div>
         </div>
       </div>
-      <div class="blue-wrapper" :class="{ reverse: side === 'upper' }">
+      <div class="blue-wrapper" :class="side">
         <!-- シールドゾーン -->
         <slot name="shield-zone"></slot>
 
@@ -138,6 +138,12 @@ $card-width: 50px;
     display: flex;
     align-items: center;
     width: 380px;
+    &.upper {
+      flex-direction: row-reverse;
+      .bochi, .yamafuda-zone {
+        transform: rotate(180deg);
+      }
+    }
     > * {
       align-self: center;
     }
@@ -160,29 +166,6 @@ $card-width: 50px;
       font-size: 10px;
     }
     &_count {
-    }
-  }
-  .player-zone .shield-zone {
-    width: 275px;
-    display: flex;
-    flex-direction: row-reverse;
-    overflow: scroll;
-  }
-  .player-zone .shield-zone .shield {
-    position: relative;
-    margin-right: 5px;
-    .shield-num {
-      color: whitesmoke;
-      position: absolute;
-      bottom: 3px;
-      right: 5px;
-      font-size: 10px;
-    }
-    .shield-reverse {
-      display: block;
-      width: 50px;
-      height: cardHeight(50px);
-      background-color: rgb(79, 205, 255);
     }
   }
   .player-zone .yamafuda-zone {

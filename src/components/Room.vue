@@ -39,7 +39,7 @@
         >
           <template #shield-zone>
             <ShieldZone
-              side="lower"
+              side="upper"
               :player="upperPlayer"
               :shieldCards="players[upperPlayer]['cards']['shieldCards']"
               :shieldCardGroups="players[upperPlayer]['cards']['shieldCardGroups']"
