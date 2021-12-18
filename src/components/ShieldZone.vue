@@ -69,20 +69,13 @@ export default {
       })
     },
     clickShield(card) {
-      if (card.groupId) {
-        this.openWorkSpace({
-          zone: 'shieldCards',
-          cards: this.group(card).cards,
-          player: this.player
-        })
-        return
-      }
       this.openWorkSpace({
         zone: 'shieldCards',
-        cards: [card],
-        player: this.player
+        cards: card.groupId ? this.group(card).cards : [card],
+        player: this.player,
+        single: true,
       })
-    },
+    }
   }
 }
 </script>

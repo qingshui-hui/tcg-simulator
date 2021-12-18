@@ -27,36 +27,10 @@
         @drop="dropCard($event, card)"
         @dragover.prevent="dragOver($event)"
         @dragleave="dragLeave($event)"
+        @click="clickCard(card)"
       >
         <img v-if="card.faceDown === true" src="@/assets/images/card-back.jpg" draggable="false" />
         <img v-else :src="card.imageUrl" draggable="false" />
-
-        <div class="menu-list hidden" :class="{ reverse: side === 'upper' }">
-          <!-- グループ化されている場合は、タップかアンタップしかできない -->
-          <div v-if="card.tapped" @click="tapCard(card)">
-            <span>アンタップ</span>
-          </div>
-          <div v-else @click="tapCard(card)">
-            <span>タップ</span>
-          </div>
-          <template v-if="!card.groupId">
-            <div @click="moveCard('battleCards', 'tefudaCards', card)">
-              <span>手札へ</span>
-            </div>
-            <div @click="moveCard('battleCards', 'bochiCards', card)">
-              <span>墓地へ</span>
-            </div>
-          </template>
-          <div
-            @click="openWorkSpace({
-              zone: 'battleCards',
-              cards: battleCards,
-              player: player,
-            })"
-          >
-            <span>開く</span>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -85,6 +59,17 @@ export default {
   },
   mixins: [mixin.zone],
   methods: {
+    // リレーション
+    group(card) {
+      if (!card.groupId) {
+        return null
+      }
+      const group = {
+        ...this.battleCardGroups.find(g => g.id === card.groupId)
+      }
+      group.cards = this.battleCards.filter(c => c.groupId === group.id)
+      return group
+    },
     dragCard(card) {
       this.$store.commit('setDraggingCard', card)
     },
@@ -111,7 +96,14 @@ export default {
       // this.$forceUpdate();
       this.$emit('move-cards', 'battleCards', 'battleCards', this.battleCards, this.player);
     },
-
+    clickCard(card) {
+      this.openWorkSpace({
+        zone: 'battleCards',
+        cards: card.groupId ? this.group(card).cards : [card],
+        player: this.player,
+        single: true,
+      })
+    }
   }
 }
 </script>
@@ -145,6 +137,7 @@ $card-width: 100px;
     display: flex;
     flex-wrap: wrap;
     margin-left: 30px;
+    min-height: cardHeight($card-width);
     // overflow-x: scroll;
     // height: cardHeight($card-width);
     max-width: 700px; // 800 - margin-left
@@ -187,19 +180,6 @@ $card-width: 100px;
       border-left-width: 0;
       box-shadow: 2px 3px black;
       border-radius: 3px;
-    }
-  }
-  .card:hover {
-    .menu-list {
-      @include menu-list-hover;
-      position: absolute;
-      left: 0px;
-      top: 20px;
-      div {
-        height: 18px;
-        line-height: 18px;
-        font-size: 13px;
-      }
     }
   }
 }

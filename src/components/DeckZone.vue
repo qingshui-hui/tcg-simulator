@@ -23,11 +23,6 @@
       @click="moveCard('yamafudaCards', 'tefudaCards', yamafudaCards[0])"
     >ドロー</o-dropdown-item>
     <o-dropdown-item aria-role="listitem" @click="openDeck">開く</o-dropdown-item>
-    <o-dropdown-item
-      v-if="yamafudaCards.length > 0"
-      aria-role="listitem"
-      @click="shuffleCards('yamafudaCards', yamafudaCards)"
-    >シャッフル</o-dropdown-item>
   </Dropdown>
 </template>
 

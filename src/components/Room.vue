@@ -5,6 +5,7 @@
       <ImageViewer>
         <WorkSpace
           @move-cards="moveCards"
+          @shuffle-cards="shuffleCards"
         ></WorkSpace>
 
         <DeckSelector :player="lowerPlayer"
@@ -35,7 +36,6 @@
             :shieldCards="players[upperPlayer]['cards']['shieldCards']"
             :shieldCardGroups="players[upperPlayer]['cards']['shieldCardGroups']"
             v-on:move-cards="moveCards"
-            v-on:shuffle-cards="shuffleCards"
           >
             <template #shield-zone>
               <ShieldZone
@@ -90,7 +90,6 @@
             :shieldCards="players[lowerPlayer]['cards']['shieldCards']"
             :shieldCardGroups="players[lowerPlayer]['cards']['shieldCardGroups']"
             v-on:move-cards="moveCards"
-            v-on:shuffle-cards="shuffleCards"
           >
             <template #shield-zone>
               <ShieldZone
@@ -266,6 +265,12 @@ export default {
           card.faceDown = false
         })
       }
+      // 違うゾーンへ移動するときはタップを解除する。
+      if (to !== from) {
+        selectedCards.forEach((card) => {
+          card.tapped = false
+        })
+      }
       this.players[player]["cards"][from] = Util.arrayRemoveCards(this.players[player]["cards"][from], selectedCards);
       if (prepend) {
         this.players[player]["cards"][to] = Util.arrayPrependCards(this.players[player]["cards"][to], selectedCards);
@@ -276,15 +281,15 @@ export default {
       // 少し待てば、レンダリングが完了しているため、うまくいった。
       if (to === "tefudaCards") {
         setTimeout(() => {
-          this.scrollZone("tefuda-zone" + player, "left");
-        }, 300);
+          this.scrollZone(".tefuda-zone." + (player === this.upperPlayer ? 'upper' : 'lower'), "left");
+        }, 300)
       }
       if (!this.useConfig().WS_ENABLED)
         return;
       this.players[player].isReady = true
       this.socket.emit("cards-moved", this.players[player]);
     },
-    shuffleCards: function (from, cards, player) {
+    shuffleCards(from, cards, player) {
       this.players[player]["cards"][from] = Deck.shuffle(cards);
       const shuffleMessage = {
         shieldCards: "シールド",
@@ -293,13 +298,11 @@ export default {
       };
       this.setMessage(shuffleMessage[from] + "をシャッフル", player);
     },
-    scrollZone: function (targetZoneId, direction) {
-      // TefudaZone.vue > tefuda-zone の id に注意
-      const target = document.getElementById(targetZoneId);
+    scrollZone(targetSelector, direction) {
+      const target = document.querySelector(targetSelector)
       target.scrollTo({
         behavior: "smooth",
         [direction]: target.scrollWidth,
-        // 'top': scrolled.scrollHeight
       });
     },
     setMessage() {

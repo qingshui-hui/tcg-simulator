@@ -11,20 +11,36 @@
       <!-- position absoluteで下につける -->
       <div class="bottomMenu">
         <div class="bottomMenu__overlay">
-          <o-button class="bottomMenu__action" variant="primary" size="large" @click="action">タップする</o-button>
+
+          <!-- single actions -->
+          <template v-if="['battleCards'].includes(workSpace.zone) && workSpace.single">
+            <o-button
+              v-if="!workSpace.cards[0].tapped"
+              class="bottomMenu__action" variant="primary" size="large"
+              @click="tapAllCards"
+            >タップする</o-button>
+            <o-button
+              v-else
+              class="bottomMenu__action" variant="primary" size="large"
+              @click="untapAllCards"
+            >アンタップする</o-button>
+          </template>
+          <o-button
+            v-if="['shieldCards'].includes(workSpace.zone) && workSpace.single"
+            class="bottomMenu__action" variant="primary" size="large"
+            @click="moveCard(orderedCards[0], 'tefudaCards')"
+          >手札へ</o-button>
         </div>
       </div>
       <div class="workSpace_inner">
         <div class="workSpace_top">
           <div class="workSpace_top_1">
-            <o-button variant="grey-dark" outlined disabled>{{ workSpace.zone }}</o-button>
-            <o-button v-if="['manaCards', 'battleCards'].includes(workSpace.zone)" @click="untapAllCards">全てアンタップする</o-button>
-          </div>
-          <div class="workSpace_top_2">
-            <o-select v-model="manaZoneMode">
-              <option value="1">タップするカードを選択</option>
-              <option value="2">個別に操作する</option>
-            </o-select>
+            <!-- ゾーン名をクリックしたときにも閉じる。 -->
+            <o-button variant="grey-dark" outlined
+              @click="closeWorkSpace"
+            >{{ zoneName }}</o-button>
+            <o-button v-if="['manaCards', 'battleCards'].includes(workSpace.zone) && !workSpace.single" @click="untapAllCards">全てアンタップする</o-button>
+            <o-button v-if="['yamafudaCards'].includes(workSpace.zone) && !workSpace.single" @click="shuffleCards('yamafudaCards', workSpace.cards)">シャッフル</o-button>
           </div>
         </div>
         <div class="workSpace_cardList gridCardList">
@@ -32,7 +48,7 @@
             <template #trigger>
               <div class="card with-info" :class="{ tapped: card.tapped }">
                 <o-icon
-                  v-if="card.selected"
+                  v-if="false"
                   class="card_checkedIcon"
                   pack="fas"
                   icon="check-circle"
@@ -42,10 +58,41 @@
                 ></o-icon>
                 <span class="card-id card-info" v-if="card.groupId">{{ card.groupId }}</span>
                 <div @click="clickCard(card)">
-                  <img src="@/assets/images/card-back.jpg" v-if="card.faceDown === true" />
+                  <!-- ワークスペース内だけでみられる状態がある -->
+                  <img src="@/assets/images/card-back.jpg" v-if="card.faceDown === true && !card.showInWorkSpace" />
                   <img :src="card.imageUrl" v-else />
                 </div>
               </div>
+
+              <!-- 裏向きのカードを見るボタン -->
+              <o-button
+                class="card_bottomButton"
+                v-if="card.faceDown && !card.showInWorkSpace"
+                @click="card.showInWorkSpace = true"
+              >見る</o-button>
+              <!-- ショートカット -->
+              <o-button
+                class="card_bottomButton"
+                v-else-if="['tefudaCards'].includes(workSpace.zone)"
+                @click="moveCard(card, 'battleCards')"
+              >出す</o-button>
+              <o-button
+                class="card_bottomButton"
+                v-else-if="['bochiCards'].includes(workSpace.zone)"
+                @click="moveCard(card, 'tefudaCards')"
+              >手札へ</o-button>
+              <template v-else-if="['manaCards'].includes(workSpace.zone)">
+                <o-button
+                  class="card_bottomButton"
+                  v-if="!card.tapped"
+                  @click="card.tapped = true"
+                >タップ</o-button>
+                <o-button
+                  class="card_bottomButton"
+                  v-else
+                  @click="card.tapped = false"
+                >アンタップ</o-button>
+              </template>
             </template>
             <o-dropdown-item>
               <span class="drop-item-2" @click="moveCard(card, 'battleCards')">出す</span>
@@ -65,7 +112,17 @@
             </o-dropdown-item>
           </Dropdown>
         </div>
-        <o-button v-if="workSpace.zone === 'yamafudaCards'" @click="openAllCards">全て表にする</o-button>
+        <!-- 全て〇〇する系 -->
+        <template v-if="!workSpace.single">
+          <o-button
+            v-if="['yamafudaCards', 'shieldCards'].includes(workSpace.zone)"
+            @click="openAllCards"
+          >全て見る</o-button>
+          <o-button
+            v-if="['manaCards', 'battleCards'].includes(workSpace.zone)"
+            @click="tapAllCards"
+          >全てタップする</o-button>
+        </template>
       </div>
     </div>
   </div>
@@ -92,37 +149,66 @@ export default {
       }
       return this.workSpace.cards
     },
+    zoneName() {
+      const map = {
+        manaCards: 'マナゾーン',
+        battleCards: 'フィールド',
+        bochiCards: '墓地',
+        shieldCards: 'シールドゾーン',
+        tefudaCards: '手札',
+        yamafudaCards: '山札',
+      }
+      if (Object.keys(map).includes(this.workSpace.zone)) {
+        return map[this.workSpace.zone]
+      }
+      return ''
+    },
   },
   watch: {
     // ワークスペースが開いている間は背景を薄くする。
     // ホバーで画像拡大はできるようにする。
-    workSpace(newVal) {
+    workSpace(newVal, oldVal) {
+      // 開いたとき
       if (newVal.active) {
         document.querySelector('#js_gameBoard').style.opacity = 0.8
+      // 閉じたとき
       } else {
         document.querySelector('#js_gameBoard').style.opacity = 1
+        oldVal.cards.forEach(c => {
+          c.showInWorkSpace = false
+        })
       }
     },
   },
   methods: {
     ...mapMutations(['closeWorkSpace', 'openWorkSpace']),
-    clickCard(card) {
-      if (this.workSpace.zone === 'manaCards') {
-        card.selected = !card.selected
-      }
-    },
     openCard(card) {
       card.faceDown = !card.faceDown;
       this.$forceUpdate();
     },
     openAllCards() {
+      // 山札とシールドでしか使わない想定
       this.workSpace.cards.forEach(c => {
-        c.faceDown = false
+        c.showInWorkSpace = true
       })
     },
     untapAllCards() {
       this.workSpace.cards.forEach(c => {
         c.tapped = false
+      })
+      this.closeWorkSpace()
+    },
+    tapAllCards() {
+      this.workSpace.cards.forEach(c => {
+        c.tapped = true
+      })
+      this.closeWorkSpace()
+    },
+    // 操作したプレイヤーだけが見ることができる。
+    // カードを裏返すのとは違う。
+    showAllInWorkSpace() {
+      this.workSpace.cards.forEach(c => {
+        c.showInWorkSpace = true
       })
     },
     moveCard(card, to, prepend = false) {
@@ -132,20 +218,20 @@ export default {
         cards: this.workSpace.cards.filter(c => c.id !== card.id),
       })
       const from = this.workSpace.zone;
-      // 選択は解除
-      card.selected = false
+      // 見られる状態を解除
+      card.showInWorkSpace = false
       // バトルゾーン以外からシールドへ移動するときは裏向きにする。
       if (to === 'shieldCards' && from !== 'battleCards') {
         card.faceDown = true
       }
       this.$emit('move-cards', from, to, [card], this.workSpace.player, prepend);
+      // カードが0枚になったらワークスペースを閉じる。
+      if (this.workSpace.cards.length === 0) {
+        this.closeWorkSpace()
+      }
     },
-    action() {
-      const selectedCards = this.workSpace.cards.filter(c => c.selected)
-      selectedCards.forEach(c => {
-        c.selected = false
-        c.tapped = true
-      })
+    shuffleCards(from, cards) {
+      this.$emit('shuffle-cards', from, cards, this.player)
       this.closeWorkSpace()
     },
   }
@@ -198,8 +284,9 @@ $card-width: 120px;
   }
   .closeButton {
     position: absolute;
-    right: 0;
-    top: -20px;
+    z-index: 1;
+    right: -60px;
+    top: -10px;
     background-color: #fff;
     border-radius: 50%;
   }
@@ -216,10 +303,17 @@ $card-width: 120px;
     img {
       width: $card-width;
     }
-  }
-  .card_checkedIcon {
-    background-color: #fff;
-    border-radius: 50%;
+    &_checkedIcon {
+      background-color: #fff;
+      border-radius: 50%;
+    }
+    &_bottomButton {
+      position: absolute;
+      z-index: 1;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
   }
   .card-info {
     background-color: black;

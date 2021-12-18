@@ -20,13 +20,13 @@ const store = createStore({
     setDraggingCard(state, card) {
       state.draggingCard = card
     },
-    // 第二引数のプロパティは全て必須。
-    openWorkSpace(state, {cards, zone, player}) {
+    openWorkSpace(state, {cards, zone, player, single=false}) {
       state.workSpace = {
         cards,
         zone,
         player,
         active: true,
+        single,
       }
     },
     closeWorkSpace(state) {
