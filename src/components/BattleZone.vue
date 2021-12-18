@@ -111,14 +111,15 @@ export default {
 @function cardHeight($value) {
   @return calc($value * 908 / 650);
 }
-$card-width: 50px;
+$card-width: 100px;
 .battle-zone-wrapper {
   img {
-    width: 120px;
+    width: $card-width;
   }
   .battle-zone {
     display: flex;
     overflow-x: scroll;
+    height: cardHeight($card-width);
     max-width: 700px; // 800 - margin-left
     > * {
       flex-shrink: 0;
@@ -135,7 +136,7 @@ $card-width: 50px;
           // あとはtranslateXでy座標を調整する。
           transform: rotate(90deg) translateX(-100%);
           transform-origin: left bottom;
-          width: cardHeight(120px);
+          width: cardHeight($card-width);
         }
       }
     }

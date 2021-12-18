@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <CHeader></CHeader>
     <div class="app-wrapper">
       <ImageViewer>
 
@@ -123,11 +124,12 @@ import PlayerZone from './PlayerZone.vue';
 import BattleZone from './BattleZone.vue';
 import DeckSelector from './DeckSelector.vue';
 import ShieldZone from './ShieldZone.vue';
+import CHeader from './CHeader.vue';
 
 export default {
   name: "c-app",
   props: ["upperPlayer", "lowerPlayer", "socket"],
-  components: { WorkSpace, ImageViewer, TefudaZone, ManaZone, PlayerZone, BattleZone, DeckSelector, ShieldZone },
+  components: { WorkSpace, ImageViewer, TefudaZone, ManaZone, PlayerZone, BattleZone, DeckSelector, ShieldZone, CHeader },
   data() {
     const roomId = this.$route.query.roomId;
     return {
@@ -259,6 +261,7 @@ export default {
       }
       if (!this.useConfig().WS_ENABLED)
         return;
+      this.players[player].isReady = true
       this.socket.emit("cards-moved", this.players[player]);
     },
     shuffleCards: function (from, cards, player) {

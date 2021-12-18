@@ -1,7 +1,10 @@
 <template>
-  <div :class="{ hidden: !workSpace.active }">
-    <div class="close-button-work-space" @click="closeWorkSpace">x</div>
-
+  <o-modal
+    v-model:active="workSpace.active"
+    @close="closeWorkSpace"
+    :width="600"
+    mobileBreakpoint="600px"
+  >
     <div id="work-space" class>
       <div>
         <p>player:{{ workSpace.player }}</p>
@@ -39,7 +42,7 @@
       <button v-if="workSpace.zone === 'yamafudaCards'" @click="openAllCards">全て表にする</button>
       <button v-if="workSpace.zone === 'manaCards'" @click="untapAllCards">全てアンタップする</button>
     </div>
-  </div>
+  </o-modal>
 </template>
 
 <script>

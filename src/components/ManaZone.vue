@@ -126,6 +126,7 @@ $card-width: 50px;
 .manaZone {
   display: flex;
   margin-left: 20px;
+  align-items: center;
   &.upper {
     padding-top: 20px;
   }

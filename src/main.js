@@ -43,3 +43,38 @@ if (process.env.VUE_APP_WS_HOST) {
   axios.defaults.baseURL = process.env.VUE_APP_WS_HOST
 }
 
+//
+// oruga ui
+import Oruga from '@oruga-ui/oruga-next'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import './assets/scss/oruga.scss'
+
+vueApp.component('vue-fontawesome', FontAwesomeIcon)
+vueApp.use(Oruga, {
+  iconComponent: 'vue-fontawesome',
+  iconPack: 'fas',
+})
+
+// fontawesomeのアイコンの読み込み
+import { library } from '@fortawesome/fontawesome-svg-core'
+import {
+  faUser,
+  faTimesCircle,
+  faTimes,
+  faArrowCircleUp,
+  faBars,
+  faCheckCircle,
+} from '@fortawesome/free-solid-svg-icons'
+import {
+  faTimesCircle as farTimesCircle,
+} from '@fortawesome/free-regular-svg-icons'
+
+library.add(
+  faTimesCircle,
+  faUser,
+  farTimesCircle,
+  faTimes,
+  faArrowCircleUp,
+  faBars,
+  faCheckCircle,
+)
