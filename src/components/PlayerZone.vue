@@ -18,45 +18,51 @@
         <!-- シールドゾーン -->
         <slot name="shield-zone"></slot>
 
-        <div class="yamafuda-zone">
-          <div v-if="yamafudaCards.length > 0">
-            <div class="menu-list hidden" :class="{ reverse: side === 'upper' }">
-              <div @click="moveCard('yamafudaCards', 'tefudaCards', yamafudaCards[0])">
-                <span class="small">ドロー</span>
-              </div>
-              <div @click="openDeck">
-                <span class="small">開く</span>
-              </div>
-              <div @click="shuffleCards('yamafudaCards', yamafudaCards)">
-                <span class="small">シャッフル</span>
+        <Dropdown :triggers="dropdownTriggers" position="top-left">
+          <template v-slot:trigger>
+            <div class="yamafuda-zone">
+              <div v-if="yamafudaCards.length > 0">
+                <img v-if="side === 'upper'" src="@/assets/images/deck1.png" />
+                <img v-else src="@/assets/images/deck2.png" />
               </div>
             </div>
-            <img v-if="side === 'upper'" src="@/assets/images/deck1.png" />
-            <img v-else src="@/assets/images/deck2.png" />
-          </div>
-        </div>
+          </template>
+          <o-dropdown-item
+            aria-role="listitem"
+            @click="moveCard('yamafudaCards', 'tefudaCards', yamafudaCards[0])"
+          >ドロー</o-dropdown-item>
+          <o-dropdown-item aria-role="listitem" @click="openDeck">開く</o-dropdown-item>
+          <o-dropdown-item
+            aria-role="listitem"
+            @click="shuffleCards('yamafudaCards', yamafudaCards)"
+          >シャッフル</o-dropdown-item>
+        </Dropdown>
 
-        <div class="bochi">
-          <div class="menu-list hidden" :class="{ reverse: side === 'upper' }">
-            <div
-              @click="openWorkSpace({
-                zone: 'bochiCards',
-                cards: bochiCards,
-                player: player,
-              })"
-            >
-              <span class="small">開く</span>
+        <Dropdown :triggers="dropdownTriggers">
+          <template v-slot:trigger>
+            <div class="bochi">
+              <img v-if="lastCard(bochiCards)" :src="lastCard(bochiCards).imageUrl" />
             </div>
-          </div>
-          <img v-if="lastCard(bochiCards)" :src="lastCard(bochiCards).imageUrl" />
-        </div>
+          </template>
+          <o-dropdown-item
+            aria-role="listitem"
+            @click="openWorkSpace({
+              zone: 'bochiCards',
+              cards: bochiCards,
+              player: player,
+            })"
+          >開く</o-dropdown-item>
+        </Dropdown>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+/* eslint vue/no-deprecated-slot-attribute: 0 */
+/* eslint vue/no-deprecated-slot-scope-attribute: 0 */
 import mixin from "@/helpers/mixin.js";
+import Dropdown from "./dropdown/Dropdown.vue";
 
 export default {
   props: [
@@ -68,6 +74,7 @@ export default {
     "side",
   ],
   mixins: [mixin.zone],
+  components: { Dropdown },
   computed: {
     countableShieldCards() {
       // グループ化されているカードは一つとカウントする。
@@ -75,6 +82,9 @@ export default {
       return this.shieldCards.filter((c) => {
         return !c.groupId || firstCardIds.includes(c.id);
       });
+    },
+    dropdownTriggers() {
+      return this.$store.state.settings.dropdownTriggers
     },
   },
   methods: {

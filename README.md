@@ -15,6 +15,10 @@ ngrokを使いたいときに便利。
 避けるためには、ファイルの拡張子をmjsにする。そのファイルを普通のjsファイルに取り込むには、
 `db = import('./test.mjs')`
 
+## typescript
+orugauiのカスタマイズのために使用。
+https://cli.vuejs.org/core-plugins/typescript.html#configuration
+
 ## 準備
 db.jsonを作成する。
 ```

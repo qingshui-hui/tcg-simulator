@@ -9,7 +9,7 @@
       @click="onClick"
       @contextmenu.prevent="onContextMenu"
       @mouseenter="onHover"
-      @mouseleave="isHoverable = false"
+      @mouseleave="onMouseleave"
       @focus.capture="onFocus"
       aria-haspopup="true"
     >
@@ -33,7 +33,7 @@
         :role="ariaRole"
         :style="menuStyle"
         @mouseenter="onHover"
-        @mouseleave="isHoverable = false"
+        @mouseleave="onMouseleave"
         v-trap-focus="trapFocus"
       >
         <slot />
@@ -216,12 +216,13 @@ export default defineComponent({
   },
   computed: {
     rootClasses() {
+      // mobileClassによって、メニューがモーダルになるかどうかを切り替えている。
       return [
         this.computedClass('rootClass', 'o-drop'),
         { [this.computedClass('disabledClass', 'o-drop--disabled')]: this.disabled },
         { [this.computedClass('expandedClass', 'o-drop--expanded')]: this.expanded },
         { [this.computedClass('inlineClass', 'o-drop--inline')]: this.inline },
-        { [this.computedClass('mobileClass', 'o-drop--mobile')]: this.isMobileModal && this.isMatchMedia && !this.hoverable },
+        // { [this.computedClass('mobileClass', 'o-drop--mobile')]: this.isMobileModal && this.isMatchMedia && !this.hoverable },
       ]
     },
     triggerClasses() {
@@ -238,7 +239,8 @@ export default defineComponent({
       return [
         this.computedClass('menuClass', 'o-drop__menu'),
         { [this.computedClass('menuPositionClass', 'o-drop__menu--', this.position)]: this.position },
-        { [this.computedClass('menuActiveClass', 'o-drop__menu--active')]: (this.isActive || this.inline) }
+        { [this.computedClass('menuActiveClass', 'o-drop__menu--active')]: (this.isActive || this.inline) },
+        { 'o-drop__menu--hovering': this.isHoverable },
       ]
     },
     isMobileModal() {
@@ -254,7 +256,7 @@ export default defineComponent({
     menuStyle() {
       return {
         maxHeight: this.scrollable ? toCssDimension(this.maxHeight) : null,
-        overflow: this.scrollable ? 'auto' : null
+        overflow: this.scrollable ? 'auto' : null,
       }
     },
     hoverable() {
@@ -310,6 +312,9 @@ export default defineComponent({
       this.$emit('update:modelValue', this.selected)
       if (!this.multiple) {
         this.isActive = !this.closeOnClick
+        this.isHoverable = false
+        // セレクトフォームでないので、アクティブなメニューを作らない。
+        this.selected = null
         if (this.hoverable && this.closeOnClick) {
           this.isHoverable = false
         }
@@ -350,7 +355,10 @@ export default defineComponent({
       if (this.cancelOptions.indexOf('outside') < 0) return
       if (this.inline) return
 
-      if (!this.isInWhiteList(event.target)) this.isActive = false
+      if (!this.isInWhiteList(event.target)) {
+        this.isHoverable = false
+        this.isActive = false
+      }
     },
 
     /**
@@ -366,7 +374,10 @@ export default defineComponent({
     onClick() {
       // DID:
       if (this.triggers.indexOf('click') < 0) return
-      this.toggle()
+      // this.toggle()
+      // Activeの状態だと外側かメニューをタップしないとメニューが閉じない。
+      this.isActive = true
+      this.isHoverable = true
     },
     onContextMenu() {
       if (this.triggers.indexOf('contextmenu') < 0) return
@@ -379,6 +390,12 @@ export default defineComponent({
     onFocus() {
       if (this.triggers.indexOf('focus') < 0) return
       this.toggle()
+    },
+    onMouseleave() {
+      // if (this.triggers.indexOf('hover') >= 0) {
+      //   this.isActive = false
+      // }
+      this.isHoverable = false
     },
 
     /**
@@ -465,3 +482,10 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="scss">
+// トリガー要素から、メニュー要素へホバーした時、メニューが見えなくなる問題への対応。
+.fade-leave-to.o-drop__menu--hovering {
+  opacity: 1;
+}
+</style>

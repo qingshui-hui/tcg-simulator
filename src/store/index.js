@@ -11,6 +11,9 @@ const store = createStore({
         zone: '',
         player: '',
       },
+      settings: {
+        dropdownTriggers: ['click', 'hover'],
+      },
     }
   },
   mutations: {
@@ -32,6 +35,13 @@ const store = createStore({
         zone: '',
         player: '',
         active: false,
+      }
+    },
+    updateSettings(state, settings) {
+      console.log(settings)
+      state.settings = {
+        ...state.settings,
+        ...settings,
       }
     }
   },
