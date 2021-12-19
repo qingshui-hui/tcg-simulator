@@ -3,10 +3,14 @@
     <div
       v-for="(card, index) in countableShieldCards" :key="index"
       class="shield"
+      :class="{'is-selectMode': selectMode && workSpace.player === player}"
       @dragover.prevent="dragOver($event)"
       @dragleave="dragLeave($event)"
+      @touchstart="dragOver($event)"
+      @touchend="dragLeave($event)"
+      @contextmenu="dragLeave($event)"
       @drop="dropCard($event, card, 'shieldCards')"
-      @click="clickShield(card)"
+      @click="clickShield($event, card)"
     >
       <div class="shield-wrapper">
         <span class="shield-id">{{ card.shieldId }}</span>
@@ -28,7 +32,7 @@ import mixin from "../helpers/mixin";
 
 export default {
   props: ['player', 'shieldCards', 'shieldCardGroups', 'side'],
-  mixins: [mixin.zone],
+  mixins: [mixin.zone, mixin.droppable],
   computed: {
     countableShieldCards() {
       // グループ化されているカードは一つとカウントする。
@@ -50,31 +54,35 @@ export default {
       group.cards = this.shieldCards.filter(c => c.groupId === group.id)
       return group
     },
-    dragOver: function (event) {
-      event.target.style.opacity = 0.5;
-    },
-    dragLeave: function (event) {
+    dropCard(event, card) {
       event.target.style.opacity = 1;
-    },
-    dropCard: function (event, card) {
-      event.target.style.opacity = 1;
-      if (card.id === this.$store.state.draggingCard.id) return
-      this.moveCard('battleCards', 'shieldCards', this.$store.state.draggingCard)
+      if (card.id === this.draggingCard.id) return
+      this.moveCard('battleCards', 'shieldCards', this.draggingCard)
       this.$emit('group-card', {
         from: 'shieldCards',
         to: 'shieldCardGroups',
-        fromCard: this.$store.state.draggingCard,
+        fromCard: this.draggingCard,
         toCard: card,
         player: this.player,
       })
     },
-    clickShield(card) {
-      this.openWorkSpace({
-        zone: 'shieldCards',
-        cards: card.groupId ? this.group(card).cards : [card],
-        player: this.player,
-        single: true,
-      })
+    clickShield(event, card) {
+      if (!this.selectMode) {
+        this.openWorkSpace({
+          zone: 'shieldCards',
+          cards: card.groupId ? this.group(card).cards : [card],
+          player: this.player,
+          single: true,
+        })
+        return
+      }
+      if (this.workSpace.player === this.player) {
+        // Drag&Dropと同じ扱いをする。
+        this.setDraggingCard(this.workSpace.cards[0])
+        this.dropCard(event, card)
+        this.closeWorkSpace()
+        return
+      }
     }
   }
 }
@@ -101,6 +109,10 @@ export default {
   }
   .shield {
     position: relative;
+    &.is-selectMode {
+      border: 3px solid orange;
+      border-radius: 5px;
+    }
   }
   .shield-num {
     color: rgb(37, 37, 37);

@@ -20,14 +20,20 @@
         class="card in-battle"
         v-for="(card, index) in battleZoneCards"
         :key="index"
-        :class="{ tapped: card.tapped, 'is-group': !!card.groupId }"
+        :class="{ tapped: card.tapped,
+          'is-group': !!card.groupId,
+          'is-selectMode': selectMode && workSpace.player === player,
+        }"
         :draggable="!card.groupId"
         @dragstart="dragCard(card)"
         @dragend="dragCard(null)"
         @drop="dropCard($event, card)"
         @dragover.prevent="dragOver($event)"
+        @touchstart="dragOver($event)"
+        @touchend="dragLeave($event)"
+        @contextmenu="dragLeave($event)"
         @dragleave="dragLeave($event)"
-        @click="clickCard(card)"
+        @click="clickCard($event, card)"
       >
         <img v-if="card.faceDown === true" src="@/assets/images/card-back.jpg" draggable="false" />
         <img v-else :src="card.imageUrl" draggable="false" />
@@ -37,16 +43,11 @@
 </template>
 
 <script>
-
 import mixin from '@/helpers/mixin.js';
 
 export default {
   props: ['player', 'battleCards', 'battleCardGroups', 'side'],
-  data() {
-    return {
-      draggingCard: null,
-    }
-  },
+  mixins: [mixin.zone, mixin.droppable],
   computed: {
     battleZoneCards() {
       // 表示するカードのIDのリスト
@@ -57,7 +58,6 @@ export default {
       return visibleCards
     },
   },
-  mixins: [mixin.zone],
   methods: {
     // リレーション
     group(card) {
@@ -71,38 +71,41 @@ export default {
       return group
     },
     dragCard(card) {
-      this.$store.commit('setDraggingCard', card)
+      this.setDraggingCard(card)
     },
     dropCard(event, card) {
       event.target.style.opacity = 1;
-      if (card.id === this.$store.state.draggingCard.id) return
+      if (card.id === this.draggingCard.id) return
       this.$emit('group-card', {
         from: 'battleCards',
         to: 'battleCardGroups',
-        fromCard: this.$store.state.draggingCard,
+        fromCard: this.draggingCard,
         toCard: card,
         player: this.player,
       })
     },
-    dragOver(event) {
-      event.target.style.opacity = 0.5;
-    },
-    dragLeave(event) {
-      event.target.style.opacity = 1;
-    },
-
     tapCard(card) {
       card.tapped = !card.tapped;
       // this.$forceUpdate();
       this.$emit('move-cards', 'battleCards', 'battleCards', this.battleCards, this.player);
     },
-    clickCard(card) {
-      this.openWorkSpace({
-        zone: 'battleCards',
-        cards: card.groupId ? this.group(card).cards : [card],
-        player: this.player,
-        single: true,
-      })
+    clickCard(event, card) {
+      if (!this.selectMode) {
+        this.openWorkSpace({
+          zone: 'battleCards',
+          cards: card.groupId ? this.group(card).cards : [card],
+          player: this.player,
+          single: true,
+        })
+        return
+      }
+      if (this.workSpace.player === this.player) {
+        // Drag&Dropと同じ扱いをする。
+        this.setDraggingCard(this.workSpace.cards[0])
+        this.dropCard(event, card)
+        this.closeWorkSpace()
+        return
+      }
     }
   }
 }
@@ -180,6 +183,12 @@ $card-width: 100px;
       border-left-width: 0;
       box-shadow: 2px 3px black;
       border-radius: 3px;
+    }
+    &.is-selectMode {
+      img {
+        border: 3px solid orange;
+        border-radius: 5px;
+      }
     }
   }
 }

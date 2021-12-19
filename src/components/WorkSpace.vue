@@ -5,8 +5,9 @@
     }]">
       <o-icon
         class="minButton"
+        :class="[{minButton__expand: workSpace.minimum}]"
         pack="fas"
-        icon="minus-circle"
+        :icon="workSpace.minimum ? 'expand-alt' : 'minus-circle'"
         size="medium"
         @click="workSpace.minimum = !workSpace.minimum"
       ></o-icon>
@@ -150,15 +151,13 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import mixin from '../helpers/mixin.js'
 import Dropdown from "./dropdown/Dropdown.vue";
 
 export default {
   components: { Dropdown },
+  mixins: [mixin.zone],
   computed: {
-    workSpace() {
-      return this.$store.state.workSpace
-    },
     player() {
       return this.$store.state.workSpace.player;
     },
@@ -198,12 +197,12 @@ export default {
         oldVal.cards.forEach(c => {
           c.showInWorkSpace = false
         })
+        // セレクトモードをオフにする。
         this.setSelectMode(false)
       }
     },
   },
   methods: {
-    ...mapMutations(['closeWorkSpace', 'openWorkSpace', 'setSelectMode']),
     openCard(card) {
       card.faceDown = !card.faceDown;
       this.$forceUpdate();
@@ -257,9 +256,12 @@ export default {
       this.closeWorkSpace()
     },
     startSelectMode() {
-      this.setSelectMode(true)
-      this.workSpace.minimum = true
-      console.log(this.$store.state.selectMode)
+      if (!this.selectMode) {
+        this.setSelectMode(true)
+        this.workSpace.minimum = true
+      } else {
+        this.setSelectMode(false)
+      }
     },
   }
 }
@@ -316,6 +318,9 @@ $card-width: 120px;
       max-height: 100px;
       overflow-y: scroll;
     }
+    .bottomMenu {
+      display: none;
+    }
   }
   &_inner {
     // height: 60vh;
@@ -344,6 +349,13 @@ $card-width: 120px;
     transform: translateY(-48px);
     background-color: #fff;
     border-radius: 50%;
+    &__expand {
+      width: 40px;
+      height: 40px;
+      right: 0;
+      color: white;
+      background-color: black;
+    }
   }
   &_top_1 {
     display: flex;

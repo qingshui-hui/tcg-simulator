@@ -1,7 +1,12 @@
-import { mapMutations } from "vuex/dist/vuex.cjs";
+import { mapMutations, mapState } from "vuex/dist/vuex.cjs";
 
 const mixin = {}
 mixin.zone = {
+  computed: {
+    // mapStateヘルパー
+    // https://vuex.vuejs.org/ja/guide/state.html#mapstate-%E3%83%98%E3%83%AB%E3%83%8F%E3%82%9A%E3%83%BC
+    ...mapState(['workSpace', 'selectMode', 'draggingCard'])
+  },
   methods: {
     moveCard(from, to, card, prepend = false) {
       this.$emit('move-cards', from, to, [card], this.player, prepend);
@@ -12,16 +17,20 @@ mixin.zone = {
     // openWorkSpace: function (cards, from, faceDown = null) {
     //   this.$emit('open-work-space', cards, from, this.player, faceDown);
     // },
-    ...mapMutations(['openWorkSpace']),
+    ...mapMutations(['openWorkSpace', 'closeWorkSpace', 'setSelectMode', 'setDraggingCard']),
   }
 }
 mixin.droppable = {
   methods: {
-    dragOver: function () {
-      event.preventDefault();
+    dropCard(event, card) {
+      event.target.style.opacity = 1;
+      if (card.id === this.$store.state.draggingCard.id) return
+      // 上書きが必要。
+    },
+    dragOver(event) {
       event.target.style.opacity = 0.5;
     },
-    dragLeave: function () {
+    dragLeave(event) {
       event.target.style.opacity = 1;
     },
   }

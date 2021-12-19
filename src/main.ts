@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createApp } from 'vue'
 import App from './app.vue'
 
@@ -68,6 +69,7 @@ import {
   faBars,
   faCheckCircle,
   faMinusCircle,
+  faExpandAlt,
 } from '@fortawesome/free-solid-svg-icons'
 import {
   faTimesCircle as farTimesCircle,
@@ -82,4 +84,5 @@ library.add(
   faBars,
   faCheckCircle,
   faMinusCircle,
+  faExpandAlt,
 )
