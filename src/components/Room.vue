@@ -206,9 +206,10 @@ export default {
     DeckZone,
   },
   data() {
-    return initialData({
-      roomId: this.roomId,
+    const data = initialData({
+      roomId: this.$route.query.roomId,
     });
+    return data;
   },
   computed: {
     roomId() {
