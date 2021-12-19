@@ -27,6 +27,14 @@ db.jsonを作成する。
 }
 ```
 
+## herokuでsocket ioを使用するとき
+https://devcenter.heroku.com/articles/node-websockets
+```
+$ heroku features:enable http-session-affinity -a duelma-3
+$ heroku features -a duelma-3
+```
+CLI は、将来使用できるように、メールアドレスと API トークンを ~/.netrcに保存します。
+
 ## Project setup
 ```
 yarn install

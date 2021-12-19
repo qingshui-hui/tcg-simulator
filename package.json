@@ -1,6 +1,10 @@
 {
   "name": "duelma-3",
   "version": "0.1.0",
+  "engines": {
+    "node": "16.x",
+    "yarn": "3.x"
+  },
   "private": true,
   "workspaces": [
     "packages/*"
