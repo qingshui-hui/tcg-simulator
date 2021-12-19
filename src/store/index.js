@@ -43,7 +43,6 @@ const store = createStore({
       }
     },
     updateSettings(state, settings) {
-      console.log(settings)
       state.settings = {
         ...state.settings,
         ...settings,

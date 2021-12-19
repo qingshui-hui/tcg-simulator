@@ -4,6 +4,7 @@
     <div class="app-wrapper">
       <ImageViewer>
         <WorkSpace
+          :lowerPlayer="lowerPlayer"
           @move-cards="moveCards"
           @shuffle-cards="shuffleCards"
         ></WorkSpace>
@@ -125,8 +126,13 @@
           ></tefuda-zone>
         </div>
       </ImageViewer>
+      <o-dropdown>
+        <template #trigger>
+          <button>ゲームをリセットする</button>
+        </template>
+        <o-dropdown-item @click="resetGame">ゲームをリセットする</o-dropdown-item>
+      </o-dropdown>
 
-      <button @click="resetGame">ゲームをリセットする</button>
     </div>
   </div>
 </template>
@@ -226,7 +232,6 @@ export default {
         // fromCardをtoCardの前に移す。
         Util.arrayInsertBefore(this.players[player]["cards"][from], toCard, fromCard)
       }
-      console.log(this.players[player]["cards"][to])
       // 状態の変更を送信する
       if (!this.useConfig().WS_ENABLED) return;
       this.socket.emit("cards-moved", this.players[player]);
@@ -329,6 +334,10 @@ export default {
         top: 0,
         behavior: 'smooth'
       })
+      // 状態の変更を送信する
+      if (!this.socket) return;
+      this.socket.emit("cards-moved", this.players.a);
+      this.socket.emit("cards-moved", this.players.b);
     },
   },
   created() {

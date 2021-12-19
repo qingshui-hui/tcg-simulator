@@ -221,7 +221,7 @@ export default defineComponent({
       // mobileClassによって、メニューがモーダルになるかどうかを切り替えている。
       return [
         this.computedClass('rootClass', 'o-drop'),
-        { [this.computedClass('disabledClass', 'o-drop--disabled')]: this.disabled },
+        // { [this.computedClass('disabledClass', 'o-drop--disabled')]: this.disabled },
         { [this.computedClass('expandedClass', 'o-drop--expanded')]: this.expanded },
         { [this.computedClass('inlineClass', 'o-drop--inline')]: this.inline },
         // { [this.computedClass('mobileClass', 'o-drop--mobile')]: this.isMobileModal && this.isMatchMedia && !this.hoverable },
@@ -376,6 +376,7 @@ export default defineComponent({
     onClick() {
       // DID:
       if (this.triggers.indexOf('click') < 0) return
+      if (this.disabled) return
       // this.toggle()
       // Activeの状態だと外側かメニューをタップしないとメニューが閉じない。
       if (this.isActive && this.isHoverable) {

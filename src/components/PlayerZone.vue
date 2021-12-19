@@ -105,6 +105,11 @@ $card-width: 50px;
         transform: rotate(180deg);
       }
     }
+    &.lower {
+      .bochi {
+        margin-left: 5px;
+      }
+    }
     > * {
       align-self: center;
     }
@@ -136,7 +141,6 @@ $card-width: 50px;
     width: 60px;
     height: cardHeight(50px);
     background-color: purple;
-    margin-left: 5px;
     img {
     }
   }

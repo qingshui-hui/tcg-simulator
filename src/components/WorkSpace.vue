@@ -20,7 +20,7 @@
         @click="closeWorkSpace"
       ></o-icon>
       <!-- position absoluteで下につける -->
-      <div class="bottomMenu">
+      <div class="bottomMenu" v-if="this.player === this.lowerPlayer">
         <div class="bottomMenu__overlay">
           <!-- single actions -->
           <template v-if="['battleCards'].includes(workSpace.zone) && workSpace.single">
@@ -157,6 +157,7 @@ import Dropdown from "./dropdown/Dropdown.vue";
 export default {
   components: { Dropdown },
   mixins: [mixin.zone],
+  props: ['lowerPlayer'],
   computed: {
     player() {
       return this.$store.state.workSpace.player;
@@ -166,6 +167,10 @@ export default {
         const tappedCards = this.workSpace.cards.filter(c => c.tapped)
         const untappedCards = this.workSpace.cards.filter(c => !c.tapped)
         return [...untappedCards, ...tappedCards]
+      }
+      // 相手の裏向きのカードは表示しないようにする。
+      if (this.player !== this.lowerPlayer) {
+        return this.workSpace.cards.filter(c => !c.faceDown)
       }
       return this.workSpace.cards
     },

@@ -1,26 +1,31 @@
 <template>
-  <div id="deck-form" v-if="!isReady">
-    <p>デッキを選択してください</p>
-    <select name="deck" v-model="deckId">
-      <option v-for="(value, deckId) in deckList" :key="deckId" :value="deckId">{{ value.name }}</option>
-    </select>
-    <button @click="selectDeck">選択</button>
-  </div>
+  <o-modal :active="active" :canCancel="canCansel" :width="600">
+    <div id="deck-form" v-if="!isReady">
+      <p>デッキを選択してください</p>
+      <select name="deck" v-model="deckId">
+        <option v-for="(value, deckId) in deckList" :key="deckId" :value="deckId">{{ value.name }}</option>
+      </select>
+      <o-button @click="selectDeck" variant="info" size="medium" :style="{marginTop: '20px'}">選択</o-button>
+    </div>
 
-  <div v-else-if="!partnerIsReady" id="waiting-player">
-    <span>相手プレイヤーが</span>
-    <br />
-    <span>デッキを選択するのを待つか、</span>
-    <br />
-    <span>ウィンドウをもう一つ開いて、</span>
-    <br />
-    <span>同じ部屋番号の</span>
-    <br />
-    <span>相手プレイヤーとして、</span>
-    <br />
-    <span>デッキを選択してください</span>
-    <br />
-  </div>
+    <div v-else-if="!partnerIsReady" id="waiting-player">
+      <p>相手プレイヤーが</p>
+      <p>デッキを選択するのを待つか、</p>
+      <p>ウィンドウをもう一つ開いて、</p>
+      <p>同じ部屋番号の</p>
+      <p>相手プレイヤーとして、</p>
+      <p>デッキを選択してください</p>
+      <o-button variant="info" size="medium"
+        :style="{marginTop: '20px'}"
+        tag="a" :href="tabUrl" target="_blank"
+      >
+        <span>タブを開く</span>
+        <o-icon pack="fas" icon="external-link-alt"
+          :style="{marginLeft: '10px'}"
+        ></o-icon>
+      </o-button>
+    </div>
+  </o-modal>
 </template>
 
 <script>
@@ -35,6 +40,20 @@ export default {
       deckId: Object.keys(deckList)[0],
       deckList,
     }
+  },
+  computed: {
+    active() {
+      return !this.isReady || !this.partnerIsReady
+    },
+    canCansel() {
+      return this.isReady
+    },
+    tabUrl() {
+      // 相手プレイヤーのルームのURL
+      const roomId = this.$route.query.roomId
+      const player = this.$route.query.player
+      return encodeURI(`/room?roomId=${roomId}&player=${player == 'a' ? 'b' : 'a'}`)
+    },
   },
   mounted() {
     // クエリストリングにdeckIdが存在したときのショートカット。
@@ -64,27 +83,20 @@ export default {
 
 <style lang="scss">
 #deck-form {
-  position: absolute;
   text-align: center;
-  width: 300px;
-  height: 150px;
-  top: 200px;
-  left: 200px;
-  border-radius: 20px;
-  background-color: aqua;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  > * {
+    display: block;
+  }
   p {
     font-size: 20px;
     margin: 20px 0;
   }
 }
 #waiting-player {
-  position: absolute;
   text-align: center;
-  width: 300px;
-  top: 200px;
-  left: 200px;
-  border-radius: 20px;
-  background-color: lightgreen;
   line-height: 30px;
 }
 </style>

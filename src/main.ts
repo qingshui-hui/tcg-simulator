@@ -70,6 +70,7 @@ import {
   faCheckCircle,
   faMinusCircle,
   faExpandAlt,
+  faExternalLinkAlt,
 } from '@fortawesome/free-solid-svg-icons'
 import {
   faTimesCircle as farTimesCircle,
@@ -85,4 +86,5 @@ library.add(
   faCheckCircle,
   faMinusCircle,
   faExpandAlt,
+  faExternalLinkAlt,
 )
