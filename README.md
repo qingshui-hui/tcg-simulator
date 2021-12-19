@@ -35,6 +35,11 @@ $ heroku features -a duelma-3
 ```
 CLI は、将来使用できるように、メールアドレスと API トークンを ~/.netrcに保存します。
 
+```
+heroku ps:scale worker=1
+heroku ps -a duelma-3
+```
+
 ## Project setup
 ```
 yarn install

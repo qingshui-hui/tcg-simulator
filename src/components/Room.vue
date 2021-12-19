@@ -383,6 +383,8 @@ export default {
         }.bind(this)
       );
     }
+    // デバッグのために公開
+    window.$room = this;
   },
 };
 </script>

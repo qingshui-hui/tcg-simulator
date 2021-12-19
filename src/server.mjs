@@ -48,7 +48,7 @@ io.on('connection', function (socket) {
   socket.on('room', (roomId) => {
     socket.join('room' + roomId);
     // console.log('room'+roomId+'に入室しました')
-    // console.log(socket.rooms)
+    console.log(socket.rooms)
   })
   socket.on('leave-room', (roomId) => {
     socket.leave('room' + roomId)
@@ -67,8 +67,9 @@ io.on('connection', function (socket) {
     await db.write()
   })
   socket.on('set-message', (data) => {
+    console.log(data)
     // 部屋の全てのユーザーに送信
-    io.in('room' + data.roomId).emit('set-message', data);
+    // io.in('room' + data.roomId).emit('set-message', data);
   })
   // socket.on('pull-deck', (data) => {
   //     const isPlayerA = data.playerData.name === 'a';
