@@ -67,6 +67,7 @@ import {
   faArrowCircleUp,
   faBars,
   faCheckCircle,
+  faMinusCircle,
 } from '@fortawesome/free-solid-svg-icons'
 import {
   faTimesCircle as farTimesCircle,
@@ -80,4 +81,5 @@ library.add(
   faArrowCircleUp,
   faBars,
   faCheckCircle,
+  faMinusCircle,
 )

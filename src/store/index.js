@@ -5,11 +5,13 @@ const store = createStore({
   state () {
     return {
       draggingCard: null,
+      selectMode: false, // カードを重ねるときに使用。
       workSpace: {
         active: false,
         cards: [],
         zone: '',
         player: '',
+        minimal: false,
       },
       settings: {
         dropdownTriggers: ['click'],
@@ -19,6 +21,9 @@ const store = createStore({
   mutations: {
     setDraggingCard(state, card) {
       state.draggingCard = card
+    },
+    setSelectMode(state, boolVal) {
+      state.selectMode = boolVal
     },
     openWorkSpace(state, {cards, zone, player, single=false}) {
       state.workSpace = {

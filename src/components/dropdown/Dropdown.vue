@@ -378,8 +378,13 @@ export default defineComponent({
       if (this.triggers.indexOf('click') < 0) return
       // this.toggle()
       // Activeの状態だと外側かメニューをタップしないとメニューが閉じない。
-      this.isActive = true
-      this.isHoverable = true
+      if (this.isActive && this.isHoverable) {
+        this.isActive = false
+        this.isHoverable = false
+      } else {
+        this.isActive = true
+        this.isHoverable = true
+      }
     },
     onContextMenu() {
       if (this.triggers.indexOf('contextmenu') < 0) return

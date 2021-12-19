@@ -17,13 +17,22 @@
   <div class="tool-footer">
     <div>
       <label>
-        <input type="checkbox" checked @change="switchDisplay" />ホバーで画像拡大
+        <!-- v-modelだと値の更新が行われなかった。 -->
+        <input type="checkbox"
+          :checked="!display.hidden"
+          @change="display.hidden = !$event.target.checked"
+        />ホバーで画像拡大
       </label>
       <label>
-        <input type="checkbox" checked @change="switchDisplayBlur" />画像透過
+        <input type="checkbox"
+          :checked="display.blur"
+          @change="display.blur = $event.target.checked"
+        />画像透過
       </label>
       <label>
-        <input type="checkbox" checked @change="explanation.show = !explanation.show" />説明表示
+        <input type="checkbox"
+          :checked="explanation.show"
+          @change="explanation.show = $event.target.checked" />説明表示
       </label>
     </div>
     <div id="explanation" v-if="explanation.show">
@@ -40,7 +49,7 @@ export default {
     return {
       display: {
         left: true,
-        hidden: false,
+        hidden: true,
         blur: true,
         imageUrl: "",
       },
@@ -72,12 +81,6 @@ export default {
       } else {
         this.display.left = true;
       }
-    },
-    switchDisplay() {
-      this.display.hidden = !this.display.hidden
-    },
-    switchDisplayBlur() {
-      this.display.blur = !this.display.blur
     },
   },
 }
