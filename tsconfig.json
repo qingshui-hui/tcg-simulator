@@ -1,3 +1,12 @@
 {
   // https://v3.nuxtjs.org/concepts/typescript
+  "compilerOptions": {
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false
+  },
+  "exclude": [
+    "node_modules",
+    "src/components/dropdown",
+  ]
 }

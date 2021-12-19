@@ -50,6 +50,8 @@ import MatchMediaMixin from '@oruga-ui/oruga-next/src/utils/MatchMediaMixin.ts'
 
 import trapFocus from '@oruga-ui/oruga-next/src/directives/trapFocus.ts'
 import { getOptions } from '@oruga-ui/oruga-next/src/utils/config.ts'
+// @ts-nocheck
+// tslint:disable
 import { removeElement, createAbsoluteElement, toCssDimension, getValueByPath } from '@oruga-ui/oruga-next/src/utils/helpers.ts'
 
 /**
