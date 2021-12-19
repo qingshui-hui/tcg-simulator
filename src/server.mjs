@@ -57,6 +57,7 @@ io.on('connection', function (socket) {
   socket.on('cards-moved', async (data) => {
     // 送信者を除いく部屋のユーザーに送信。
     socket.to('room' + data.roomId).emit('cards-moved', data);
+    console.log(`cards-moved room${data.roomId}`)
     // dbアダプタを取得
     await db.read()
     // data.nameはプレイヤー名
@@ -65,6 +66,7 @@ io.on('connection', function (socket) {
     }
     db.data.rooms[data.roomId][data.name] = data
     await db.write()
+    console.log(`stored-data room${data.roomId}`)
   })
   socket.on('set-message', (data) => {
     console.log(data)

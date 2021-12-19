@@ -365,10 +365,11 @@ export default {
       this.$socket.emit("cards-moved", this.players.b);
     },
   },
-  created() {
+  async mounted() {
+    // サーバーからデータを取得する。
+    await this.getRoomState();
     if (this.$socket) {
-      // サーバーからデータを取得する。
-      this.getRoomState();
+      console.log("listen event");
 
       //
       // イベントをリッスン
