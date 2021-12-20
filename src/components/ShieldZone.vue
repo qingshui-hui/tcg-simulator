@@ -1,15 +1,10 @@
 <template>
   <div class="shield-zone" :class="side">
     <div
-      v-for="(card, index) in countableShieldCards" :key="index"
+      v-for="(card, index) in countableShieldCards"
+      :key="index"
       class="shield"
-      :class="{'is-selectMode': selectMode && workSpace.player === player}"
-      @dragover.prevent="dragOver($event)"
-      @dragleave="dragLeave($event)"
-      @touchstart="dragOver($event)"
-      @touchend="dragLeave($event)"
-      @contextmenu="dragLeave($event)"
-      @drop="dropCard($event, card, 'shieldCards')"
+      :class="{ 'is-selectMode': selectMode && selectMode.player === player }"
       @click="clickShield($event, card)"
     >
       <div class="shield-wrapper">
@@ -17,10 +12,9 @@
         <!-- 裏向きのカードの場合表示されない。 -->
         <img v-if="!card.faceDown" :src="card.imageUrl" />
         <span class="shield-reverse" v-else />
-        <div
-          v-if="card.groupId && group(card).cardIds.length > 1"
-          class="shield-num"
-        >{{ group(card).cardIds.length }}</div>
+        <div v-if="card.groupId && group(card).cardIds.length > 1" class="shield-num">
+          {{ group(card).cardIds.length }}
+        </div>
       </div>
     </div>
   </div>
@@ -31,61 +25,69 @@
 import mixin from "../helpers/mixin";
 
 export default {
-  props: ['player', 'shieldCards', 'shieldCardGroups', 'side'],
+  props: ["player", "shieldCards", "shieldCardGroups", "side"],
   mixins: [mixin.zone, mixin.droppable],
+  data() {
+    return {
+      zone: "shieldCards",
+      groupZone: "shieldCardGroups",
+    };
+  },
   computed: {
     countableShieldCards() {
       // グループ化されているカードは一つとカウントする。
-      const firstCardIds = this.shieldCardGroups.map(g => g.cardIds[0])
+      const firstCardIds = this.shieldCardGroups.map((g) => g.cardIds[0]);
       return this.shieldCards.filter((c) => {
-        return !c.groupId || firstCardIds.includes(c.id)
-      })
+        return !c.groupId || firstCardIds.includes(c.id);
+      });
     },
   },
   methods: {
     // リレーション
     group(card) {
       if (!card.groupId) {
-        return null
+        return null;
       }
       const group = {
-        ...this.shieldCardGroups.find(g => g.id === card.groupId)
-      }
-      group.cards = this.shieldCards.filter(c => c.groupId === group.id)
-      return group
-    },
-    dropCard(event, card) {
-      event.target.style.opacity = 1;
-      if (card.id === this.draggingCard.id) return
-      this.moveCard('battleCards', 'shieldCards', this.draggingCard)
-      this.$emit('group-card', {
-        from: 'shieldCards',
-        to: 'shieldCardGroups',
-        fromCard: this.draggingCard,
-        toCard: card,
-        player: this.player,
-      })
+        ...this.shieldCardGroups.find((g) => g.id === card.groupId),
+      };
+      group.cards = this.shieldCards.filter((c) => c.groupId === group.id);
+      return group;
     },
     clickShield(event, card) {
       if (!this.selectMode) {
         this.openWorkSpace({
-          zone: 'shieldCards',
+          zone: "shieldCards",
           cards: card.groupId ? this.group(card).cards : [card],
           player: this.player,
           single: true,
-        })
-        return
+        });
+        return;
       }
-      if (this.workSpace.player === this.player) {
-        // Drag&Dropと同じ扱いをする。
-        this.setDraggingCard(this.workSpace.cards[0])
-        this.dropCard(event, card)
-        this.closeWorkSpace()
-        return
+      // 本人確認
+      if (this.selectMode.player === this.player) {
+        // 選択中のカードと同じカードがクリックされた場合、
+        if (this.selectMode.card.id === card.id) {
+          // セレクトモードを終了。
+          this.setSelectMode(null);
+          return;
+        }
+        // カードを重ねる。
+        // moveSelectedCardでselectModeがnullになるので、情報を残しておく。
+        const fromCard = this.selectMode.card;
+        this.moveSelectedCard(this.zone);
+        this.$emit("group-card", {
+          from: this.zone,
+          to: this.groupZone,
+          fromCard: fromCard,
+          toCard: card,
+          player: this.player,
+        });
+        return;
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss">

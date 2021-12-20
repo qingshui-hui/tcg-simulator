@@ -7,6 +7,7 @@
           :lowerPlayer="lowerPlayer"
           @move-cards="moveCards"
           @shuffle-cards="shuffleCards"
+          @emit-room-state="emitRoomState"
         ></WorkSpace>
 
         <DeckSelector
@@ -66,6 +67,7 @@
             :battleCardGroups="players[upperPlayer]['cards']['battleCardGroups']"
             v-on:move-cards="moveCards"
             @group-card="groupCard"
+            @emit-room-state="emitRoomState"
           ></BattleZone>
 
           <!-- <MessageBox :upper-player="upperPlayer"
@@ -82,6 +84,7 @@
             :battleCardGroups="players[lowerPlayer]['cards']['battleCardGroups']"
             v-on:move-cards="moveCards"
             @group-card="groupCard"
+            @emit-room-state="emitRoomState"
           ></BattleZone>
 
           <player-zone
@@ -324,6 +327,13 @@ export default {
       if (!this.useConfig().WS_ENABLED) return;
       this.players[player].isReady = true;
       this.$socket.emit("cards-moved", this.players[player]);
+    },
+    emitRoomState() {
+      if (this.$socket) {
+        // 今のところバトルゾーンとマナゾーンのタップ状態を送信するために使用。
+        this.$socket.emit("cards-moved", this.players[this.lowerPlayer]);
+        // this.$socket.emit("cards-moved", this.players[this.upperPlayer])
+      }
     },
     shuffleCards(from, cards, player) {
       this.players[player]["cards"][from] = Deck.shuffle(cards);

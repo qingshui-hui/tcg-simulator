@@ -1,11 +1,16 @@
 <template>
   <div v-if="workSpace.active">
-    <div class="workSpace" :class="[{
-      workSpace__minimum: workSpace.minimum
-    }]">
+    <div
+      class="workSpace"
+      :class="[
+        {
+          workSpace__minimum: workSpace.minimum,
+        },
+      ]"
+    >
       <o-icon
         class="minButton"
-        :class="[{minButton__expand: workSpace.minimum}]"
+        :class="[{ minButton__expand: workSpace.minimum }]"
         pack="fas"
         :icon="workSpace.minimum ? 'expand-alt' : 'minus-circle'"
         size="medium"
@@ -23,50 +28,33 @@
       <div class="bottomMenu" v-if="this.player === this.lowerPlayer">
         <div class="bottomMenu__overlay">
           <!-- single actions -->
-          <template v-if="['battleCards'].includes(workSpace.zone) && workSpace.single">
-            <o-button
-              v-if="!workSpace.cards[0].tapped"
-              class="bottomMenu__action"
-              variant="primary"
-              size="medium"
-              @click="tapAllCards"
-            >タップする</o-button>
-            <o-button
-              v-else
-              class="bottomMenu__action"
-              variant="primary"
-              size="medium"
-              @click="untapAllCards"
-            >アンタップする</o-button>
-          </template>
           <o-button
             v-if="['shieldCards'].includes(workSpace.zone) && workSpace.single"
             class="bottomMenu__action"
             variant="primary"
             size="large"
             @click="moveCard(orderedCards[0], 'tefudaCards')"
-          >手札へ</o-button>
+            >手札へ</o-button
+          >
         </div>
       </div>
       <div class="workSpace_inner">
         <div class="workSpace_top">
           <div class="workSpace_top_1">
             <!-- ゾーン名をクリックしたときにも閉じる。 -->
-            <o-button variant="grey-dark" outlined @click="closeWorkSpace">{{ zoneName }}</o-button>
+            <o-button variant="grey-dark" outlined @click="closeWorkSpace">{{
+              zoneName
+            }}</o-button>
             <template v-if="['manaCards', 'battleCards'].includes(workSpace.zone)">
-              <o-button
-                v-if="!workSpace.single"
-                @click="untapAllCards"
-              >全てアンタップする</o-button>
-              <o-button
-                v-else-if="workSpace.cards.length === 1"
-                @click="startSelectMode"
-              >重ねる</o-button>
+              <o-button v-if="!workSpace.single" @click="untapAllCards"
+                >全てアンタップする</o-button
+              >
             </template>
             <o-button
               v-if="['yamafudaCards'].includes(workSpace.zone) && !workSpace.single"
               @click="shuffleCards('yamafudaCards', workSpace.cards)"
-            >シャッフル</o-button>
+              >シャッフル</o-button
+            >
           </div>
         </div>
         <div class="workSpace_cardList gridCardList">
@@ -81,9 +69,13 @@
                     icon="check-circle"
                     size="medium"
                     variant="info"
-                    :style="[{ position: 'absolute', top: '-5px', right: '0px', zIndex: '1' }]"
+                    :style="[
+                      { position: 'absolute', top: '-5px', right: '0px', zIndex: '1' },
+                    ]"
                   ></o-icon>
-                  <span class="card-id card-info" v-if="card.groupId">{{ card.groupId }}</span>
+                  <span class="card-id card-info" v-if="card.groupId">{{
+                    card.groupId
+                  }}</span>
                   <div>
                     <!-- ワークスペース内だけでみられる状態がある -->
                     <img
@@ -95,20 +87,32 @@
                 </div>
               </template>
               <o-dropdown-item>
-                <span class="drop-item-2" @click="moveCard(card, 'battleCards')">出す</span>
-                <span class="drop-item-2" @click="moveCard(card, 'tefudaCards')">手札へ</span>
+                <span class="drop-item-2" @click="moveCard(card, 'battleCards')"
+                  >出す</span
+                >
+                <span class="drop-item-2" @click="moveCard(card, 'tefudaCards')"
+                  >手札へ</span
+                >
               </o-dropdown-item>
               <o-dropdown-item>
-                <span class="drop-item-2" @click="moveCard(card, 'yamafudaCards', true)">山札の上へ</span>
-                <span class="drop-item-2" @click="moveCard(card, 'yamafudaCards')">/ 下へ</span>
+                <span class="drop-item-2" @click="moveCard(card, 'yamafudaCards', true)"
+                  >山札の上へ</span
+                >
+                <span class="drop-item-2" @click="moveCard(card, 'yamafudaCards')"
+                  >/ 下へ</span
+                >
               </o-dropdown-item>
               <o-dropdown-item>
-                <span class="drop-item-2" @click="moveCard(card, 'shieldCards')">シールドへ</span>
+                <span class="drop-item-2" @click="moveCard(card, 'shieldCards')"
+                  >シールドへ</span
+                >
                 <span class="drop-item-2" @click="openCard(card)">裏返す</span>
               </o-dropdown-item>
               <o-dropdown-item>
                 <span class="drop-item-2" @click="moveCard(card, 'manaCards')">マナ</span>
-                <span class="drop-item-2" @click="moveCard(card, 'bochiCards')">墓地へ</span>
+                <span class="drop-item-2" @click="moveCard(card, 'bochiCards')"
+                  >墓地へ</span
+                >
               </o-dropdown-item>
             </Dropdown>
             <div class="card_bottomButton">
@@ -116,7 +120,8 @@
               <o-button
                 v-if="card.faceDown && !card.showInWorkSpace"
                 @click="card.showInWorkSpace = true"
-              >見る</o-button>
+                >見る</o-button
+              >
 
               <!-- ショートカット -->
               <template v-else-if="['tefudaCards'].includes(workSpace.zone)">
@@ -124,11 +129,14 @@
                 <o-button @click="moveCard(card, 'manaCards')">マナ</o-button>
               </template>
               <o-button
-                v-else-if="['bochiCards'].includes(workSpace.zone)"
+                v-else-if="['battleCards', 'bochiCards'].includes(workSpace.zone)"
                 @click="moveCard(card, 'tefudaCards')"
-              >手札へ</o-button>
+                >手札へ</o-button
+              >
               <template v-else-if="['manaCards'].includes(workSpace.zone)">
-                <o-button v-if="!card.tapped" @click="card.tapped = true">タップ</o-button>
+                <o-button v-if="!card.tapped" @click="card.tapped = true"
+                  >タップ</o-button
+                >
                 <o-button v-else @click="card.tapped = false">アンタップ</o-button>
               </template>
             </div>
@@ -139,11 +147,13 @@
           <o-button
             v-if="['yamafudaCards', 'shieldCards'].includes(workSpace.zone)"
             @click="openAllCards"
-          >全て見る</o-button>
+            >全て見る</o-button
+          >
           <o-button
             v-if="['manaCards', 'battleCards'].includes(workSpace.zone)"
             @click="tapAllCards"
-          >全てタップする</o-button>
+            >全てタップする</o-button
+          >
         </template>
       </div>
     </div>
@@ -151,42 +161,42 @@
 </template>
 
 <script>
-import mixin from '../helpers/mixin.js'
+import mixin from "../helpers/mixin.js";
 import Dropdown from "./dropdown/Dropdown.vue";
 
 export default {
   components: { Dropdown },
   mixins: [mixin.zone],
-  props: ['lowerPlayer'],
+  props: ["lowerPlayer"],
   computed: {
     player() {
       return this.$store.state.workSpace.player;
     },
     orderedCards() {
-      if (this.workSpace.zone === 'manaCards') {
-        const tappedCards = this.workSpace.cards.filter(c => c.tapped)
-        const untappedCards = this.workSpace.cards.filter(c => !c.tapped)
-        return [...untappedCards, ...tappedCards]
+      if (this.workSpace.zone === "manaCards") {
+        const tappedCards = this.workSpace.cards.filter((c) => c.tapped);
+        const untappedCards = this.workSpace.cards.filter((c) => !c.tapped);
+        return [...untappedCards, ...tappedCards];
       }
       // 相手の裏向きのカードは表示しないようにする。
       if (this.player !== this.lowerPlayer) {
-        return this.workSpace.cards.filter(c => !c.faceDown)
+        return this.workSpace.cards.filter((c) => !c.faceDown);
       }
-      return this.workSpace.cards
+      return this.workSpace.cards;
     },
     zoneName() {
       const map = {
-        manaCards: 'マナゾーン',
-        battleCards: 'フィールド',
-        bochiCards: '墓地',
-        shieldCards: 'シールドゾーン',
-        tefudaCards: '手札',
-        yamafudaCards: '山札',
-      }
+        manaCards: "マナゾーン",
+        battleCards: "フィールド",
+        bochiCards: "墓地",
+        shieldCards: "シールドゾーン",
+        tefudaCards: "手札",
+        yamafudaCards: "山札",
+      };
       if (Object.keys(map).includes(this.workSpace.zone)) {
-        return map[this.workSpace.zone]
+        return map[this.workSpace.zone];
       }
-      return ''
+      return "";
     },
   },
   watch: {
@@ -195,15 +205,17 @@ export default {
     workSpace(newVal, oldVal) {
       // 開いたとき
       if (newVal.active) {
-        document.querySelector('#js_gameBoard').style.opacity = 0.8
+        document.querySelector("#js_gameBoard").style.opacity = 0.8;
         // 閉じたとき
       } else {
-        document.querySelector('#js_gameBoard').style.opacity = 1
-        oldVal.cards.forEach(c => {
-          c.showInWorkSpace = false
-        })
+        document.querySelector("#js_gameBoard").style.opacity = 1;
+        oldVal.cards.forEach((c) => {
+          c.showInWorkSpace = false;
+        });
         // セレクトモードをオフにする。
-        this.setSelectMode(false)
+        this.setSelectMode(null);
+        // 状態を送信
+        this.emitState();
       }
     },
   },
@@ -214,62 +226,54 @@ export default {
     },
     openAllCards() {
       // 山札とシールドでしか使わない想定
-      this.workSpace.cards.forEach(c => {
-        c.showInWorkSpace = true
-      })
+      this.workSpace.cards.forEach((c) => {
+        c.showInWorkSpace = true;
+      });
     },
     untapAllCards() {
-      this.workSpace.cards.forEach(c => {
-        c.tapped = false
-      })
-      this.closeWorkSpace()
+      this.workSpace.cards.forEach((c) => {
+        c.tapped = false;
+      });
+      this.closeWorkSpace();
     },
     tapAllCards() {
-      this.workSpace.cards.forEach(c => {
-        c.tapped = true
-      })
-      this.closeWorkSpace()
+      this.workSpace.cards.forEach((c) => {
+        c.tapped = true;
+      });
+      this.closeWorkSpace();
     },
     // 操作したプレイヤーだけが見ることができる。
     // カードを裏返すのとは違う。
     showAllInWorkSpace() {
-      this.workSpace.cards.forEach(c => {
-        c.showInWorkSpace = true
-      })
+      this.workSpace.cards.forEach((c) => {
+        c.showInWorkSpace = true;
+      });
     },
     moveCard(card, to, prepend = false) {
       // ワークスペースから移動したカードを消す。
       this.openWorkSpace({
         ...this.workSpace,
-        cards: this.workSpace.cards.filter(c => c.id !== card.id),
-      })
+        cards: this.workSpace.cards.filter((c) => c.id !== card.id),
+      });
       const from = this.workSpace.zone;
       // 見られる状態を解除
-      card.showInWorkSpace = false
+      card.showInWorkSpace = false;
       // バトルゾーン以外からシールドへ移動するときは裏向きにする。
-      if (to === 'shieldCards' && from !== 'battleCards') {
-        card.faceDown = true
+      if (to === "shieldCards" && from !== "battleCards") {
+        card.faceDown = true;
       }
-      this.$emit('move-cards', from, to, [card], this.workSpace.player, prepend);
+      this.$emit("move-cards", from, to, [card], this.workSpace.player, prepend);
       // カードが0枚になったらワークスペースを閉じる。
       if (this.workSpace.cards.length === 0) {
-        this.closeWorkSpace()
+        this.closeWorkSpace();
       }
     },
     shuffleCards(from, cards) {
-      this.$emit('shuffle-cards', from, cards, this.player)
-      this.closeWorkSpace()
+      this.$emit("shuffle-cards", from, cards, this.player);
+      this.closeWorkSpace();
     },
-    startSelectMode() {
-      if (!this.selectMode) {
-        this.setSelectMode(true)
-        this.workSpace.minimum = true
-      } else {
-        this.setSelectMode(false)
-      }
-    },
-  }
-}
+  },
+};
 </script>
 
 <style lang="scss">

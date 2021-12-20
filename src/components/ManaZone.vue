@@ -2,24 +2,38 @@
   <div class="mana-zone-wrapper">
     <div class="mana-zone manaZone" :class="side">
       <div
+        v-if="selectMode && selectMode.player === player"
         class="mana-counter manaButton"
-        :class="side"
-        @click="openWorkSpace({
-          zone: 'manaCards',
-          cards: manaCards,
-          player: player
-        })"
+        :class="[side, { 'is-selectMode': !!selectMode }]"
+        @click="moveSelectedCard(zone)"
       >
         <div class="manaButton_text">マナ</div>
-        <div class="mana-info manaButton_count">{{ countNormal }}/{{ manaCards.length }}</div>
+        <div class="mana-info manaButton_count">チャージ</div>
       </div>
-      <div class="green-wrapper" :class="{ 'reverse': side === 'upper' }">
+      <div
+        v-else
+        class="mana-counter manaButton"
+        :class="side"
+        @click="
+          openWorkSpace({
+            zone: 'manaCards',
+            cards: manaCards,
+            player: player,
+          })
+        "
+      >
+        <div class="manaButton_text">マナ</div>
+        <div class="mana-info manaButton_count">
+          {{ countNormal }}/{{ manaCards.length }}
+        </div>
+      </div>
+      <div class="green-wrapper" :class="{ reverse: side === 'upper' }">
         <div class="tapped">
           <div
             class="mana-card card"
             v-for="(card, index) in tappedCards"
             :key="index"
-            :style="{ top: (index) * 50 + 'px' }"
+            :style="{ top: index * 50 + 'px' }"
           >
             <img v-if="!card.faceDown" :src="card.imageUrl" />
             <img v-else src="@/assets/images/card-back.jpg" />
@@ -30,7 +44,7 @@
             class="mana-card card"
             v-for="(card, index) in normalCards"
             :key="index"
-            :style="{ right: (index) * 30 + 'px' }"
+            :style="{ right: index * 30 + 'px' }"
           >
             <img v-if="!card.faceDown" :src="card.imageUrl" />
             <img v-else src="@/assets/images/card-back.jpg" />
@@ -42,28 +56,32 @@
 </template>
 
 <script>
-
-import mixin from '@/helpers/mixin.js';
+import mixin from "@/helpers/mixin.js";
 
 export default {
-  props: ['player', 'manaCards', 'side'],
+  props: ["player", "manaCards", "side"],
   mixins: [mixin.zone],
+  data() {
+    return {
+      zone: "manaCards",
+    };
+  },
   computed: {
     normalCards() {
       return this.manaCards.filter((card) => {
         return card.tapped !== true;
-      })
+      });
     },
     tappedCards() {
       return this.manaCards.filter((card) => {
         return card.tapped === true;
-      })
+      });
     },
     countNormal() {
       return this.normalCards.length;
     },
   },
-}
+};
 </script>
 
 <style lang="scss">
@@ -108,7 +126,9 @@ $card-width: 50px;
     width: 70px;
     color: beige;
     text-align: center;
-
+    &.is-selectMode {
+      border: 3px solid orange;
+    }
     &_count {
     }
     &_text {

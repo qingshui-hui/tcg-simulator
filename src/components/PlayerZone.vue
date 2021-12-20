@@ -4,11 +4,13 @@
       <div class="player-counter" :class="side">
         <div
           class="shieldButton"
-          @click="openWorkSpace({
-            zone: 'shieldCards',
-            cards: shieldCards,
-            player: player,
-          })"
+          @click="
+            openWorkSpace({
+              zone: 'shieldCards',
+              cards: shieldCards,
+              player: player,
+            })
+          "
         >
           <div class="shieldButton_text">シールド</div>
           <div class="shieldButton_count">{{ countableShieldCards.length }}</div>
@@ -20,15 +22,11 @@
         <!-- デッキゾーン -->
         <slot name="deck-zone"></slot>
         <!-- 墓地 -->
-        <div
-          class="bochi"
-          @click="openWorkSpace({
-            zone: 'bochiCards',
-            cards: bochiCards,
-            player: player,
-          })"
-        >
-          <img v-if="lastCard(bochiCards)" :src="lastCard(bochiCards).imageUrl" />
+        <div class="bochi" @click="clickBochi">
+          <div v-if="selectMode && selectMode.player === player" class="bochi_text">
+            墓地へ
+          </div>
+          <img v-else-if="lastCard(bochiCards)" :src="lastCard(bochiCards).imageUrl" />
         </div>
       </div>
     </div>
@@ -39,13 +37,7 @@
 import mixin from "@/helpers/mixin.js";
 
 export default {
-  props: [
-    "player",
-    "bochiCards",
-    "shieldCards",
-    "shieldCardGroups",
-    "side",
-  ],
+  props: ["player", "bochiCards", "shieldCards", "shieldCardGroups", "side"],
   mixins: [mixin.zone],
   computed: {
     countableShieldCards() {
@@ -56,7 +48,7 @@ export default {
       });
     },
     dropdownTriggers() {
-      return this.$store.state.settings.dropdownTriggers
+      return this.$store.state.settings.dropdownTriggers;
     },
   },
   methods: {
@@ -66,6 +58,17 @@ export default {
         return cards[length - 1];
       }
       return null;
+    },
+    clickBochi() {
+      if (!this.selectMode) {
+        this.openWorkSpace({
+          zone: "bochiCards",
+          cards: this.bochiCards,
+          player: this.player,
+        });
+        return;
+      }
+      this.moveSelectedCard("bochiCards");
     },
   },
 };
@@ -110,6 +113,15 @@ $card-width: 50px;
         margin-left: 5px;
       }
     }
+    .bochi {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: lightgray;
+      &_text {
+        text-align: center;
+      }
+    }
     > * {
       align-self: center;
     }
@@ -141,6 +153,7 @@ $card-width: 50px;
     width: 60px;
     height: cardHeight(50px);
     background-color: purple;
+    cursor: pointer;
     img {
     }
   }

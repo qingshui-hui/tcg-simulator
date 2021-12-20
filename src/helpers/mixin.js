@@ -11,8 +11,18 @@ mixin.zone = {
     moveCard(from, to, card, prepend = false) {
       this.$emit('move-cards', from, to, [card], this.player, prepend);
     },
+    moveSelectedCard(to, prepend = false) {
+      if (!this.selectMode) return
+      // 本人確認
+      if (this.selectMode.player !== this.player) return
+      this.$emit('move-cards', this.selectMode.zone, to, [this.selectMode.card], this.player, prepend)
+      this.setSelectMode(null)
+    },
     shuffleCards(from, cards) {
       this.$emit('shuffle-cards', from, cards, this.player)
+    },
+    emitState() {
+      this.$emit('emit-room-state', this.player)
     },
     // openWorkSpace: function (cards, from, faceDown = null) {
     //   this.$emit('open-work-space', cards, from, this.player, faceDown);
