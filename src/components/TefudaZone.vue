@@ -58,15 +58,18 @@ export default {
   data() {
     return {
       zone: "tefudaCards",
-      cards: this.tefudaCards,
     };
+  },
+  computed: {
+    cards() {
+      return this.tefudaCards;
+    },
   },
   methods: {
     clickCard(card) {
       // すでに選択済みのカードであれば、選択解除
       if (this.selectMode && this.selectMode.card.id === card.id) {
         this.setSelectMode(null);
-        this.setDraggingCard(null);
         return;
       }
       // 選択する
@@ -75,7 +78,6 @@ export default {
         card,
         zone: this.zone,
       });
-      this.setDraggingCard(card);
     },
   },
 };

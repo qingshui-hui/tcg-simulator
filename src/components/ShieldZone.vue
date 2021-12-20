@@ -26,7 +26,7 @@ import mixin from "../helpers/mixin";
 
 export default {
   props: ["player", "shieldCards", "shieldCardGroups", "side"],
-  mixins: [mixin.zone, mixin.droppable],
+  mixins: [mixin.zone],
   data() {
     return {
       zone: "shieldCards",

@@ -73,7 +73,7 @@ import mixin from "@/helpers/mixin.js";
 
 export default {
   props: ["player", "battleCards", "battleCardGroups", "side"],
-  mixins: [mixin.zone, mixin.droppable],
+  mixins: [mixin.zone],
   computed: {
     battleZoneCards() {
       // 表示するカードのIDのリスト
@@ -99,7 +99,7 @@ export default {
     toggleTap(card) {
       card.tapped = !card.tapped;
       // 状態を送信
-      this.emitState()
+      this.emitState();
     },
     clickCard(event, card) {
       if (!this.selectMode) {

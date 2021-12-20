@@ -4,7 +4,6 @@ import { createStore } from 'vuex'
 const store = createStore({
   state () {
     return {
-      draggingCard: null,
       selectMode: false, // カードを重ねるときに使用。
       workSpace: {
         active: false,
@@ -19,9 +18,6 @@ const store = createStore({
     }
   },
   mutations: {
-    setDraggingCard(state, card) {
-      state.draggingCard = card
-    },
     setSelectMode(state, boolVal) {
       state.selectMode = boolVal
     },

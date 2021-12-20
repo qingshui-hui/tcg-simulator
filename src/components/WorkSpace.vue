@@ -8,14 +8,14 @@
         },
       ]"
     >
-      <o-icon
+      <!-- <o-icon
         class="minButton"
         :class="[{ minButton__expand: workSpace.minimum }]"
         pack="fas"
         :icon="workSpace.minimum ? 'expand-alt' : 'minus-circle'"
         size="medium"
         @click="workSpace.minimum = !workSpace.minimum"
-      ></o-icon>
+      ></o-icon> -->
       <o-icon
         v-if="!workSpace.minimum"
         class="closeButton"
