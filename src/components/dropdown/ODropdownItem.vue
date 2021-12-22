@@ -2,7 +2,7 @@
     <component
         :is="tag"
         :class="rootClasses"
-        @click="selectItem"
+        @click.stop="selectItem"
         :role="ariaRoleItem"
         :tabindex="tabindex">
         <slot/>

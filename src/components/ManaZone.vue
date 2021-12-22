@@ -5,7 +5,7 @@
         v-if="selectMode && selectMode.player === player"
         class="mana-counter manaButton"
         :class="[side, { 'is-selectMode': !!selectMode }]"
-        @click="moveSelectedCard(zone)"
+        @click.stop="moveSelectedCard(zone)"
       >
         <div class="manaButton_text">マナ</div>
         <div class="mana-info manaButton_count">チャージ</div>
@@ -14,7 +14,7 @@
         v-else
         class="mana-counter manaButton"
         :class="side"
-        @click="
+        @click.stop="
           openWorkSpace({
             zone: 'manaCards',
             cards: manaCards,

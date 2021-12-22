@@ -1,13 +1,13 @@
 <template>
 	<transition name="modal" appear>
-		<div class="modal modal-overlay" @click.self="$emit('close-modal')">
+		<div class="modal modal-overlay" @click.stop.self="$emit('close-modal')">
 			<div class="modal-window">
 				<div class="modal-content">
 					<slot name="content"/>
 				</div>
 				<footer class="modal-footer">
 					<slot name="footer">
-						<button @click="$emit('close-modal')">Close</button>
+						<button @click.stop="$emit('close-modal')">Close</button>
 					</slot>
 				</footer>
 			</div>
@@ -17,7 +17,7 @@
 
 <script>
 export default {
-	
+
 }
 </script>
 

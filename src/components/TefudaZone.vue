@@ -8,9 +8,9 @@
         >
           <!-- 対戦相手の手札は常に裏向き -->
           <div v-if="side === 'upper'">
-            <img src="@/assets/images/card-back.jpg" @click="clickCard(card)" />
+            <img src="@/assets/images/card-back.jpg" @click.stop="clickCard(card)" />
           </div>
-          <div v-else @click="clickCard(card)">
+          <div v-else @click.stop="clickCard(card)">
             <img v-if="card.faceDown" src="@/assets/images/card-back.jpg" />
             <img v-else :src="card.imageUrl" />
           </div>
@@ -22,7 +22,7 @@
           <o-button
             variant="grey-dark"
             size="small"
-            @click="
+            @click.stop="
               setSelectMode(null);
               moveCard(zone, 'battleCards', card);
             "
@@ -40,7 +40,7 @@
           size="large"
           icon="arrow-circle-up"
           variant="info"
-          @click="
+          @click.stop="
             openWorkSpace({
               zone,
               cards,
@@ -53,7 +53,7 @@
           class="tefudaZoneButton"
           variant="info"
           rounded
-          @click="moveSelectedCard(zone, true)"
+          @click.stop="moveSelectedCard(zone, true)"
         >
           手札へ
         </o-button>

@@ -6,7 +6,7 @@
       :tabindex="disabled ? false : 0"
       ref="trigger"
       :class="triggerClasses"
-      @click="onClick"
+      @click.stop="onClick"
       @contextmenu="false"
       @mouseenter="onHover"
       @mouseleave="onMouseleave"

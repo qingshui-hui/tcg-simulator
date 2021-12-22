@@ -4,7 +4,7 @@
       <div class="player-counter" :class="side">
         <div
           class="shieldButton"
-          @click="
+          @click.stop="
             openWorkSpace({
               zone: 'shieldCards',
               cards: shieldCards,
@@ -22,7 +22,7 @@
         <!-- デッキゾーン -->
         <slot name="deck-zone"></slot>
         <!-- 墓地 -->
-        <div class="bochi" @click="clickBochi">
+        <div class="bochi" @click.stop="clickBochi">
           <div v-if="selectMode && selectMode.player === player" class="bochi_text">
             墓地へ
           </div>

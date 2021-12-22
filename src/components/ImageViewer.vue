@@ -7,7 +7,7 @@
     >
       <div v-if="display.imageUrl" class="imageDisplay_image">
         <!-- ディスプレイが邪魔をして操作ができない時のために、クリックで閉じる -->
-        <img :src="display.imageUrl" @click="display.imageUrl = ''" />
+        <img :src="display.imageUrl" @click.stop="display.imageUrl = ''" />
       </div>
     </div>
     <!-- slot -->

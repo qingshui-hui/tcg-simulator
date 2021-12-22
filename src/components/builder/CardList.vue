@@ -26,16 +26,16 @@
               </div>
 
               <div class="buttons">
-                <div class="click" @click="addCardNum(card)">
+                <div class="click" @click.stop="addCardNum(card)">
                   <span>▲</span>
                 </div>
-                <div class="click" @click="decrementCardNum(card)">
+                <div class="click" @click.stop="decrementCardNum(card)">
                   <span>▼</span>
                 </div>
               </div>
             </div>
 
-            <div class="delele-button hidden" @click="deleteCard(card)">X</div>
+            <div class="delele-button hidden" @click.stop="deleteCard(card)">X</div>
           </div>
         </div>
       </template>

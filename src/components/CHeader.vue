@@ -2,7 +2,7 @@
   <div class="c-header">
     <o-icon class="c-header__bars" pack="fas" icon="bars" size="medium"
       style="color: white; margin-left: 30px;"
-      @click="sidebarOpen = !sidebarOpen"
+      @click.stop="sidebarOpen = !sidebarOpen"
     ></o-icon>
   </div>
   <div class="sidebar" :class="{

@@ -9,7 +9,7 @@
         class="battleZoneButton"
         variant="danger"
         rounded
-        @click="moveSelectedCard('battleCards', true)"
+        @click.stop="moveSelectedCard('battleCards', true)"
       >
         出す
       </o-button>
@@ -22,7 +22,7 @@
         size="large"
         icon="arrow-circle-up"
         variant="primary"
-        @click="
+        @click.stop="
           openWorkSpace({
             zone: 'battleCards',
             cards: battleCards,
@@ -43,11 +43,11 @@
           :class="{
             tapped: card.tapped,
             'is-group': !!card.groupId,
-            'is-selectMode': selectMode && selectMode.player === player,
+            'is-selectMode': selectTargetMode(),
             'is-selected': cardIsSelected(card),
           }"
           :draggable="!card.groupId"
-          @click="clickCard($event, card)"
+          @click.stop="clickCard($event, card)"
         >
           <img
             v-if="card.faceDown === true"
@@ -62,7 +62,7 @@
             v-if="card.groupId"
             variant="grey-dark"
             size="small"
-            @click="
+            @click.stop="
               openWorkSpace({
                 zone: 'battleCards',
                 cards: card.groupId ? group(card).cards : [card],
@@ -74,31 +74,30 @@
           >
           <template v-else>
             <o-button
-              v-if="selectMode && selectMode.card.id === card.id"
+              v-if="selectTargetMode() && selectMode.card.id === card.id"
               variant="grey-dark"
               size="small"
-              @click="clickCard($event, card)"
+              @click.stop="clickCard($event, card)"
               >キャンセル</o-button
             >
             <o-button
               v-else
               variant="grey-dark"
               size="small"
-              @click="
+              @click.stop="
                 setSelectMode({
-                  card,
-                  zone: 'battleCards',
-                  player: player,
+                  ...selectMode,
+                  selectingTarget: true,
                 })
               "
               >重ねる</o-button
             >
           </template>
           <!-- アンタップ or タップ -->
-          <o-button v-if="card.tapped" variant="grey-dark" @click="toggleTap(card)"
+          <o-button v-if="card.tapped" variant="grey-dark" @click.stop="toggleTap(card)"
             >アンタップ</o-button
           >
-          <o-button v-else variant="grey-dark" @click="toggleTap(card)">タップ</o-button>
+          <o-button v-else variant="grey-dark" @click.stop="toggleTap(card)">タップ</o-button>
         </div>
       </div>
     </div>
@@ -144,23 +143,16 @@ export default {
         // 選択中のカードと同じカードがクリックされた場合、
         // セレクトモードを終了。
         this.setSelectMode(null);
-        this.setSelectedCard(null);
         return;
       }
-      if (!this.selectMode) {
-        // if (!card.groupId) {
-        //   this.setSelectMode({
-        //     card,
-        //     zone: "battleCards",
-        //     player: this.player,
-        //   });
-        //   return;
-        // }
-        this.setSelectedCard(card);
+      if (!this.selectTargetMode()) {
+        this.setSelectMode({
+          card,
+          zone: "battleCards",
+          player: this.player,
+        });
         return;
-      }
-      // 本人確認
-      if (this.selectMode.player === this.player) {
+      } else {
         // カードを重ねる。
         // moveSelectedCardでselectModeがnullになるので、情報を残しておく。
         const fromCard = this.selectMode.card;
@@ -174,15 +166,6 @@ export default {
         });
         return;
       }
-    },
-    cardIsSelected(card) {
-      if (this.selectMode && this.selectMode.card.id === card.id) {
-        return true;
-      }
-      if (this.selectedCard && this.selectedCard.id === card.id) {
-        return true;
-      }
-      return false;
     },
   },
 };
@@ -271,7 +254,8 @@ $card-width: 100px;
     }
     &.is-selected {
       img {
-        border-color: #b60000;
+        border: 3px solid #b60000;
+        border-radius: 5px;
       }
     }
     &_wrapper {

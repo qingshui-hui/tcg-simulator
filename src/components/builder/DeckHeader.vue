@@ -23,17 +23,17 @@
       <span>合計枚数{{ totalNum }} カードの種類{{ cardNum }}</span>
       <span
         class="save-button click"
-        @click="updateDeck()"
+        @click.stop="updateDeck()"
         v-if="selected.deckType === 'custom'"
       >変更を保存</span>
       <span
         class="click"
-        @click="openModal(deckList['custom'][selected.index].name, 'update')"
+        @click.stop="openModal(deckList['custom'][selected.index].name, 'update')"
         v-if="selected.deckType === 'custom'"
       >名前を変更</span>
       <span
         class="click"
-        @click="openModal('', 'create')"
+        @click.stop="openModal('', 'create')"
         v-if="selected.deckType === 'custom'"
       >新規作成</span>
     </div>
@@ -48,7 +48,7 @@
         </div>
       </template>
       <template v-slot:footer>
-        <button @click="updateDeckName">送信</button>
+        <button @click.stop="updateDeckName">送信</button>
       </template>
     </Modal>
 
@@ -62,7 +62,7 @@
         </div>
       </template>
       <template v-slot:footer>
-        <button @click="createDeck">送信</button>
+        <button @click.stop="createDeck">送信</button>
       </template>
     </Modal>
   </div>

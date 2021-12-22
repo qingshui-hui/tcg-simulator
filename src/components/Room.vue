@@ -11,6 +11,7 @@
         ></WorkSpace>
 
         <DeckSelector
+          v-model="deckSelectorActive"
           :player="lowerPlayer"
           :isReady="players[lowerPlayer].isReady"
           :partnerIsReady="players[this.upperPlayer].isReady"
@@ -134,7 +135,7 @@
         <template #trigger>
           <button>ゲームをリセットする</button>
         </template>
-        <o-dropdown-item @click="resetGame">ゲームをリセットする</o-dropdown-item>
+        <o-dropdown-item @click.stop="resetGame">ゲームをリセットする</o-dropdown-item>
       </o-dropdown>
     </div>
   </div>
@@ -190,6 +191,7 @@ function initialData({ roomId }) {
         isReady: false,
       },
     },
+    deckSelectorActive: false,
   };
 }
 

@@ -4,8 +4,8 @@
       v-for="(card, index) in countableShieldCards"
       :key="index"
       class="shield"
-      :class="{ 'is-selectMode': selectMode && selectMode.player === player }"
-      @click="clickShield($event, card)"
+      :class="{ 'is-selectMode': selectTargetMode() }"
+      @click.stop="clickShield($event, card)"
     >
       <div class="shield-wrapper">
         <span class="shield-id">{{ card.shieldId }}</span>
