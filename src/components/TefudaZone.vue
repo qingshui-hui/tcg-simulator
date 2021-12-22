@@ -1,19 +1,33 @@
 <template>
   <div class="tefuda-zone-wrapper" :class="side">
     <div class="tefuda-zone" :class="side">
-      <div
-        class="card"
-        :class="[{ 'is-selected': selectMode && selectMode.card.id === card.id }]"
-        v-for="(card, index) in tefudaCards"
-        :key="index"
-      >
-        <!-- 対戦相手の手札は常に裏向き -->
-        <div v-if="side === 'upper'">
-          <img src="@/assets/images/card-back.jpg" @click="clickCard(card)" />
+      <div class="card_wrapper" v-for="(card, index) in tefudaCards" :key="index">
+        <div
+          class="card"
+          :class="[{ 'is-selected': selectMode && selectMode.card.id === card.id }]"
+        >
+          <!-- 対戦相手の手札は常に裏向き -->
+          <div v-if="side === 'upper'">
+            <img src="@/assets/images/card-back.jpg" @click="clickCard(card)" />
+          </div>
+          <div v-else @click="clickCard(card)">
+            <img v-if="card.faceDown" src="@/assets/images/card-back.jpg" />
+            <img v-else :src="card.imageUrl" />
+          </div>
         </div>
-        <div v-else @click="clickCard(card)">
-          <img v-if="card.faceDown" src="@/assets/images/card-back.jpg" />
-          <img v-else :src="card.imageUrl" />
+        <div
+          v-if="selectMode && selectMode.card.id === card.id"
+          class="card_bottomButton"
+        >
+          <o-button
+            variant="grey-dark"
+            size="small"
+            @click="
+              setSelectMode(null);
+              moveCard(zone, 'battleCards', card);
+            "
+            >出す</o-button
+          >
         </div>
       </div>
 
@@ -38,7 +52,6 @@
           v-else
           class="tefudaZoneButton"
           variant="info"
-          size="medium"
           rounded
           @click="moveSelectedCard(zone, true)"
         >
@@ -84,6 +97,8 @@ export default {
 </script>
 
 <style lang="scss">
+$card-width: 70px;
+
 .tefuda-zone-wrapper {
   .openZoneButton {
     transform: rotate(45deg);
@@ -112,13 +127,16 @@ export default {
     }
   }
   img {
-    width: 70px;
+    width: $card-width;
   }
   .tefuda-zone {
     height: 100%;
     display: flex;
     overflow-x: scroll;
-    max-width: 400px;
+    max-width: 410px;
+    .card_wrapper {
+      position: relative;
+    }
     .card {
       position: relative;
       margin-right: 5px;
@@ -127,6 +145,14 @@ export default {
           border: 3px solid #b60000;
           border-radius: 5px;
         }
+      }
+      &_bottomButton {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: $card-width;
+        display: flex;
+        justify-content: center;
       }
     }
   }

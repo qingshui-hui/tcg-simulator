@@ -5,6 +5,7 @@ const store = createStore({
   state () {
     return {
       selectMode: false, // カードを重ねるときに使用。
+      selectedCard: null, // セレクトモードではないが、カードを選択するとき使用する。
       workSpace: {
         active: false,
         cards: [],
@@ -19,13 +20,21 @@ const store = createStore({
     }
   },
   mutations: {
-    setSelectMode(state, boolVal) {
-      state.selectMode = boolVal
+    setSelectMode(state, data) {
+      // セレクトモード変化時には選択中のカードを消す。
+      state.selectedCard = null
+      state.selectMode = data
+    },
+    setSelectedCard(state, card) {
+      state.selectedCard = card
     },
     openWorkSpace(state, {cards, zone, player, single=false}) {
       // 既に開いている状態で、同じゾーンを開こうとした場合は閉じる。
       if (state.workSpace.active) {
-        if (state.workSpace.player === player && state.workSpace.zone === zone) {
+        if (state.workSpace.player === player
+          && state.workSpace.zone === zone
+          && state.workSpace.cards.length === cards.length
+        ) {
           store.commit('closeWorkSpace')
           return
         }

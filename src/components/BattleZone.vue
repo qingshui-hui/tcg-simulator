@@ -8,7 +8,6 @@
       <o-button
         class="battleZoneButton"
         variant="danger"
-        size="medium"
         rounded
         @click="moveSelectedCard('battleCards', true)"
       >
@@ -45,7 +44,7 @@
             tapped: card.tapped,
             'is-group': !!card.groupId,
             'is-selectMode': selectMode && selectMode.player === player,
-            'is-selected': selectMode && selectMode.card.id === card.id,
+            'is-selected': cardIsSelected(card),
           }"
           :draggable="!card.groupId"
           @click="clickCard($event, card)"
@@ -57,10 +56,45 @@
           />
           <img v-else :src="card.imageUrl" draggable="false" />
         </div>
-        <div
-          v-if="selectMode && selectMode.card.id === card.id"
-          class="card_bottomButton"
-        >
+        <div v-if="cardIsSelected(card)" class="card_bottomButton">
+          <!-- 重ねる or 見る -->
+          <o-button
+            v-if="card.groupId"
+            variant="grey-dark"
+            size="small"
+            @click="
+              openWorkSpace({
+                zone: 'battleCards',
+                cards: card.groupId ? group(card).cards : [card],
+                player: player,
+                single: true,
+              })
+            "
+            >見る</o-button
+          >
+          <template v-else>
+            <o-button
+              v-if="selectMode && selectMode.card.id === card.id"
+              variant="grey-dark"
+              size="small"
+              @click="clickCard($event, card)"
+              >キャンセル</o-button
+            >
+            <o-button
+              v-else
+              variant="grey-dark"
+              size="small"
+              @click="
+                setSelectMode({
+                  card,
+                  zone: 'battleCards',
+                  player: player,
+                })
+              "
+              >重ねる</o-button
+            >
+          </template>
+          <!-- アンタップ or タップ -->
           <o-button v-if="card.tapped" variant="grey-dark" @click="toggleTap(card)"
             >アンタップ</o-button
           >
@@ -101,35 +135,32 @@ export default {
     },
     toggleTap(card) {
       card.tapped = !card.tapped;
+      this.setSelectMode(null);
       // 状態を送信
       this.emitState();
     },
     clickCard(event, card) {
+      if (this.cardIsSelected(card)) {
+        // 選択中のカードと同じカードがクリックされた場合、
+        // セレクトモードを終了。
+        this.setSelectMode(null);
+        this.setSelectedCard(null);
+        return;
+      }
       if (!this.selectMode) {
-        if (!card.groupId) {
-          this.setSelectMode({
-            card,
-            zone: "battleCards",
-            player: this.player,
-          });
-          return;
-        }
-        this.openWorkSpace({
-          zone: "battleCards",
-          cards: card.groupId ? this.group(card).cards : [card],
-          player: this.player,
-          single: true,
-        });
+        // if (!card.groupId) {
+        //   this.setSelectMode({
+        //     card,
+        //     zone: "battleCards",
+        //     player: this.player,
+        //   });
+        //   return;
+        // }
+        this.setSelectedCard(card);
         return;
       }
       // 本人確認
       if (this.selectMode.player === this.player) {
-        // 選択中のカードと同じカードがクリックされた場合、
-        if (this.selectMode.card.id === card.id) {
-          // セレクトモードを終了。
-          this.setSelectMode(null);
-          return;
-        }
         // カードを重ねる。
         // moveSelectedCardでselectModeがnullになるので、情報を残しておく。
         const fromCard = this.selectMode.card;
@@ -143,6 +174,15 @@ export default {
         });
         return;
       }
+    },
+    cardIsSelected(card) {
+      if (this.selectMode && this.selectMode.card.id === card.id) {
+        return true;
+      }
+      if (this.selectedCard && this.selectedCard.id === card.id) {
+        return true;
+      }
+      return false;
     },
   },
 };
@@ -242,7 +282,12 @@ $card-width: 100px;
       left: 50%;
       transform: translateX(-50%) translateY(-100%);
       display: flex;
+      flex-direction: column;
       justify-content: center;
+      align-items: center;
+      > * + * {
+        margin-top: 10px;
+      }
     }
   }
 }
