@@ -2,18 +2,12 @@
   <div class="player-zone-wrapper">
     <div class="player-zone" :class="side">
       <div class="player-counter" :class="side">
-        <div
-          class="shieldButton"
-          @click.stop="
-            openWorkSpace({
-              zone: 'shieldCards',
-              cards: shieldCards,
-              player: player,
-            })
-          "
-        >
-          <div class="shieldButton_text">シールド</div>
-          <div class="shieldButton_count">{{ countableShieldCards.length }}</div>
+        <div class="shieldButton" @click.stop="clickShieldButton">
+          <div v-if="hasSelectedCard()" class="shieldButton_text__single">シールドへ</div>
+          <template v-else>
+            <div class="shieldButton_text">シールド</div>
+            <div class="shieldButton_count">{{ countableShieldCards.length }}</div>
+          </template>
         </div>
       </div>
       <div class="blue-wrapper" :class="side">
@@ -69,6 +63,17 @@ export default {
         return;
       }
       this.moveSelectedCard("bochiCards");
+    },
+    clickShieldButton() {
+      if (this.hasSelectedCard()) {
+        this.moveSelectedCard("shieldCards");
+        return;
+      }
+      this.openWorkSpace({
+        zone: "shieldCards",
+        cards: this.shieldCards,
+        player: this.player,
+      });
     },
   },
 };
@@ -142,6 +147,10 @@ $card-width: 50px;
       padding-top: 10px;
       margin: 0px 0 5px;
       font-size: 10px;
+      &__single {
+        line-height: 50px;
+        font-size: 12px;
+      }
     }
     &_count {
     }

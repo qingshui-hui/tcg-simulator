@@ -93,11 +93,21 @@
               >重ねる</o-button
             >
           </template>
-          <!-- アンタップ or タップ -->
-          <o-button v-if="card.tapped" variant="grey-dark" @click.stop="toggleTap(card)"
-            >アンタップ</o-button
+          <o-button
+            v-if="card.faceDown"
+            variant="grey-dark"
+            @click.stop="card.faceDown = !card.faceDown"
+            >裏返す</o-button
           >
-          <o-button v-else variant="grey-dark" @click.stop="toggleTap(card)">タップ</o-button>
+          <!-- アンタップ or タップ -->
+          <template v-else>
+            <o-button v-if="card.tapped" variant="grey-dark" @click.stop="toggleTap(card)"
+              >アンタップ</o-button
+            >
+            <o-button v-else variant="grey-dark" @click.stop="toggleTap(card)"
+              >タップ</o-button
+            >
+          </template>
         </div>
       </div>
     </div>

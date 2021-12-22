@@ -11,6 +11,7 @@
         <img
           class="deck_topImg"
           v-if="yamafudaCards.length > 0"
+          :class="[{ is_selected: cardIsSelected(yamafudaCards[0]) }]"
           src="@/assets/images/card-back.jpg"
           alt
           :style="{
@@ -20,13 +21,19 @@
         />
       </div>
     </template>
-    <o-dropdown-item
-      v-if="yamafudaCards.length > 0"
-      aria-role="listitem"
-      @click="moveCard('yamafudaCards', 'tefudaCards', yamafudaCards[0])"
-      >ドロー</o-dropdown-item
-    >
-    <o-dropdown-item aria-role="listitem" @click="openDeck">開く</o-dropdown-item>
+    <template v-if="yamafudaCards.length > 0">
+      <o-dropdown-item aria-role="listitem" @click="openDeck">開く</o-dropdown-item>
+      <o-dropdown-item
+        aria-role="listitem"
+        @click="setSelectMode({ zone: 'yamafudaCards', card: yamafudaCards[0], player })"
+        >山札の上から一枚目を</o-dropdown-item
+      >
+      <o-dropdown-item
+        aria-role="listitem"
+        @click="moveCard('yamafudaCards', 'tefudaCards', yamafudaCards[0])"
+        >ドロー</o-dropdown-item
+      >
+    </template>
   </Dropdown>
 </template>
 
@@ -103,6 +110,10 @@ $card-width: 50px;
     width: $card-width;
     height: cardHeight($card-width);
     border-radius: 2px;
+    &.is_selected {
+      border: 1px solid red;
+      border-radius: 5px;
+    }
   }
   .deck_card {
     width: 100%;

@@ -23,6 +23,7 @@ mixin.zone = {
         && this.selectMode.selectingTarget
     },
     cardIsSelected(card) {
+      if (!card) return false
       if (this.hasSelectedCard() && this.selectMode.card.id === card.id) {
         return true;
       }

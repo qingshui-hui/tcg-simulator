@@ -1,31 +1,16 @@
 <template>
   <div class="mana-zone-wrapper">
     <div class="mana-zone manaZone" :class="side">
-      <div
-        v-if="selectMode && selectMode.player === player"
-        class="mana-counter manaButton"
-        :class="[side, { 'is-selectMode': !!selectMode }]"
-        @click.stop="moveSelectedCard(zone)"
-      >
-        <div class="manaButton_text">マナ</div>
-        <div class="mana-info manaButton_count">チャージ</div>
-      </div>
-      <div
-        v-else
-        class="mana-counter manaButton"
-        :class="side"
-        @click.stop="
-          openWorkSpace({
-            zone: 'manaCards',
-            cards: manaCards,
-            player: player,
-          })
-        "
-      >
-        <div class="manaButton_text">マナ</div>
-        <div class="mana-info manaButton_count">
-          {{ countNormal }}/{{ manaCards.length }}
+      <div class="mana-counter manaButton" @click.stop="clickManaButton">
+        <div v-if="hasSelectedCard()" class="mana-info manaButton_text__single">
+          チャージ
         </div>
+        <template v-else>
+          <div class="manaButton_text">マナ</div>
+          <div class="mana-info manaButton_count">
+            {{ countNormal }}/{{ manaCards.length }}
+          </div>
+        </template>
       </div>
       <div class="green-wrapper" :class="{ reverse: side === 'upper' }">
         <div class="tapped">
@@ -81,6 +66,19 @@ export default {
       return this.normalCards.length;
     },
   },
+  methods: {
+    clickManaButton() {
+      if (this.hasSelectedCard()) {
+        this.moveSelectedCard(this.zone);
+        return;
+      }
+      this.openWorkSpace({
+        zone: "manaCards",
+        cards: this.manaCards,
+        player: this.player,
+      });
+    },
+  },
 };
 </script>
 
@@ -126,15 +124,16 @@ $card-width: 50px;
     width: 70px;
     color: beige;
     text-align: center;
-    &.is-selectMode {
-      border: 3px solid orange;
-    }
     &_count {
     }
     &_text {
       padding: 5px 0;
       line-height: 10px;
       font-size: 10px;
+      &__single {
+        line-height: 50px;
+        font-size: 12px;
+      }
     }
   }
 
