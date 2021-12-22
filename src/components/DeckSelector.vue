@@ -28,7 +28,7 @@
       <p>同じ部屋番号の</p>
       <p>相手プレイヤーとして、</p>
       <p>デッキを選択してください</p>
-      <o-button
+      <!-- <o-button
         variant="info"
         size="medium"
         :style="{ marginTop: '20px' }"
@@ -42,7 +42,7 @@
           icon="external-link-alt"
           :style="{ marginLeft: '10px' }"
         ></o-icon>
-      </o-button>
+      </o-button> -->
     </div>
   </o-modal>
 </template>

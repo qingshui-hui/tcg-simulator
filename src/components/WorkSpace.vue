@@ -294,7 +294,7 @@ export default {
     },
     clickedOutside(event) {
       // 本来はワークスペースを開く要素全てを除く必要がある。
-      if (event.target.closest(".workSpace")) {
+      if (event.target.closest(".workSpace") || event.target.closest(".o-drop__menu")) {
         return;
       }
       console.log("click outside");
@@ -442,6 +442,9 @@ $card-width: 120px;
   }
   .drop-item-2 {
     display: inline-block;
+    width: 100%;
+    height: 100%;
+
     &:not(:first-child) {
       margin-left: auto;
     }

@@ -6,23 +6,27 @@
           class="deck_card"
           v-for="i in deckViews"
           :key="i"
-          :style="{ top: `${(i - 1) * (-2)}px`, left: `${(i - 1) * (-2)}px` }"
+          :style="{ top: `${(i - 1) * -2}px`, left: `${(i - 1) * -2}px` }"
         ></div>
         <img
           class="deck_topImg"
           v-if="yamafudaCards.length > 0"
           src="@/assets/images/card-back.jpg"
           alt
-          :style="{ top: `${deckViews.length * (-2)}px`, left: `${deckViews.length * (-2)}px` }"
+          :style="{
+            top: `${deckViews.length * -2}px`,
+            left: `${deckViews.length * -2}px`,
+          }"
         />
       </div>
     </template>
     <o-dropdown-item
       v-if="yamafudaCards.length > 0"
       aria-role="listitem"
-      @click.stop="moveCard('yamafudaCards', 'tefudaCards', yamafudaCards[0])"
-    >ドロー</o-dropdown-item>
-    <o-dropdown-item aria-role="listitem" @click.stop="openDeck">開く</o-dropdown-item>
+      @click="moveCard('yamafudaCards', 'tefudaCards', yamafudaCards[0])"
+      >ドロー</o-dropdown-item
+    >
+    <o-dropdown-item aria-role="listitem" @click="openDeck">開く</o-dropdown-item>
   </Dropdown>
 </template>
 
@@ -31,54 +35,50 @@ import mixin from "@/helpers/mixin.js";
 import Dropdown from "./dropdown/Dropdown.vue";
 
 export default {
-  props: [
-    "player",
-    "yamafudaCards",
-    "side",
-  ],
+  props: ["player", "yamafudaCards", "side"],
   mixins: [mixin.zone],
   components: { Dropdown },
   computed: {
     dropdownTriggers() {
-      return this.$store.state.settings.dropdownTriggers
+      return this.$store.state.settings.dropdownTriggers;
     },
     deckViews() {
       // 1~nまでの数字を順に要素とする配列を返す。
       // デッキの下に重なっているカード要素の数を
       // deckViewsLengthとする。
-      const l = this.yamafudaCards.length
-      let deckViewsLength = 0
+      const l = this.yamafudaCards.length;
+      let deckViewsLength = 0;
       if (l >= 20) {
-        deckViewsLength = 4
+        deckViewsLength = 4;
       } else if (l >= 15) {
-        deckViewsLength = 3
+        deckViewsLength = 3;
       } else if (l >= 2) {
-        deckViewsLength = 2
-      // } else if (l >= 2) {
-      //   deckViewsLength = 1
-      // deckViewが一枚だけだと見た目が良くなかったため飛ばして0にする。
+        deckViewsLength = 2;
+        // } else if (l >= 2) {
+        //   deckViewsLength = 1
+        // deckViewが一枚だけだと見た目が良くなかったため飛ばして0にする。
       } else {
-        deckViewsLength = 0
+        deckViewsLength = 0;
       }
-      const deckViews = []
+      const deckViews = [];
       for (let i = 0; i < deckViewsLength; i++) {
-        deckViews.push(i + 1)
+        deckViews.push(i + 1);
       }
-      return deckViews
+      return deckViews;
     },
   },
   methods: {
     // デッキを開くときはデフォルトで全て裏にする。
     openDeck() {
-      this.yamafudaCards.forEach(c => {
-        c.faceDown = true
-      })
+      this.yamafudaCards.forEach((c) => {
+        c.faceDown = true;
+      });
       this.openWorkSpace({
-        zone: 'yamafudaCards',
+        zone: "yamafudaCards",
         cards: this.yamafudaCards,
         player: this.player,
-      })
-    }
+      });
+    },
   },
 };
 </script>

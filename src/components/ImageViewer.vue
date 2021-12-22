@@ -84,5 +84,10 @@ export default {
       }
     },
   },
+  mounted() {
+    if (window.innerWidth > 800) {
+      this.display.hidden = false;
+    }
+  },
 };
 </script>
