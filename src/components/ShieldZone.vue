@@ -105,6 +105,7 @@ export default {
     margin-right: 5px;
   }
   &.upper {
+    flex-direction: row;
     .shield-wrapper {
       transform: rotate(180deg);
     }
