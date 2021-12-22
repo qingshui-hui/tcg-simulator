@@ -288,6 +288,25 @@ export default {
       this.$emit("shuffle-cards", from, cards, this.player);
       this.closeWorkSpace();
     },
+    clickedOutside(event) {
+      // 本来はワークスペースを開く要素全てを除く必要がある。
+      if (event.target.closest(".workSpace")) {
+        return;
+      }
+      if (event.target.id === "js_gameBoard") {
+        this.closeWorkSpace();
+      }
+    },
+  },
+  mounted() {
+    if (typeof window !== "undefined") {
+      document.addEventListener("click", this.clickedOutside);
+    }
+  },
+  beforeUnmount() {
+    if (typeof window !== "undefined") {
+      document.removeEventListener("click", this.clickedOutside);
+    }
   },
 };
 </script>

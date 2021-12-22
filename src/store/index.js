@@ -23,6 +23,13 @@ const store = createStore({
       state.selectMode = boolVal
     },
     openWorkSpace(state, {cards, zone, player, single=false}) {
+      // 既に開いている状態で、同じゾーンを開こうとした場合は閉じる。
+      if (state.workSpace.active) {
+        if (state.workSpace.player === player && state.workSpace.zone === zone) {
+          store.commit('closeWorkSpace')
+          return
+        }
+      }
       state.workSpace = {
         cards,
         zone,
