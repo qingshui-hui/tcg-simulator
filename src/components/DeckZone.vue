@@ -1,5 +1,5 @@
 <template>
-  <Dropdown :triggers="dropdownTriggers" :disabled="side === 'upper'" position="top-left">
+  <Dropdown :triggers="dropdownTriggers" position="top-left">
     <template v-slot:trigger>
       <div class="deck_zone" :class="side">
         <div

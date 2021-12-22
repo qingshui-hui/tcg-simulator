@@ -11,6 +11,7 @@ const store = createStore({
         zone: '',
         player: '',
         minimal: false,
+        single: false, // シールドが重なっている場合や、進化クリーチャーの時もtrue
       },
       settings: {
         dropdownTriggers: ['click'],

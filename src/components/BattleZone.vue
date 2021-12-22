@@ -38,7 +38,7 @@
         [side]: true,
       }"
     >
-      <div v-for="(card, index) in battleZoneCards" :key="index">
+      <div class="card_wrapper" v-for="(card, index) in battleZoneCards" :key="index">
         <div
           class="card in-battle"
           :class="{
@@ -57,7 +57,10 @@
           />
           <img v-else :src="card.imageUrl" draggable="false" />
         </div>
-        <div v-if="side === 'lower' && !!selectMode" class="card_bottomButton">
+        <div
+          v-if="selectMode && selectMode.card.id === card.id"
+          class="card_bottomButton"
+        >
           <o-button v-if="card.tapped" variant="grey-dark" @click="toggleTap(card)"
             >アンタップ</o-button
           >
@@ -231,7 +234,13 @@ $card-width: 100px;
         border-color: #b60000;
       }
     }
+    &_wrapper {
+      position: relative;
+    }
     &_bottomButton {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100%);
       display: flex;
       justify-content: center;
     }

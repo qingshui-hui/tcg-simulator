@@ -25,25 +25,15 @@
         @click="closeWorkSpace"
       ></o-icon>
       <!-- position absoluteで下につける -->
-      <div class="bottomMenu" v-if="this.player === this.lowerPlayer">
-        <div class="bottomMenu__overlay">
-          <!-- single actions -->
-          <o-button
-            v-if="['shieldCards'].includes(workSpace.zone) && workSpace.single"
-            class="bottomMenu__action"
-            variant="primary"
-            size="large"
-            @click="moveCard(orderedCards[0], 'tefudaCards')"
-            >手札へ</o-button
-          >
-        </div>
+      <div class="bottomMenu">
+        <div class="bottomMenu__overlay"></div>
       </div>
       <div class="workSpace_inner">
         <div class="workSpace_top">
           <div class="workSpace_top_1">
             <!-- ゾーン名をクリックしたときにも閉じる。 -->
             <o-button variant="grey-dark" outlined @click="closeWorkSpace">{{
-              zoneName
+              (isOwner ? "" : "相手の") + zoneName
             }}</o-button>
             <template v-if="['manaCards', 'battleCards'].includes(workSpace.zone)">
               <o-button v-if="!workSpace.single" @click="untapAllCards"
@@ -70,7 +60,12 @@
                     size="medium"
                     variant="info"
                     :style="[
-                      { position: 'absolute', top: '-5px', right: '0px', zIndex: '1' },
+                      {
+                        position: 'absolute',
+                        top: '-5px',
+                        right: '0px',
+                        zIndex: '1',
+                      },
                     ]"
                   ></o-icon>
                   <span class="card-id card-info" v-if="card.groupId">{{
@@ -106,7 +101,9 @@
                 <span class="drop-item-2" @click="moveCard(card, 'shieldCards')"
                   >シールドへ</span
                 >
-                <span class="drop-item-2" @click="openCard(card)">裏返す</span>
+                <span v-if="isOwner" class="drop-item-2" @click="openCard(card)"
+                  >裏返す</span
+                >
               </o-dropdown-item>
               <o-dropdown-item>
                 <span class="drop-item-2" @click="moveCard(card, 'manaCards')">マナ</span>
@@ -116,12 +113,21 @@
               </o-dropdown-item>
             </Dropdown>
             <div class="card_bottomButton">
-              <!-- 裏向きのカードを見るボタン -->
-              <o-button
-                v-if="card.faceDown && !card.showInWorkSpace"
-                @click="card.showInWorkSpace = true"
-                >見る</o-button
-              >
+              <template v-if="['yamafudaCards'].includes(workSpace.zone)">
+                <!-- 裏向きのカードを見るボタン -->
+                <!-- 本人確認 -->
+                <o-button
+                  v-if="card.faceDown && !card.showInWorkSpace && isOwner"
+                  @click="card.showInWorkSpace = true"
+                  >見る</o-button
+                >
+                <!-- 見られる状態になったカードを場に出すボタン -->
+                <o-button
+                  v-if="card.showInWorkSpace"
+                  @click="moveCard(card, 'battleCards')"
+                  >出す</o-button
+                >
+              </template>
 
               <!-- ショートカット -->
               <template v-else-if="['tefudaCards'].includes(workSpace.zone)">
@@ -133,6 +139,9 @@
                 @click="moveCard(card, 'tefudaCards')"
                 >手札へ</o-button
               >
+              <template v-else-if="['shieldCards'].includes(workSpace.zone)">
+                <o-button @click="moveCard(card, 'tefudaCards')">手札へ</o-button>
+              </template>
               <template v-else-if="['manaCards'].includes(workSpace.zone)">
                 <o-button v-if="!card.tapped" @click="card.tapped = true"
                   >タップ</o-button
@@ -145,7 +154,7 @@
         <!-- 全て〇〇する系 -->
         <template v-if="!workSpace.single">
           <o-button
-            v-if="['yamafudaCards', 'shieldCards'].includes(workSpace.zone)"
+            v-if="['yamafudaCards', 'shieldCards'].includes(workSpace.zone) && isOwner"
             @click="openAllCards"
             >全て見る</o-button
           >
@@ -178,10 +187,6 @@ export default {
         const untappedCards = this.workSpace.cards.filter((c) => !c.tapped);
         return [...untappedCards, ...tappedCards];
       }
-      // 相手の裏向きのカードは表示しないようにする。
-      if (this.player !== this.lowerPlayer) {
-        return this.workSpace.cards.filter((c) => !c.faceDown);
-      }
       return this.workSpace.cards;
     },
     zoneName() {
@@ -193,10 +198,19 @@ export default {
         tefudaCards: "手札",
         yamafudaCards: "山札",
       };
+      if (this.workSpace.single && this.workSpace.zone === "shieldCards") {
+        return "シールド";
+      }
+      if (this.workSpace.zone === "yamafudaCards") {
+        return `山札 (${this.workSpace.cards.length}枚)`;
+      }
       if (Object.keys(map).includes(this.workSpace.zone)) {
         return map[this.workSpace.zone];
       }
       return "";
+    },
+    isOwner() {
+      return this.player === this.lowerPlayer;
     },
   },
   watch: {
@@ -256,6 +270,8 @@ export default {
         cards: this.workSpace.cards.filter((c) => c.id !== card.id),
       });
       const from = this.workSpace.zone;
+      // 見られる状態であれば、表向きにする
+      if (card.showInWorkSpace) card.faceDown = false;
       // 見られる状態を解除
       card.showInWorkSpace = false;
       // バトルゾーン以外からシールドへ移動するときは裏向きにする。
