@@ -31,7 +31,7 @@
         </div>
       </div>
 
-      <template v-if="side == 'lower'">
+      <div v-if="side == 'lower'" class="tefudaZoneButton_wrapper">
         <o-icon
           v-if="!selectMode"
           class="openZoneButton"
@@ -57,7 +57,7 @@
         >
           手札へ
         </o-button>
-      </template>
+      </div>
     </div>
   </div>
 </template>
@@ -97,6 +97,9 @@ export default {
 </script>
 
 <style lang="scss">
+@function cardHeight($value) {
+  @return calc($value * 908 / 650);
+}
 $card-width: 70px;
 
 .tefuda-zone-wrapper {
@@ -107,6 +110,11 @@ $card-width: 70px;
   }
   .tefudaZoneButton {
     align-self: center;
+    &_wrapper {
+      display: flex;
+      align-items: center;
+      height: cardHeight($card-width);
+    }
   }
   &.upper {
     margin-left: 100px;

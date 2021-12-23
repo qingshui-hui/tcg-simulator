@@ -1,11 +1,8 @@
 <template>
   <div class="battle-zone-wrapper">
-    <template
-      v-if="
-        selectMode && selectMode.zone !== 'battleCards' && selectMode.player === player
-      "
-    >
+    <div class="battleZoneButton_wrapper" :class="side">
       <o-button
+        v-if="hasSelectedCard()"
         class="battleZoneButton"
         variant="danger"
         rounded
@@ -13,11 +10,9 @@
       >
         出す
       </o-button>
-    </template>
-    <template v-else>
       <o-icon
+        v-else
         class="openZoneButton battleZoneButton"
-        :class="side"
         pack="fas"
         size="large"
         icon="arrow-circle-up"
@@ -30,7 +25,7 @@
           })
         "
       ></o-icon>
-    </template>
+    </div>
     <div
       class="battle-zone"
       :class="{
@@ -192,26 +187,31 @@ $card-width: 100px;
   img {
     width: $card-width;
   }
-  .openZoneButton {
-    transform: rotate(45deg);
-    cursor: pointer;
-    &.upper {
-      margin-top: 20px;
-      align-self: flex-start;
-    }
-  }
   .battleZoneButton {
-    align-self: flex-end;
-    margin-left: 20px;
-    &.lower {
-      margin-bottom: 10px;
+    // align-self: flex-end;
+    cursor: pointer;
+    &_wrapper {
+      margin-left: 20px;
+      margin-right: 10px;
+      width: 70px;
+      height: 50px;
+      &.upper {
+        align-self: flex-start;
+        margin-top: 20px;
+      }
+      &.lower {
+        align-self: flex-end;
+        margin-bottom: 20px;
+      }
+    }
+    &.openZoneButton {
+      transform: rotate(45deg);
     }
   }
   .battle-zone {
     // スクロールをしないUIに変更
     display: flex;
     flex-wrap: wrap;
-    margin-left: 30px;
     min-height: cardHeight($card-width);
     // overflow-x: scroll;
     // height: cardHeight($card-width);
