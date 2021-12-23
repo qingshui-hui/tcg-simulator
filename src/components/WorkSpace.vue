@@ -52,22 +52,6 @@
             <Dropdown class="dropdown">
               <template #trigger>
                 <div class="card with-info" :class="{ tapped: card.tapped }">
-                  <o-icon
-                    v-if="false"
-                    class="card_checkedIcon"
-                    pack="fas"
-                    icon="check-circle"
-                    size="medium"
-                    variant="info"
-                    :style="[
-                      {
-                        position: 'absolute',
-                        top: '-5px',
-                        right: '0px',
-                        zIndex: '1',
-                      },
-                    ]"
-                  ></o-icon>
                   <span class="card-id card-info" v-if="card.groupId">{{
                     card.groupId
                   }}</span>
@@ -418,10 +402,6 @@ $card-width: 120px;
     img {
       width: $card-width;
     }
-    &_checkedIcon {
-      background-color: #fff;
-      border-radius: 50%;
-    }
     &_bottomButton {
       display: flex;
       justify-content: center;
@@ -436,17 +416,21 @@ $card-width: 120px;
     font-weight: bold;
     color: beige;
   }
+  .o-drop__menu {
+    top: 40px;
+  }
   .o-drop__item {
     display: flex;
     justify-content: space-between;
   }
   .drop-item-2 {
+    font-size: 14px;
     display: inline-block;
     width: 100%;
     height: 100%;
 
     &:not(:first-child) {
-      margin-left: auto;
+      margin-left: 5px;
     }
     &:hover {
       background-color: lightgray;

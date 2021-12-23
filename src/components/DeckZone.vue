@@ -1,5 +1,5 @@
 <template>
-  <Dropdown :triggers="dropdownTriggers" position="top-left">
+  <Dropdown class="deckZone_wrapper" :triggers="dropdownTriggers" position="top-left">
     <template v-slot:trigger>
       <div class="deck_zone" :class="side">
         <div
@@ -122,6 +122,11 @@ $card-width: 50px;
     background-color: black;
     border: 1px solid white;
     border-radius: 2px;
+  }
+}
+.deckZone_wrapper {
+  .o-drop__menu {
+    bottom: 30px;
   }
 }
 </style>
