@@ -11,10 +11,10 @@
         ></WorkSpace>
 
         <DeckSelector
-          v-model="deckSelectorActive"
+          v-model:active="deckSelectorActive"
           :player="lowerPlayer"
           :isReady="players[lowerPlayer].isReady"
-          :partnerIsReady="players[this.upperPlayer].isReady"
+          :partnerIsReady="players[upperPlayer].isReady"
           @moveCards="moveCards"
           @selected="players[lowerPlayer].isReady = true"
         ></DeckSelector>
@@ -135,7 +135,9 @@
         <template #trigger>
           <button>ゲームをリセットする</button>
         </template>
-        <o-dropdown-item @click.stop="resetGame">ゲームをリセットする</o-dropdown-item>
+        <o-dropdown-item :itemActiveClass="'dropdown-item__active'" @click="resetGame"
+          >ゲームをリセットする</o-dropdown-item
+        >
       </o-dropdown>
     </div>
   </div>
@@ -365,13 +367,20 @@ export default {
       if (room.b) {
         this.players.b = room.b;
       }
+      // 片方がデッキ未選択であれば、モーダルを表示する。
+      if (!this.players.a.isReady || !this.players.b.isReady) {
+        this.deckSelectorActive = true;
+      } else {
+        this.deckSelectorActive = false;
+      }
     },
     resetGame() {
       this.players = initialData({ roomId: this.roomId }).players;
       window.scrollTo({
         top: 0,
-        behavior: "smooth",
+        // behavior: "smooth",
       });
+      this.deckSelectorActive = true;
       // 状態の変更を送信する
       if (!this.$socket) return;
       this.$socket.emit("cards-moved", this.players.a);

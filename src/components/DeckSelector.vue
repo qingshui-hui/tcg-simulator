@@ -1,10 +1,5 @@
 <template>
-  <o-modal
-    :active="active"
-    :canCancel="canCansel"
-    @close="$emit('input', false)"
-    :width="600"
-  >
+  <o-modal :active="active" :canCancel="canCansel" @close="onClose" :width="600">
     <div id="deck-form" v-if="!isReady">
       <p>デッキを選択してください</p>
       <select name="deck" v-model="deckId">
@@ -52,7 +47,7 @@ import { data } from "@/helpers/data";
 import { Deck } from "@/helpers/Deck";
 
 export default {
-  props: ["isReady", "player", "partnerIsReady"],
+  props: ["isReady", "player", "partnerIsReady", "active"],
   data() {
     const deckList = data.deckList;
     return {
@@ -61,9 +56,6 @@ export default {
     };
   },
   computed: {
-    active() {
-      return !this.isReady || !this.partnerIsReady;
-    },
     canCansel() {
       return this.isReady;
     },
@@ -107,6 +99,9 @@ export default {
         this.player
       );
       this.$emit("selected", true);
+    },
+    onClose() {
+      this.$emit("update:active", false);
     },
   },
 };
