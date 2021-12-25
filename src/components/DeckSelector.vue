@@ -51,12 +51,25 @@ export default {
       return encodeURI(`/room?roomId=${roomId}&player=${player == "a" ? "b" : "a"}`);
     },
   },
-  mounted() {
+  created() {
     // クエリストリングにdeckIdが存在したときのショートカット。
     if (this.$route.query.deckId) {
       this.deckId = this.$route.query.deckId;
       this.selectDeck();
     }
+    // GC Storageからデータを取得する。
+    // httpsとhttpの場合でcorsの挙動に差があり、httpの方を利用した。
+    fetch("http://storage.googleapis.com/card-storage/decks.json")
+      .then((res) => {
+        if (!res.ok) {
+          console.log(res.status);
+          return;
+        }
+        return res.json();
+      })
+      .then((decks) => {
+        this.deckList = [...this.deckList, ...decks];
+      });
   },
   methods: {
     selectDeck() {
