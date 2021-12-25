@@ -91,14 +91,21 @@ export default {
         deck.slice(5, 10),
         this.player
       );
+      const yamafudaCards = deck.slice(10, 40);
+      yamafudaCards.forEach((c) => {
+        c.faceDown = true;
+      });
       this.$emit(
         "move-cards",
         "yamafudaCards",
         "yamafudaCards",
-        deck.slice(10, 40),
+        yamafudaCards,
         this.player
       );
       this.$emit("selected", true);
+      if (this.partnerIsReady) {
+        this.$emit("update:active", false);
+      }
     },
     onClose() {
       this.$emit("update:active", false);
