@@ -51,7 +51,7 @@ export default {
       return encodeURI(`/room?roomId=${roomId}&player=${player == "a" ? "b" : "a"}`);
     },
   },
-  created() {
+  mounted() {
     // クエリストリングにdeckIdが存在したときのショートカット。
     if (this.$route.query.deckId) {
       this.deckId = this.$route.query.deckId;
@@ -59,7 +59,8 @@ export default {
     }
     // GC Storageからデータを取得する。
     // httpsとhttpの場合でcorsの挙動に差があり、httpの方を利用した。
-    fetch("http://storage.googleapis.com/card-storage/decks.json")
+    const deckUrl = `${window.location.protocol}//storage.googleapis.com/card-storage/decks.json`;
+    fetch(deckUrl)
       .then((res) => {
         if (!res.ok) {
           console.log(res.status);
