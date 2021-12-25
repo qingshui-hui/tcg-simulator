@@ -51,7 +51,7 @@ export default {
       display: {
         left: true,
         hidden: true,
-        blur: true,
+        blur: false,
         imageUrl: "",
       },
       explanation: {

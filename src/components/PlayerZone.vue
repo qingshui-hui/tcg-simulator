@@ -112,6 +112,9 @@ $card-width: 50px;
       .bochi {
         transform: rotate(180deg);
       }
+      .bochi_text {
+        transform: rotate(180deg);
+      }
     }
     &.lower {
       .bochi {

@@ -101,7 +101,6 @@ export default {
     clickCard(card) {
       // すでに選択済みのカードであれば、選択解除
       if (this.selectMode && this.selectMode.card.id === card.id) {
-        console.log("cancel");
         this.setSelectMode(null);
         return;
       }
