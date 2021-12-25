@@ -1,35 +1,39 @@
 const START_ID_A = 1;
 const START_ID_B = 101;
 
-// const data  require('../../js/data.js');
-import { data } from './data'
-const deckData = data.deckList;
+import { useConfig } from '../plugins/useConfig'
+
 export class Deck {
-  static getDeckById(imageHost, deckId, playerA = false) {
-    let deck = [];
-    const prefix = deckData[`${deckId}`]["urlPrefix"];
-    for (let data of deckData[`${deckId}`]["cards"]) {
+  static prepareDeck(deckCards, playerA = false) {
+    let cards = [];
+    deckCards.forEach(data => {
       // デッキメーカーから取り込んだデータにはtimeがないことによる対応。
       const times = data.time || 1
       for (let i = 0; i < times; i++) {
-        let card = {};
-        if (!data.imageUrl) {
-          // 環境変数で、カード画像のサーバーを設定する。
-          card.imageUrl =
-            imageHost + `/${prefix + data.imageId}.jpg`;
-        } else {
-          card.imageUrl = data.imageUrl;
-        }
-        deck.push(card);
+        cards.push({
+          imageId: data.imageId,
+          imageUrl: data.imageUrl,
+        });
       }
-    }
-    deck = Deck.shuffle(deck);
+    })
+    return this.prepareCardsForGame(cards, playerA)
+  }
+
+  /**
+   * ゲーム内で一意になるようなカードIDをカードに付与する
+   */
+  static prepareCardsForGame(cards, playerA = false) {
+    let shuffledCards = Deck.shuffle(cards);
+    const startId = playerA ? START_ID_A : START_ID_B;
+    const imageHost = useConfig().IMAGE_HOST
     // id が特定のカード名と結びつかないように、シャッフルしてから
-    for (let i = 0; i < deck.length; i++) {
-      const startId = playerA ? START_ID_A : START_ID_B;
-      deck[i].id = i + startId;
-    }
-    return deck;
+    shuffledCards = shuffledCards.map((c, i) => {
+      return {
+        id: startId + i,
+        imageUrl: c.imageUrl || `${imageHost}/${c.imageId}`
+      }
+    })
+    return shuffledCards;
   }
 
   static formatData(deckD, imageHost) {

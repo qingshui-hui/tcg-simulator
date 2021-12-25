@@ -73,16 +73,6 @@ io.on('connection', function (socket) {
     // 部屋の全てのユーザーに送信
     // io.in('room' + data.roomId).emit('set-message', data);
   })
-  // socket.on('pull-deck', (data) => {
-  //     const isPlayerA = data.playerData.name === 'a';
-  //     const deck = Deck.getDeckById(data.deckId, isPlayerA);
-  //     const playerData = data.playerData;
-  //     playerData['cards']['shieldCards'] = deck.slice(0,5);
-  //     playerData['cards']['tefudaCards'] = deck.slice(5,10);
-  //     playerData['cards']['yamafudaCards'] = deck.slice(10,40);
-  //     playerData['isReady'] = true;
-  //     io.to('room'+playerData.roomId).emit('cards-moved', playerData);
-  // })
   socket.on("disconnect", () => {
     console.log('ソケットの接続が切断されました。')
   });

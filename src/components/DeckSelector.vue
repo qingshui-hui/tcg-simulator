@@ -3,8 +3,8 @@
     <div id="deck-form" v-if="!isReady">
       <p>デッキを選択してください</p>
       <select name="deck" v-model="deckId">
-        <option v-for="(value, deckId) in deckList" :key="deckId" :value="deckId">
-          {{ value.name }}
+        <option v-for="(deck, index) in deckList" :key="index" :value="index">
+          {{ deck.name }}
         </option>
       </select>
       <o-button
@@ -23,21 +23,6 @@
       <p>同じ部屋番号の</p>
       <p>相手プレイヤーとして、</p>
       <p>デッキを選択してください</p>
-      <!-- <o-button
-        variant="info"
-        size="medium"
-        :style="{ marginTop: '20px' }"
-        tag="a"
-        :href="tabUrl"
-        target="_blank"
-      >
-        <span>タブを開く</span>
-        <o-icon
-          pack="fas"
-          icon="external-link-alt"
-          :style="{ marginLeft: '10px' }"
-        ></o-icon>
-      </o-button> -->
     </div>
   </o-modal>
 </template>
@@ -51,7 +36,7 @@ export default {
   data() {
     const deckList = data.deckList;
     return {
-      deckId: Object.keys(deckList)[0],
+      deckId: 0,
       deckList,
     };
   },
@@ -75,8 +60,10 @@ export default {
   },
   methods: {
     selectDeck() {
-      const config = this.useConfig();
-      const deck = Deck.getDeckById(config.IMAGE_HOST, this.deckId, this.player === "a");
+      const deck = Deck.prepareDeck(
+        this.deckList[this.deckId].cards,
+        this.player === "a"
+      );
 
       // fromのカードは存在しなくても良いため、仮にyamafudaCardsにしている。
       const shieldCards = deck.slice(0, 5);
