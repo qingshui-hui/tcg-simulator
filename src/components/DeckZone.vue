@@ -8,24 +8,63 @@
           :key="i"
           :style="{ top: `${(i - 1) * -2}px`, left: `${(i - 1) * -2}px` }"
         ></div>
-        <img
+        <div
           class="deck_topImg"
           v-if="yamafudaCards.length > 0"
           :class="[{ is_selected: cardIsSelected(yamafudaCards[0]) }]"
-          src="@/assets/images/card-back.jpg"
           alt
           :style="{
             top: `${deckViews.length * -2}px`,
             left: `${deckViews.length * -2}px`,
           }"
-        />
+        >
+          <img
+            v-if="yamafudaCards[0].faceDown"
+            src="@/assets/images/card-back.jpg"
+            alt=""
+          />
+          <img v-else :src="yamafudaCards[0].imageUrl" alt="" />
+        </div>
+        <!-- <template>
+          <img
+            class="deck_topImg"
+            v-if="yamafudaCards.length > 0"
+            :class="[{ is_selected: cardIsSelected(yamafudaCards[0]) }]"
+            :src="card.faceDown ? '/images/card-back.jpg' : card.imageUrl"
+            alt
+            :style="{
+              top: `${deckViews.length * -2}px`,
+              left: `${deckViews.length * -2}px`,
+            }"
+          />
+        </template>
+        <template>
+          <img
+            class="deck_topImg"
+            v-if="yamafudaCards.length > 0"
+            :class="[{ is_selected: cardIsSelected(yamafudaCards[0]) }]"
+            :src="card.faceDown ? '/images/card-back.jpg' : card.imageUrl"
+            alt
+            :style="{
+              top: `${deckViews.length * -2}px`,
+              left: `${deckViews.length * -2}px`,
+            }"
+          />
+        </template> -->
       </div>
     </template>
     <template v-if="yamafudaCards.length > 0">
       <o-dropdown-item aria-role="listitem" @click="openDeck">開く</o-dropdown-item>
       <o-dropdown-item
         aria-role="listitem"
-        @click="setSelectMode({ zone: 'yamafudaCards', card: yamafudaCards[0], player })"
+        @click="
+          setSelectMode({
+            zone: 'yamafudaCards',
+            card: yamafudaCards[0],
+            player,
+            selectingTarget: true,
+          })
+        "
         >山札の上から一枚目を</o-dropdown-item
       >
       <o-dropdown-item
@@ -111,8 +150,15 @@ $card-width: 50px;
     height: cardHeight($card-width);
     border-radius: 2px;
     &.is_selected {
-      border: 1px solid red;
-      border-radius: 5px;
+      img {
+        border: 1px solid red;
+        border-radius: 5px;
+      }
+    }
+    img {
+      border-radius: 2px;
+      width: $card-width;
+      height: cardHeight($card-width);
     }
   }
   .deck_card {

@@ -20,6 +20,25 @@
           class="card_bottomButton"
         >
           <o-button
+            v-if="selectTargetMode() && selectMode.card.id === card.id"
+            variant="grey-dark"
+            size="small"
+            @click.stop="clickCard(card)"
+            >キャンセル</o-button
+          >
+          <o-button
+            v-else
+            variant="grey-dark"
+            size="small"
+            @click.stop="
+              setSelectMode({
+                ...selectMode,
+                selectingTarget: true,
+              })
+            "
+            >重ねる</o-button
+          >
+          <o-button
             variant="grey-dark"
             size="small"
             @click.stop="
@@ -82,6 +101,7 @@ export default {
     clickCard(card) {
       // すでに選択済みのカードであれば、選択解除
       if (this.selectMode && this.selectMode.card.id === card.id) {
+        console.log("cancel");
         this.setSelectMode(null);
         return;
       }
@@ -161,6 +181,14 @@ $card-width: 70px;
         width: $card-width;
         display: flex;
         justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        > * + * {
+          margin-top: 15px;
+        }
+        > * {
+          width: fit-content;
+        }
       }
     }
   }

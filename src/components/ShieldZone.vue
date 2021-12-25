@@ -5,7 +5,7 @@
       :key="index"
       class="shield"
       :class="{ 'is-selectMode': selectTargetMode() }"
-      @click.stop="clickShield($event, card)"
+      @click.stop="clickShield(card)"
     >
       <div class="shield-wrapper">
         <span class="shield-id">{{ card.shieldId }}</span>
@@ -54,8 +54,8 @@ export default {
       group.cards = this.shieldCards.filter((c) => c.groupId === group.id);
       return group;
     },
-    clickShield(event, card) {
-      if (!this.selectMode) {
+    clickShield(card) {
+      if (!this.selectMode || !this.selectTargetMode()) {
         this.openWorkSpace({
           zone: "shieldCards",
           cards: card.groupId ? this.group(card).cards : [card],
