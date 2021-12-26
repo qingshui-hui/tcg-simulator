@@ -27,8 +27,14 @@ db.jsonを作成する。
 }
 ```
 
-## herokuでsocket ioを使用するとき
+## herokuでの設定
 https://devcenter.heroku.com/articles/node-websockets
+以下の環境変数を設定する。
+```
+VUE_APP_IMAGE_HOST=
+DECK_URL=
+```
+
 ```
 $ heroku features:enable http-session-affinity -a duelma-3
 $ heroku features -a duelma-3
@@ -40,25 +46,6 @@ heroku ps:scale worker=1
 heroku ps -a duelma-3
 ```
 
-## Project setup
-```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
