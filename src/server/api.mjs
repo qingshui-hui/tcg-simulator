@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { data } from '../helpers/data.js'
+import deckList from '../helpers/data.js'
 import db from './db.mjs'
 
 const router = Router()
@@ -10,12 +10,17 @@ router.get('/api/rooms/:roomId', async function (req, res) {
   res.json(data)
 })
 
+import axios from 'axios'
 router.get('/api/decks', async function (req, res) {
-  // dbアダプタを取得
-  // const data = require('./data')
-  // const data = (await import('../helpers/data.js')).data
-  const decks = Object.keys(data.deckList).map(k => data.deckList[k])
-  res.json(decks)
+  let response
+  try {
+    response = await axios.get(process.env.DECK_URL)
+    res.json([...deckList, ...response.data])
+  } catch (error) {
+    // ex: Request failed with status code 404
+    console.log(error.message)
+    res.json([...deckList])
+  }
 })
 
 export default router

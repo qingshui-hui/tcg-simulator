@@ -28,16 +28,14 @@
 </template>
 
 <script>
-import { data } from "@/helpers/data";
 import { Deck } from "@/helpers/Deck";
 
 export default {
   props: ["isReady", "player", "partnerIsReady", "active"],
   data() {
-    const deckList = data.deckList;
     return {
       deckId: 0,
-      deckList,
+      deckList: [],
     };
   },
   computed: {
@@ -59,7 +57,7 @@ export default {
     }
     // GC Storageからデータを取得する。
     // httpsとhttpの場合でcorsの挙動に差があり、httpの方を利用した。
-    const deckUrl = `${window.location.protocol}//storage.googleapis.com/card-storage/decks.json`;
+    const deckUrl = `${this.useConfig().API_HOST}/api/decks`;
     fetch(deckUrl, {
       // サーバー側のcors設定で、以下のヘッダーを許可する必要がある。
       headers: {
