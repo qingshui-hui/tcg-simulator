@@ -4516,12 +4516,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"deck-builder@workspace:packages/deck-builder":
-  version: 0.0.0-use.local
-  resolution: "deck-builder@workspace:packages/deck-builder"
-  languageName: unknown
-  linkType: soft
-
 "decode-uri-component@npm:^0.2.0":
   version: 0.2.0
   resolution: "decode-uri-component@npm:0.2.0"
