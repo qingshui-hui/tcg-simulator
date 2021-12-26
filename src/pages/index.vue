@@ -1,15 +1,17 @@
 <template>
   <div>
-    <div id="app" style="padding: 20px">
+    <div id="app" style="padding: 20px; background-color: white">
       <p>部屋を選択してください</p>
       <table class="roomTable" style="margin-top: 20px">
         <thead>
           <th></th>
-          <th>プレイヤーA</th>
-          <th>プレイヤーB</th>
+          <th><div>プレイヤーA</div></th>
+          <th><div>プレイヤーB</div></th>
         </thead>
         <tr v-for="room in rooms" :key="room.id">
-          <td>部屋{{ room.id }}</td>
+          <td>
+            <div>部屋{{ room.id }}</div>
+          </td>
           <td>
             <router-link
               :to="{
@@ -56,6 +58,11 @@ export default {
   td {
     border: 1px solid darkgray;
     padding: 5px 10px;
+    > * {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
 }
 a {

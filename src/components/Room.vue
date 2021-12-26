@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" style="background-color: lightgray">
     <CHeader></CHeader>
     <div class="app-wrapper">
       <ImageViewer>
