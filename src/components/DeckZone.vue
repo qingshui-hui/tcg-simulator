@@ -20,7 +20,7 @@
         >
           <img
             v-if="yamafudaCards[0].faceDown"
-            src="@/assets/images/card-back.jpg"
+            :src="yamafudaCards[0].backImageUrl"
             alt=""
           />
           <img v-else :src="yamafudaCards[0].imageUrl" alt="" />

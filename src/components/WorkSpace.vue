@@ -58,7 +58,7 @@
                   <div>
                     <!-- ワークスペース内だけでみられる状態がある -->
                     <img
-                      src="@/assets/images/card-back.jpg"
+                      :src="card.backImageUrl"
                       v-if="card.faceDown === true && !card.showInWorkSpace"
                     />
                     <img :src="card.imageUrl" v-else />

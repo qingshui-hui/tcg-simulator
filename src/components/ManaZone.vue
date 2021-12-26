@@ -21,7 +21,7 @@
             :style="{ top: index * 50 + 'px' }"
           >
             <img v-if="!card.faceDown" :src="card.imageUrl" />
-            <img v-else src="@/assets/images/card-back.jpg" />
+            <img v-else src="card.backImageUrl" />
           </div>
         </div>
         <div class="normal">
@@ -32,7 +32,7 @@
             :style="{ right: index * 30 + 'px' }"
           >
             <img v-if="!card.faceDown" :src="card.imageUrl" />
-            <img v-else src="@/assets/images/card-back.jpg" />
+            <img v-else :src="card.backImageUrl" />
           </div>
         </div>
       </div>

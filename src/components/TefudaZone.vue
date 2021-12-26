@@ -8,10 +8,10 @@
         >
           <!-- 対戦相手の手札は常に裏向き -->
           <div v-if="side === 'upper'">
-            <img src="@/assets/images/card-back.jpg" @click.stop="clickCard(card)" />
+            <img :src="card.backImageUrl" @click.stop="clickCard(card)" />
           </div>
           <div v-else @click.stop="clickCard(card)">
-            <img v-if="card.faceDown" src="@/assets/images/card-back.jpg" />
+            <img v-if="card.faceDown" :src="card.backImageUrl" />
             <img v-else :src="card.imageUrl" />
           </div>
         </div>

@@ -46,7 +46,7 @@
         >
           <img
             v-if="card.faceDown === true"
-            src="@/assets/images/card-back.jpg"
+            :src="card.backImageUrl"
             draggable="false"
           />
           <img v-else :src="card.imageUrl" draggable="false" />
