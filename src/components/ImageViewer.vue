@@ -70,7 +70,7 @@ export default {
         return;
       }
       // ホストが異なる画像だけ拡大することで、カード画像だけが拡大できるようにする。
-      if (!imageSrc.includes(window.location.origin)) {
+      if (!imageSrc.includes("card-back")) {
         this.display.imageUrl = imageSrc;
       } else {
         this.display.imageUrl = "";

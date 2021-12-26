@@ -13,6 +13,7 @@ export class Deck {
         cards.push({
           imageId: data.imageId,
           imageUrl: data.imageUrl,
+          backImageUrl: data.backImageUrl,
         });
       }
     })
@@ -30,7 +31,8 @@ export class Deck {
     shuffledCards = shuffledCards.map((c, i) => {
       return {
         id: startId + i,
-        imageUrl: c.imageUrl || `${imageHost}/${c.imageId}`
+        imageUrl: c.imageUrl || `${imageHost}/${c.imageId}`,
+        backImageUrl: c.backImageUrl || `${imageHost}/card-back.jpg`,
       }
     })
     return shuffledCards;
