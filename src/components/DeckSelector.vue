@@ -60,7 +60,12 @@ export default {
     // GC Storageからデータを取得する。
     // httpsとhttpの場合でcorsの挙動に差があり、httpの方を利用した。
     const deckUrl = `${window.location.protocol}//storage.googleapis.com/card-storage/decks.json`;
-    fetch(deckUrl, { cache: "no-store" })
+    fetch(deckUrl, {
+      // サーバー側のcors設定で、以下のヘッダーを許可する必要がある。
+      headers: {
+        "Cache-Control": "no-store",
+      },
+    })
       .then((res) => {
         if (!res.ok) {
           console.log(res.status);
