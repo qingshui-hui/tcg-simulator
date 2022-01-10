@@ -3,7 +3,7 @@
     <div id="deck-form" v-if="!isReady">
       <p class="deckForm_p">デッキを選択してください</p>
       <select name="deck" v-model="deckId">
-        <option v-for="(deck, index) in deckList" :key="index" :value="index">
+        <option v-for="(deck, index) in allDecks" :key="index" :value="index">
           {{ deck.name }}
         </option>
       </select>
@@ -71,7 +71,6 @@ export default {
       return encodeURI(`/room?roomId=${roomId}&player=${player == "a" ? "b" : "a"}`);
     },
     errors() {
-      console.log(this.errors);
       return {
         scrapeUrl: (() => {
           if (this.scrapeUrl) {
@@ -84,6 +83,9 @@ export default {
           return "";
         })(),
       };
+    },
+    allDecks() {
+      return [...this.$store.state.decks.data, ...this.deckList];
     },
   },
   mounted() {
@@ -107,7 +109,7 @@ export default {
   methods: {
     selectDeck() {
       const deck = Deck.prepareDeck(
-        this.deckList[this.deckId].cards,
+        this.allDecks[this.deckId].cards,
         this.player === "a"
       );
 
@@ -150,7 +152,10 @@ export default {
         .get(url)
         .then((res) => {
           console.log(res);
-          this.deckList.unshift(res.data);
+          this.$store.commit("decks/setData", [
+            res.data,
+            ...this.$store.state.decks.data,
+          ]);
           this.scrapeUrl = "";
           this.scraping = false;
         })

@@ -1,8 +1,26 @@
 import { createStore } from 'vuex'
+import createPersistedState from "vuex-persistedstate";
 
 // https://next.vuex.vuejs.org/ja/guide/#%E3%82%B7%E3%83%B3%E3%83%97%E3%83%AB%E3%81%AA%E3%82%B9%E3%83%88%E3%82%A2
 const store = createStore({
-  state () {
+  plugins: [createPersistedState({
+    // スクレイピングで取得したデッキデータをブラウザのLocal Storageに保存する。
+    paths: ['decks'],
+  })],
+  modules: {
+    decks: {
+      namespaced: true,
+      state: {
+        data: [],
+      },
+      mutations: {
+        setData(state, data) {
+          state.data = data
+        }, // commit('decks/setData')
+      },
+    }
+  },
+  state() {
     return {
       selectMode: false, // カードを重ねるときに使用。
       selectedCard: null, // セレクトモードではないが、カードを選択するとき使用する。
@@ -28,7 +46,7 @@ const store = createStore({
     setSelectedCard(state, card) {
       state.selectedCard = card
     },
-    openWorkSpace(state, {cards, zone, player, single=false}) {
+    openWorkSpace(state, { cards, zone, player, single = false }) {
       // 既に開いている状態で、同じゾーンを開こうとした場合は閉じる。
       if (state.workSpace.active) {
         if (state.workSpace.player === player
@@ -60,7 +78,7 @@ const store = createStore({
         ...state.settings,
         ...settings,
       }
-    }
+    },
   },
 })
 
