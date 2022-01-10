@@ -4895,7 +4895,7 @@ __metadata:
     express: ^4.17.1
     fork-ts-checker-webpack-plugin: ^6.5.0
     lowdb: ^3.0.0
-    playwright: ^1.17.2
+    playwright-chromium: ^1.17.2
     sass: ^1.45.0
     sass-loader: ^10
     socket.io: ^4.4.0
@@ -9388,6 +9388,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"playwright-chromium@npm:^1.17.2":
+  version: 1.17.2
+  resolution: "playwright-chromium@npm:1.17.2"
+  dependencies:
+    playwright-core: =1.17.2
+  bin:
+    playwright: cli.js
+  checksum: 3b4c8e760b514844c1600b03e54ee7fe1ee1cd456447535a751dcebf72fb044169536f5a4cdbcc12d36a1742ee78d92678e183b69c828f8d87bc2e1eaf51d10d
+  languageName: node
+  linkType: hard
+
 "playwright-core@npm:=1.17.2":
   version: 1.17.2
   resolution: "playwright-core@npm:1.17.2"
@@ -9411,17 +9422,6 @@ __metadata:
   bin:
     playwright: cli.js
   checksum: d7d648eebd2529acecae3d1fa09fbb96b0101f26a33a4109ac70073c686cde7ad49706fcc65d610e30a945c17c9aa5b15d0f190fd64bc001dd08a80f38dafd3a
-  languageName: node
-  linkType: hard
-
-"playwright@npm:^1.17.2":
-  version: 1.17.2
-  resolution: "playwright@npm:1.17.2"
-  dependencies:
-    playwright-core: =1.17.2
-  bin:
-    playwright: cli.js
-  checksum: 8276273b64325a4f11225883f6625244f378aac7dadb47a073866ee63fd3be8bd880a79f696aa1327ed9c9e0b5c1a539a7bfb5e55d7b28b21f0e3b357c785557
   languageName: node
   linkType: hard
 

@@ -29,10 +29,12 @@ router.get('/api/decks', async function (req, res) {
   }
 })
 
-import playwright from 'playwright'
+// https://elements.heroku.com/buildpacks/playwright-community/heroku-playwright-buildpack
+// 特定のブラウザのみに対応するplaywrightを使用。
+import { chromium } from 'playwright-chromium'
 
 router.get('/api/scrape', async (req, res) => {
-  const browser = await playwright.chromium.launch({
+  const browser = await chromium.launch({
     // headless: false // setting this to true will not run the UI
   });
 
