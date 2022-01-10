@@ -1,10 +1,10 @@
-import { Modal, Icon, Dropdown, Button, Config } from '@oruga-ui/oruga-next'
+import { Modal, Icon, Dropdown, Button, Config, Input, Field } from '@oruga-ui/oruga-next'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import '../assets/scss/oruga.scss'
 
 export function useOruga(vueApp) {
   vueApp.component('vue-fontawesome', FontAwesomeIcon)
-  vueApp.use(Modal).use(Icon).use(Dropdown).use(Button)
+  vueApp.use(Modal).use(Icon).use(Dropdown).use(Button).use(Input).use(Field)
   // https://github.com/oruga-ui/oruga/issues/99#issuecomment-794784783
   // How to set icon pack for Individual components (tree shaking) ?
   vueApp.use(Config, {
@@ -26,6 +26,7 @@ import {
   faMinusCircle,
   faExpandAlt,
   faExternalLinkAlt,
+  faSearch,
 } from '@fortawesome/free-solid-svg-icons'
 import {
   faTimesCircle as farTimesCircle,
@@ -42,4 +43,5 @@ library.add(
   faMinusCircle,
   faExpandAlt,
   faExternalLinkAlt,
+  faSearch,
 )

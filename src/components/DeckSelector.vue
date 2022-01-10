@@ -1,7 +1,7 @@
 <template>
   <o-modal :active="active" :canCancel="canCansel" @close="onClose" :width="600">
     <div id="deck-form" v-if="!isReady">
-      <p>デッキを選択してください</p>
+      <p class="deckForm_p">デッキを選択してください</p>
       <select name="deck" v-model="deckId">
         <option v-for="(deck, index) in deckList" :key="index" :value="index">
           {{ deck.name }}
@@ -14,21 +14,41 @@
         :style="{ marginTop: '20px' }"
         >選択</o-button
       >
+      <div :style="{ marginTop: '20px', width: '250px' }">
+        <o-field
+          :variant="errors.scrapeUrl ? 'danger' : ''"
+          :message="scraping ? 'デッキ取得中です' : errors.scrapeUrl"
+        >
+          <o-input
+            v-model="scrapeUrl"
+            placeholder="デッキメーカーのURLを貼り付ける"
+            type="text"
+            icon="search"
+            :icon-clickable="!scraping"
+            size="small"
+            :expanded="true"
+            :disabled="scraping"
+            @icon-click="scrape"
+          >
+          </o-input>
+        </o-field>
+      </div>
     </div>
 
     <div v-else-if="!partnerIsReady" id="waiting-player">
-      <p>相手プレイヤーが</p>
-      <p>デッキを選択するのを待つか、</p>
-      <p>ウィンドウをもう一つ開いて、</p>
-      <p>同じ部屋番号の</p>
-      <p>相手プレイヤーとして、</p>
-      <p>デッキを選択してください</p>
+      <p class="deckForm_p">相手プレイヤーが</p>
+      <p class="deckForm_p">デッキを選択するのを待つか、</p>
+      <p class="deckForm_p">ウィンドウをもう一つ開いて、</p>
+      <p class="deckForm_p">同じ部屋番号の</p>
+      <p class="deckForm_p">相手プレイヤーとして、</p>
+      <p class="deckForm_p">デッキを選択してください</p>
     </div>
   </o-modal>
 </template>
 
 <script>
 import { Deck } from "@/helpers/Deck";
+import axios from "axios";
 
 export default {
   props: ["isReady", "player", "partnerIsReady", "active"],
@@ -36,6 +56,8 @@ export default {
     return {
       deckId: 0,
       deckList: [],
+      scrapeUrl: "",
+      scraping: false,
     };
   },
   computed: {
@@ -48,6 +70,21 @@ export default {
       const player = this.$route.query.player;
       return encodeURI(`/room?roomId=${roomId}&player=${player == "a" ? "b" : "a"}`);
     },
+    errors() {
+      console.log(this.errors);
+      return {
+        scrapeUrl: (() => {
+          if (this.scrapeUrl) {
+            if (
+              !this.scrapeUrl.includes("https://gachi-matome.com/deckrecipe-detail-dm")
+            ) {
+              return "不適切なURLです";
+            }
+          }
+          return "";
+        })(),
+      };
+    },
   },
   mounted() {
     // クエリストリングにdeckIdが存在したときのショートカット。
@@ -58,21 +95,13 @@ export default {
     // GC Storageからデータを取得する。
     // httpsとhttpの場合でcorsの挙動に差があり、httpの方を利用した。
     const deckUrl = `${this.useConfig().API_HOST}/api/decks`;
-    fetch(deckUrl, {
-      // サーバー側のcors設定で、以下のヘッダーを許可する必要がある。
-      headers: {
-        "Cache-Control": "no-store",
-      },
-    })
+    axios
+      .get(deckUrl)
       .then((res) => {
-        if (!res.ok) {
-          console.log(res.status);
-          return;
-        }
-        return res.json();
+        this.deckList = [...this.deckList, ...res.data];
       })
-      .then((decks) => {
-        this.deckList = [...this.deckList, ...decks];
+      .catch((err) => {
+        console.log(err);
       });
   },
   methods: {
@@ -111,6 +140,25 @@ export default {
         this.$emit("update:active", false);
       }
     },
+    scrape() {
+      if (!this.scrapeUrl || this.scraping || this.errors.scrapeUrl) return;
+      this.scraping = true;
+      const url = `${this.useConfig().API_HOST}/api/scrape?url=${encodeURI(
+        this.scrapeUrl
+      )}`;
+      axios
+        .get(url)
+        .then((res) => {
+          console.log(res);
+          this.deckList.unshift(res.data);
+          this.scrapeUrl = "";
+          this.scraping = false;
+        })
+        .catch((err) => {
+          this.scraping = false;
+          console.log(err);
+        });
+    },
     onClose() {
       this.$emit("update:active", false);
     },
@@ -127,7 +175,7 @@ export default {
   > * {
     display: block;
   }
-  p {
+  p.deckForm_p {
     font-size: 20px;
     margin: 20px 0;
   }

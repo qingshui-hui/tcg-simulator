@@ -29,4 +29,40 @@ router.get('/api/decks', async function (req, res) {
   }
 })
 
+import playwright from 'playwright'
+
+router.get('/api/scrape', async (req, res) => {
+  const browser = await playwright.chromium.launch({
+    // headless: false // setting this to true will not run the UI
+  });
+
+  const page = await browser.newPage();
+  await page.goto(req.query.url);
+  // たまに0件になるため、クリックで待つ。
+  await page.locator('.deck-area-gachimatome [data-toggle=modal]').first().click()
+
+  // https://playwright.dev/docs/api/class-locator#locator-element-handles
+  // https://github.com/microsoft/playwright/issues/10648
+  // Is there way to iterate the Locator elements?
+  const cardImgsLocator = page.locator('.deck-area-gachimatome .modal-body img')
+
+  const cardImgsCount = await cardImgsLocator.count()
+  console.log(`cardImgsCount: ${cardImgsCount}`)
+
+  const deck = {
+    name: await page.locator('.deck-title-and-updateAt.p-1 .dm-deck-fontsize-middle').first().textContent(),
+    from: 'deck-maker',
+    cards: [],
+  }
+  for (let i = 0; i < cardImgsCount; i++) {
+    // log.info(await cardImgsLocator.nth(i))
+    deck.cards.push({
+      imageUrl: await cardImgsLocator.nth(i).getAttribute('src')
+    })
+  }
+  console.log(deck)
+  await browser.close();
+  res.json(deck)
+})
+
 export default router
