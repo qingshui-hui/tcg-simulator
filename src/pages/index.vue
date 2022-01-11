@@ -34,6 +34,11 @@
           </td>
         </tr>
       </table>
+      <div style="margin-top: 1rem" v-if="decks.length > 0">
+        <router-link to="/builder">
+          <p>自分のデッキを編集</p>
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -44,6 +49,11 @@ export default {
     return {
       rooms: [{ id: "1" }, { id: "2" }, { id: "3" }],
     };
+  },
+  computed: {
+    decks() {
+      return this.$store.state.decks.data;
+    },
   },
 };
 </script>

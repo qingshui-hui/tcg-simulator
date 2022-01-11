@@ -38,16 +38,30 @@ export class Deck {
     return shuffledCards;
   }
 
-  static formatData(deckD, imageHost) {
-    // urlPrefixは廃止
+  static formatData(deckD) {
     const deck = Object.assign({}, deckD);
-    const prefix = deck["urlPrefix"] || '';
+    const imageHost = useConfig().IMAGE_HOST
 
-    for (let card of deck.cards) {
-      if (card.imageId && !card.imageId.includes('https://')) {
-        card.imageUrl = imageHost + `/${prefix + card.imageId}.jpg`;
-      }
+    deck.cards.forEach(c => {
+      // c.time = c.time || 1;
+      c.imageUrl = c.imageUrl || `${imageHost}/${c.imageId}`;
+    })
+    // timeのないデータだった場合、集計する。
+    if (!deck.cards[0].time && deck.cards[0].time !== 0) {
+      deck.cards = deck.cards.reduce((result, current) => {
+        const element = result.find((p) => p.imageUrl === current.imageUrl);
+        if (element) {
+          element.time++;
+        } else {
+          result.push({
+            ...current,
+            time: 1,
+          });
+        }
+        return result;
+      }, []);
     }
+    // 並べ替える
     deck.cards.sort((a, b) => {
       return b.time - a.time;
     })

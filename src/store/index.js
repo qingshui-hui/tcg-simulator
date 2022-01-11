@@ -18,6 +18,17 @@ const store = createStore({
           state.data = data
         }, // commit('decks/setData')
       },
+    },
+    builder: {
+      namespaced: true,
+      state: {
+        draggingCard: null,
+      },
+      mutations: {
+        setDraggingCard(state, data) {
+          state.draggingCard = data
+        },
+      },
     }
   },
   state() {
