@@ -33,6 +33,9 @@
           </o-input>
         </o-field>
       </div>
+      <div class="deckForm_example">
+        例: https://gachi-matome.com/deckrecipe-detail-dm/?tcgrevo_deck_maker_deck_id=xxxx
+      </div>
     </div>
 
     <div v-else-if="!partnerIsReady" id="waiting-player">
@@ -188,5 +191,10 @@ export default {
 #waiting-player {
   text-align: center;
   line-height: 30px;
+}
+.deckForm_example {
+  width: 100%;
+  font-size: 12px;
+  margin-top: 1rem;
 }
 </style>
