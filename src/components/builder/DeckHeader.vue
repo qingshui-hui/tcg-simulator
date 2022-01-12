@@ -30,12 +30,7 @@
         v-if="selected.deckType === 'custom'"
         >名前を変更</span
       >
-      <span
-        class="click"
-        @click.stop="openModal('', 'create')"
-        v-if="selected.deckType === 'custom'"
-        >新規作成</span
-      >
+      <span class="click" @click.stop="openModal('', 'create')">カードを追加</span>
     </div>
 
     <Modal
@@ -63,14 +58,14 @@
     >
       <template v-slot:content>
         <div>
-          <p>デッキの名前を入力してください</p>
+          <p>カード画像のURLを貼り付けてください</p>
         </div>
         <div>
-          <input v-model="params.name" />
+          <input v-model="params.cardUrl" />
         </div>
       </template>
       <template v-slot:footer>
-        <button @click.stop="createDeck">送信</button>
+        <button @click.stop="addCard">追加</button>
       </template>
     </Modal>
   </div>
@@ -91,6 +86,7 @@ export default {
       },
       params: {
         name: "",
+        cardUrl: "",
       },
       modal: {
         create: false,
@@ -137,6 +133,10 @@ export default {
       this.modal.create = false;
       this.$emit("create-deck", this.params, this.side, this.selected);
       this.params.name = "";
+    },
+    addCard() {
+      this.$emit("update-deck", this.params, this.side);
+      this.params.cardUrl = ""
     },
   },
 };

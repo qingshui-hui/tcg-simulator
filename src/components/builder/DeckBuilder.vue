@@ -46,20 +46,6 @@
         </div>
       </div>
 
-      <ImageUploader
-        :side="'left'"
-        :imageSrc="preview['left'].src"
-        :file="preview['left'].file"
-        :files="preview['left'].files"
-      ></ImageUploader>
-
-      <ImageUploader
-        :side="'right'"
-        :imageSrc="preview['right'].src"
-        :file="preview['right'].file"
-        :files="preview['right'].files"
-      ></ImageUploader>
-
       <div
         id="display"
         :class="{ hidden: display.hidden, blur: display.blur }"
@@ -81,13 +67,11 @@
 <script>
 import { Deck } from "../../helpers/Deck.js";
 import DeckHeader from "./DeckHeader.vue";
-import ImageUploader from "./ImageUploader.vue";
 import CardList from "./CardList.vue";
 
 export default {
   components: {
     DeckHeader,
-    ImageUploader,
     CardList,
   },
   data() {
@@ -162,6 +146,13 @@ export default {
       // 名前を変更
       if (params.name) {
         this[side].deckData.name = params.name;
+      }
+      // カードを追加
+      if (params.cardUrl) {
+        this[side].deckData.cards.push({
+          imageUrl: params.cardUrl,
+          time: 0,
+        });
       }
       const decksCopy = this.$store.state.decks.data;
       decksCopy[this[side].deckIndex] = this[side].deckData;
