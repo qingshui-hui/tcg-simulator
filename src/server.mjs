@@ -39,6 +39,9 @@ app.get('/', function (req, res) {
 app.get('/room', function (req, res) {
   res.sendFile(filepath + '/index.html');
 });
+app.get('/builder', function (req, res) {
+  res.sendFile(filepath + '/index.html');
+});
 
 import apiRouter from './server/api.mjs'
 import db from './server/db.mjs'
