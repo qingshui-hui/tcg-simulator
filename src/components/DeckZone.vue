@@ -25,32 +25,6 @@
           />
           <img v-else :src="yamafudaCards[0].imageUrl" alt="" />
         </div>
-        <!-- <template>
-          <img
-            class="deck_topImg"
-            v-if="yamafudaCards.length > 0"
-            :class="[{ is_selected: cardIsSelected(yamafudaCards[0]) }]"
-            :src="card.faceDown ? '/images/card-back.jpg' : card.imageUrl"
-            alt
-            :style="{
-              top: `${deckViews.length * -2}px`,
-              left: `${deckViews.length * -2}px`,
-            }"
-          />
-        </template>
-        <template>
-          <img
-            class="deck_topImg"
-            v-if="yamafudaCards.length > 0"
-            :class="[{ is_selected: cardIsSelected(yamafudaCards[0]) }]"
-            :src="card.faceDown ? '/images/card-back.jpg' : card.imageUrl"
-            alt
-            :style="{
-              top: `${deckViews.length * -2}px`,
-              left: `${deckViews.length * -2}px`,
-            }"
-          />
-        </template> -->
       </div>
     </template>
     <template v-if="yamafudaCards.length > 0">
