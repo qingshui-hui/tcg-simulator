@@ -137,12 +137,6 @@ export default {
       group.cards = this.battleCards.filter((c) => c.groupId === group.id);
       return group;
     },
-    toggleTap(card) {
-      card.tapped = !card.tapped;
-      this.setSelectMode(null);
-      // 状態を送信
-      this.emitState();
-    },
     clickCard(event, card) {
       if (this.cardIsSelected(card)) {
         // 選択中のカードと同じカードがクリックされた場合、

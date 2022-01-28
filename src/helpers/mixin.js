@@ -12,6 +12,16 @@ mixin.zone = {
     moveCard(from, to, card, prepend = false) {
       this.$emit('move-cards', from, to, [card], this.player, prepend);
     },
+    toggleTap(card) {
+      if (this.selectMode.zone === 'manaCards') {
+        // マナゾーンの場合タップ後に位置が変わるため、配列にプッシュして移動先の最後に表示されるようにする。
+        this.$emit('move-cards', 'manaCards', 'manaCards', [card], this.selectMode.player, false);
+      }
+      card.tapped = !card.tapped;
+      this.setSelectMode(null);
+      // 状態を送信
+      this.emitState();
+    },
     hasSelectedCard() {
       // セレクトモードと本人であることを確認
       return this.selectMode && this.selectMode.player === this.player
