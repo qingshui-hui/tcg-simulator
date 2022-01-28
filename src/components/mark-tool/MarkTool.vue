@@ -1,0 +1,128 @@
+<template>
+  <div class="markTool">
+    <slot></slot>
+    <div class="markTool_mark" ref="mark"></div>
+    <o-icon
+      v-if="showEditIcon"
+      class="markTool_editIcon"
+      pack="fas"
+      icon="pen"
+      variant="dark-gray"
+      @click.stop="editorOpen = !editorOpen"
+    ></o-icon>
+    <div v-if="editorOpen" class="markTool_colorPicker">
+      <div class="red" @click.stop="selectColor($event)"></div>
+      <div class="green" @click.stop="selectColor($event)"></div>
+      <div class="blue" @click.stop="selectColor($event)"></div>
+      <div class="yellow" @click.stop="selectColor($event)"></div>
+      <div class="purple" @click.stop="selectColor($event)"></div>
+      <div class="empty" @click.stop="selectColor($event)"></div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    active: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  data() {
+    return {
+      showEditIcon: false,
+      editorOpen: false,
+      color: "",
+    };
+  },
+  watch: {
+    active(newVal) {
+      if (newVal) {
+        this.showEditIcon = true;
+      } else {
+        this.editorOpen = false;
+        this.showEditIcon = false;
+      }
+    }
+  },
+  methods: {
+    selectColor(event) {
+      /** @type HTMLObjectElement */
+      const target = event.target;
+      this.color = window.getComputedStyle(target).backgroundColor;
+      this.editorOpen = false;
+      this.$refs.mark.style.backgroundColor = this.color;
+      this.$emit('change');
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+@import "@/assets/scss/variables.scss";
+.markTool {
+  height: fit-content;
+  position: relative;
+  &_editIcon {
+    background-color: #fff;
+    padding: 4px;
+    border-radius: 50%;
+    cursor: pointer;
+    position: absolute;
+    top: -5px;
+    right: 0px;
+  }
+  &_mark {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+  }
+  &_colorPicker {
+    background-color: #fff;
+    border-radius: 5px;
+    position: absolute;
+    top: -5px;
+    right: 0px;
+    padding: 10px;
+
+    display: grid;
+    grid-template-columns: repeat(3, 20px);
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    > * {
+      cursor: pointer;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: red;
+    }
+    .red {
+      background-color: $danger;
+    }
+    .green {
+      background-color: $color-mana;
+    }
+    .blue {
+      background-color: $info;
+    }
+    .yellow {
+      background-color: $warning;
+    }
+    .purple {
+      background-color: $color-tomb;
+    }
+    .gray {
+      background-color: $grey-dark;
+    }
+    .empty {
+      border: 1px dashed $grey-dark;
+      background-color: transparent;
+    }
+  }
+}
+</style>

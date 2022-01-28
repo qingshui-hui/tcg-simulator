@@ -32,25 +32,31 @@
         [side]: true,
       }"
     >
-      <div class="card_wrapper" v-for="(card, index) in battleZoneCards" :key="index">
-        <div
-          class="card in-battle"
-          :class="{
-            tapped: card.tapped,
-            'is-group': !!card.groupId,
-            'is-selectMode': selectTargetMode(),
-            'is-selected': cardIsSelected(card),
-          }"
-          :draggable="!card.groupId"
-          @click.stop="clickCard($event, card)"
+      <!-- keyをindexにしていると、カード移動後MarkerToolが同じindexの別のカードに移ってしまう。 -->
+      <div class="card_wrapper" v-for="card in battleZoneCards" :key="card.id">
+        <MarkTool
+          :active="cardIsSelected(card)"
+          @change="setSelectMode(null)"
         >
-          <img
-            v-if="card.faceDown === true"
-            :src="card.backImageUrl"
-            draggable="false"
-          />
-          <img v-else :src="card.imageUrl" draggable="false" />
-        </div>
+          <div
+            class="card in-battle"
+            :class="{
+              tapped: card.tapped,
+              'is-group': !!card.groupId,
+              'is-selectMode': selectTargetMode(),
+              'is-selected': cardIsSelected(card),
+            }"
+            :draggable="!card.groupId"
+            @click.stop="clickCard($event, card)"
+          >
+            <img
+              v-if="card.faceDown === true"
+              :src="card.backImageUrl"
+              draggable="false"
+            />
+            <img v-else :src="card.imageUrl" draggable="false" />
+          </div>
+        </MarkTool>
         <div v-if="cardIsSelected(card)" class="card_bottomButton">
           <!-- 重ねる or 見る -->
           <o-button
@@ -96,7 +102,10 @@
           >
           <!-- アンタップ or タップ -->
           <template v-else>
-            <o-button v-if="card.tapped" variant="grey-dark" @click.stop="toggleTap(card)"
+            <o-button
+              v-if="card.tapped"
+              variant="grey-dark"
+              @click.stop="toggleTap(card)"
               >アンタップ</o-button
             >
             <o-button v-else variant="grey-dark" @click.stop="toggleTap(card)"
@@ -111,9 +120,11 @@
 
 <script>
 import mixin from "@/helpers/mixin.js";
+import { MarkTool } from ".";
 
 export default {
   props: ["player", "battleCards", "battleCardGroups", "side"],
+  components: { MarkTool },
   mixins: [mixin.zone],
   computed: {
     battleZoneCards() {

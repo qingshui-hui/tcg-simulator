@@ -29,6 +29,7 @@ import {
   faSearch,
   faPlus,
   faMinus,
+  faPen,
 } from '@fortawesome/free-solid-svg-icons'
 import {
   faTimesCircle as farTimesCircle,
@@ -48,4 +49,5 @@ library.add(
   faSearch,
   faPlus,
   faMinus,
+  faPen,
 )
