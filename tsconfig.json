@@ -3,7 +3,13 @@
   "compilerOptions": {
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": true
+    "strict": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "esModuleInterop": true,
+    "diagnostics": false
   },
   "exclude": [
     "node_modules",

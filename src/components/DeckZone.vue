@@ -52,12 +52,10 @@
 
 <script>
 import mixin from "@/helpers/mixin.js";
-import Dropdown from "./dropdown/Dropdown.vue";
 
 export default {
   props: ["player", "yamafudaCards", "side"],
   mixins: [mixin.zone],
-  components: { Dropdown },
   computed: {
     dropdownTriggers() {
       return this.$store.state.settings.dropdownTriggers;

@@ -39,3 +39,8 @@ if (process.env.VUE_APP_WS_HOST) {
 // oruga ui
 import { useOruga } from './plugins/oruga'
 useOruga(vueApp)
+
+//
+// global components
+import Dropdown from './components/dropdown/Dropdown'
+vueApp.component('Dropdown', Dropdown)
