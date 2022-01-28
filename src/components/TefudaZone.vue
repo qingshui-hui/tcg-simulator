@@ -136,6 +136,9 @@ $card-width: 70px;
     }
   }
   &.upper {
+    // マナゾーンがはみ出た時、手札が上になるようにする。
+    z-index: 1;
+    position: relative;
     margin-left: 100px;
     .card {
       transform: rotate(180deg);
