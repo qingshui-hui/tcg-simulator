@@ -298,15 +298,22 @@ export default {
           card.faceDown = false;
         });
       }
+      // 山札から、場に出る時には表向きにする。
+      if (from === "yamafudaCards" && to === "battleCards") {
+        selectedCards.forEach((card) => {
+          card.faceDown = false;
+        });
+      }
       // 山札へ行くときは裏向きにする。
       if (["yamafudaCards"].includes(to) && to !== from) {
         selectedCards.forEach((card) => {
           card.faceDown = true;
         });
       }
-      // 違うゾーンへ移動するときはタップを解除する。
+      // 違うゾーンへ移動するときはタップとマークを解除する。
       if (to !== from) {
         selectedCards.forEach((card) => {
+          card.markColor = '';
           card.tapped = false;
         });
       }

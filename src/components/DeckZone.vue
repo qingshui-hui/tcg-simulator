@@ -1,5 +1,9 @@
 <template>
-  <Dropdown class="deckZone_wrapper" :triggers="dropdownTriggers" position="top-left">
+  <Dropdown
+    class="deckZone_wrapper"
+    :triggers="dropdownTriggers"
+    position="top-left"
+  >
     <template v-slot:trigger>
       <div class="deck_zone" :class="side">
         <div
@@ -25,10 +29,26 @@
           />
           <img v-else :src="yamafudaCards[0].imageUrl" alt="" />
         </div>
+        <div v-if="hasSelectedCard()" class="deck_buttons">
+          <o-button
+            variant="grey-dark"
+            size="small"
+            @click.stop="moveSelectedCard(zone, true)"
+            >上へ</o-button
+          >
+          <o-button
+            variant="grey-dark"
+            size="small"
+            @click.stop="moveSelectedCard(zone, false)"
+            >下へ</o-button
+          >
+        </div>
       </div>
     </template>
     <template v-if="yamafudaCards.length > 0">
-      <o-dropdown-item aria-role="listitem" @click="openDeck">開く</o-dropdown-item>
+      <o-dropdown-item aria-role="listitem" @click="openDeck"
+        >開く</o-dropdown-item
+      >
       <o-dropdown-item
         aria-role="listitem"
         @click="
@@ -56,6 +76,11 @@ import mixin from "@/helpers/mixin.js";
 export default {
   props: ["player", "yamafudaCards", "side"],
   mixins: [mixin.zone],
+  data() {
+    return {
+      zone: "yamafudaCards",
+    };
+  },
   computed: {
     dropdownTriggers() {
       return this.$store.state.settings.dropdownTriggers;
@@ -140,6 +165,14 @@ $card-width: 50px;
     background-color: black;
     border: 1px solid white;
     border-radius: 2px;
+  }
+  .deck_buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    > * + * {
+      margin-top: 8px;
+    }
   }
 }
 .deckZone_wrapper {
