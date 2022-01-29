@@ -4,18 +4,30 @@
       v-for="(card, index) in countableShieldCards"
       :key="index"
       class="shield"
-      :class="{ 'is-selectMode': selectTargetMode() }"
+      :class="{
+        'is-selectMode': selectTargetMode(),
+        'is-selected': cardIsSelected(card),
+      }"
       @click.stop="clickShield(card)"
     >
-      <div class="shield-wrapper">
-        <span class="shield-id">{{ card.shieldId }}</span>
-        <!-- 裏向きのカードの場合表示されない。 -->
-        <img v-if="!card.faceDown" :src="card.imageUrl" />
-        <span class="shield-reverse" v-else />
-        <div v-if="card.groupId && group(card).cardIds.length > 1" class="shield-num">
-          {{ group(card).cardIds.length }}
+      <MarkTool
+        :active="cardIsSelected(card)"
+        :color="card.markColor"
+        @change="setMarkColor(card, $event)"
+      >
+        <div class="shield-card card">
+          <span class="shield-id">{{ card.shieldId }}</span>
+          <!-- 裏向きのカードの場合表示されない。 -->
+          <img v-if="!card.faceDown" :src="card.imageUrl" />
+          <span class="shield-reverse" v-else />
+          <div
+            v-if="card.groupId && group(card).cardIds.length > 1"
+            class="shield-num"
+          >
+            {{ group(card).cardIds.length }}
+          </div>
         </div>
-      </div>
+      </MarkTool>
     </div>
   </div>
 </template>
@@ -23,8 +35,10 @@
 <script>
 // Dropdownを使うと、スクロールゾーンの中にメニューが表示されて何も見えない問題があった。
 import mixin from "../helpers/mixin";
+import MarkTool from "./mark-tool/MarkTool.vue";
 
 export default {
+  components: { MarkTool },
   props: ["player", "shieldCards", "shieldCardGroups", "side"],
   mixins: [mixin.zone],
   data() {
@@ -55,36 +69,33 @@ export default {
       return group;
     },
     clickShield(card) {
-      if (!this.selectMode || !this.selectTargetMode()) {
-        this.openWorkSpace({
-          zone: "shieldCards",
-          cards: card.groupId ? this.group(card).cards : [card],
-          player: this.player,
-          single: true,
-        });
-        return;
-      }
-      // 本人確認
-      if (this.selectMode.player === this.player) {
+      if (this.cardIsSelected(card)) {
         // 選択中のカードと同じカードがクリックされた場合、
-        if (this.selectMode.card.id === card.id) {
-          // セレクトモードを終了。
-          this.setSelectMode(null);
-          return;
-        }
-        // カードを重ねる。
-        // moveSelectedCardでselectModeがnullになるので、情報を残しておく。
-        const fromCard = this.selectMode.card;
-        this.moveSelectedCard(this.zone);
-        this.$emit("group-card", {
-          from: this.zone,
-          to: this.groupZone,
-          fromCard: fromCard,
-          toCard: card,
-          player: this.player,
-        });
+        // セレクトモードを終了。
+        this.setSelectMode(null);
         return;
       }
+      if (this.selectTargetMode()) {
+        if (this.selectMode.player === this.player) {
+          // カードを重ねる。
+          // moveSelectedCardでselectModeがnullになるので、情報を残しておく。
+          const fromCard = this.selectMode.card;
+          this.moveSelectedCard(this.zone);
+          this.$emit("group-card", {
+            from: this.zone,
+            to: this.groupZone,
+            fromCard: fromCard,
+            toCard: card,
+            player: this.player,
+          });
+        }
+        return;
+      }
+      this.setSelectMode({
+        card,
+        zone: "shieldCards",
+        player: this.player,
+      });
     },
   },
 };
@@ -106,15 +117,33 @@ export default {
   }
   &.upper {
     flex-direction: row;
-    .shield-wrapper {
+    .shield-card {
       transform: rotate(180deg);
     }
   }
   .shield {
     position: relative;
     &.is-selectMode {
-      border: 3px solid orange;
-      border-radius: 5px;
+      .card::before {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: 3px solid orange;
+        position: absolute;
+        top: 0;
+      }
+    }
+    &.is-selected {
+      .card::before {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: 3px solid #b60000;
+        position: absolute;
+        top: 0;
+      }
     }
   }
   .shield-num {

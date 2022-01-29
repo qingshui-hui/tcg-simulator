@@ -22,6 +22,11 @@ mixin.zone = {
       // 状態を送信
       this.emitState();
     },
+    setMarkColor(card, color) {
+      this.setSelectMode(null);
+      card.markColor = color;
+      this.emitState();
+    },
     hasSelectedCard() {
       // セレクトモードと本人であることを確認
       return this.selectMode && this.selectMode.player === this.player

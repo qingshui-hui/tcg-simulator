@@ -1,7 +1,11 @@
 <template>
-  <div class="markTool">
+  <div class="markTool" :class="{ 'is-active': active && editorOpen }">
     <slot></slot>
-    <div class="markTool_mark" ref="mark"></div>
+    <div
+      class="markTool_mark"
+      ref="mark"
+      :style="{ backgroundColor: color ? color : 'transparent' }"
+    ></div>
     <o-icon
       v-if="showEditIcon"
       class="markTool_editIcon"
@@ -28,12 +32,15 @@ export default {
       type: Boolean,
       default: false,
     },
+    color: {
+      type: String,
+      default: "",
+    },
   },
   data() {
     return {
       showEditIcon: false,
       editorOpen: false,
-      color: "",
     };
   },
   watch: {
@@ -44,16 +51,15 @@ export default {
         this.editorOpen = false;
         this.showEditIcon = false;
       }
-    }
+    },
   },
   methods: {
     selectColor(event) {
       /** @type HTMLObjectElement */
       const target = event.target;
-      this.color = window.getComputedStyle(target).backgroundColor;
+      const color = window.getComputedStyle(target).backgroundColor;
       this.editorOpen = false;
-      this.$refs.mark.style.backgroundColor = this.color;
-      this.$emit('change');
+      this.$emit("change", color);
     },
   },
 };
@@ -64,6 +70,10 @@ export default {
 .markTool {
   height: fit-content;
   position: relative;
+  &.is-active {
+    // エディタの幅
+    min-width: 100px;
+  }
   &_editIcon {
     background-color: #fff;
     padding: 4px;

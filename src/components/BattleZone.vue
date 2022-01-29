@@ -36,7 +36,8 @@
       <div class="card_wrapper" v-for="card in battleZoneCards" :key="card.id">
         <MarkTool
           :active="cardIsSelected(card)"
-          @change="setSelectMode(null)"
+          :color="card.markColor"
+          @change="setMarkColor(card, $event)"
         >
           <div
             class="card in-battle"
