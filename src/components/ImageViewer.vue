@@ -82,8 +82,6 @@ export default {
         this.display.imageUrl = "";
       }
       let mX = event.pageX;
-      // let mY = event.pageY;
-      console.log(window.innerWidth - 350);
       // 右の余白が足りない時だけ左側に表示する。
       if (mX < window.innerWidth - this.style.width + 20) {
         this.display.left = false;

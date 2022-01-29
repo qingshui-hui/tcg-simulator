@@ -29,7 +29,6 @@
         </div>
         <div v-if="cardIsSelected(card)" class="card_buttons">
           <o-button
-            v-if="card.groupId && group(card).cardIds.length > 1"
             variant="grey-dark"
             size="small"
             @click.stop="

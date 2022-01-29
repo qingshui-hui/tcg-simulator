@@ -47,22 +47,28 @@
           </div>
         </div>
         <div class="workSpace_cardList gridCardList">
-          <div v-for="(card, index) in orderedCards" :key="index">
+          <div v-for="card in orderedCards" :key="card.id">
             <Dropdown class="dropdown">
               <template #trigger>
-                <div class="card with-info" :class="{ tapped: card.tapped }">
-                  <span class="card-id card-info" v-if="card.groupId">{{
-                    card.groupId
-                  }}</span>
-                  <div>
-                    <!-- ワークスペース内だけでみられる状態がある -->
-                    <img
-                      :src="card.backImageUrl"
-                      v-if="card.faceDown === true && !card.showInWorkSpace"
-                    />
-                    <img :src="card.imageUrl" v-else />
+                <MarkTool
+                  :active="cardIsSelected(card)"
+                  :color="card.markColor"
+                  @change="setMarkColor(card, $event)"
+                >
+                  <div class="card with-info" :class="{ tapped: card.tapped }">
+                    <span class="card-id card-info" v-if="card.groupId">{{
+                      card.groupId
+                    }}</span>
+                    <div>
+                      <!-- ワークスペース内だけでみられる状態がある -->
+                      <img
+                        :src="card.backImageUrl"
+                        v-if="card.faceDown === true && !card.showInWorkSpace"
+                      />
+                      <img :src="card.imageUrl" v-else />
+                    </div>
                   </div>
-                </div>
+                </MarkTool>
               </template>
               <o-dropdown-item>
                 <span
@@ -148,7 +154,13 @@
                 >手札へ</o-button
               >
               <template v-else-if="['shieldCards'].includes(workSpace.zone)">
-                <o-button @click.stop="moveCard(card, 'tefudaCards')"
+                <!-- 本人確認 -->
+                <o-button
+                  v-if="card.faceDown && !card.showInWorkSpace && isOwner"
+                  @click.stop="card.showInWorkSpace = true"
+                  >見る</o-button
+                >
+                <o-button v-else @click.stop="moveCard(card, 'tefudaCards')"
                   >手札へ</o-button
                 >
               </template>
@@ -186,8 +198,10 @@
 
 <script>
 import mixin from "../helpers/mixin.js";
+import { MarkTool } from "./index.js";
 
 export default {
+  components: { MarkTool },
   mixins: [mixin.zone],
   props: ["lowerPlayer"],
   computed: {
