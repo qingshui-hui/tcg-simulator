@@ -3,7 +3,10 @@
     <div
       class="imageDisplay"
       :class="{ hidden: display.hidden, blur: display.blur }"
-      :style="[display.left ? { left: '5px' } : { right: '5px' }]"
+      :style="[
+        display.left ? { left: '5px' } : { right: '5px' },
+        { width: `${style.width}px` },
+      ]"
     >
       <div v-if="display.imageUrl" class="imageDisplay_image">
         <!-- ディスプレイが邪魔をして操作ができない時のために、クリックで閉じる -->
@@ -57,6 +60,9 @@ export default {
       explanation: {
         show: true,
       },
+      style: {
+        width: 300,
+      },
     };
   },
   methods: {
@@ -77,7 +83,9 @@ export default {
       }
       let mX = event.pageX;
       // let mY = event.pageY;
-      if (mX < 550) {
+      console.log(window.innerWidth - 350);
+      // 右の余白が足りない時だけ左側に表示する。
+      if (mX < window.innerWidth - this.style.width + 20) {
         this.display.left = false;
       } else {
         this.display.left = true;
@@ -91,3 +99,24 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+/* display */
+.imageDisplay {
+  // background-image: url('http://localhost:3333/dmbd07-a-010.jpg');
+  // width: 300px;
+  position: fixed;
+  top: 10px;
+  // left: 10px;
+  z-index: 12; // ワークスペースより大きくする
+  &.blur {
+    opacity: 0.6;
+  }
+  &_image {
+    width: 100%;
+    img {
+      width: 100%;
+    }
+  }
+}
+</style>

@@ -1,18 +1,22 @@
-
 body {
 }
 .app-wrapper {
-    position: relative;
-    overflow-x: scroll;
+  position: relative;
+  overflow-x: scroll;
+}
+.main {
+    margin-left: 10px;
 }
 
 #canvas {
-    margin: 0 auto;
-    width: 800px;
-    padding: 20px 0px;
-    // height: 600px;
-    background-color: rgb(241, 241, 241);
-    position: relative;
+  width: 800px;
+  padding: 20px 0px;
+  // height: 600px;
+  background-color: rgb(241, 241, 241);
+  position: relative;
+  @media screen and (max-device-width: 800px) {
+    margin-left: 0;
+  }
 }
 .rotate {
   transform: rotate(-90deg);
@@ -22,62 +26,44 @@ body {
 }
 
 .hidden {
-    display: none;
+  display: none;
 }
 
 // message
 .message-box {
-    position: absolute;
-    top: 200px;
-    left: 10px;
-    .upper {
-        width: fit-content;
-        padding: 5px;
-        border-radius: 10px;
-        background-color: white;
-        transform: rotate(180deg);
-        color: rgb(211, 158, 58);
-    }
-    .lower {
-        width: fit-content;
-        padding: 5px;
-        border-radius: 10px;
-        background-color: orange;
-        color: whitesmoke;
-        margin-top: 40px;
-    }
+  position: absolute;
+  top: 200px;
+  left: 10px;
+  .upper {
+    width: fit-content;
+    padding: 5px;
+    border-radius: 10px;
+    background-color: white;
+    transform: rotate(180deg);
+    color: rgb(211, 158, 58);
+  }
+  .lower {
+    width: fit-content;
+    padding: 5px;
+    border-radius: 10px;
+    background-color: orange;
+    color: whitesmoke;
+    margin-top: 40px;
+  }
 }
 
 .message-buttons {
-    position: absolute;
-    top: 340px;
-    left: 10px;
-    .click {
-        background-color: rgb(224, 224, 80);
-        border: 1px solid green;
-        color: black;
-        font-size: 14px;
-        cursor: pointer;
-    }
-    .click:hover {
-        color: rgb(122, 117, 117);
-    }
-}
-/* display */
-.imageDisplay {
-    // background-image: url('http://localhost:3333/dmbd07-a-010.jpg');
-    width: 300px;
-    position: fixed;
-    top: 10px;
-    // left: 10px;
-    z-index: 12; // ワークスペースより大きくする
-    &.blur {
-        opacity: 0.6;
-    }
-    &_image {
-        width: 100%;
-        img {
-            width: 100%;
-        }
-    }
+  position: absolute;
+  top: 340px;
+  left: 10px;
+  .click {
+    background-color: rgb(224, 224, 80);
+    border: 1px solid green;
+    color: black;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .click:hover {
+    color: rgb(122, 117, 117);
+  }
 }
