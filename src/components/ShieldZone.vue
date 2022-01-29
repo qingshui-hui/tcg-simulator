@@ -11,6 +11,7 @@
       @click.stop="clickShield(card)"
     >
       <MarkTool
+        :reverse="side === 'upper'"
         :active="cardIsSelected(card)"
         :color="card.markColor"
         @change="setMarkColor(card, $event)"

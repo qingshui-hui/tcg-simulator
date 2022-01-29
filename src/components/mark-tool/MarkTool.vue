@@ -4,7 +4,7 @@
     <div
       class="markTool_mark"
       ref="mark"
-      :style="{ backgroundColor: color ? color : 'transparent' }"
+      :style="[{ backgroundColor: color ? color : 'transparent' }, markStyle]"
     ></div>
     <o-icon
       v-if="showEditIcon"
@@ -32,6 +32,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    reverse: {
+      type: Boolean,
+      default: false,
+    },
     color: {
       type: String,
       default: "",
@@ -42,6 +46,21 @@ export default {
       showEditIcon: false,
       editorOpen: false,
     };
+  },
+  computed: {
+    markStyle() {
+      if (this.reverse) {
+        return {
+          bottom: "2px",
+          left: "2px",
+        };
+      } else {
+        return {
+          top: "2px",
+          right: "2px",
+        };
+      }
+    },
   },
   watch: {
     active(newVal) {
@@ -85,8 +104,8 @@ export default {
   }
   &_mark {
     position: absolute;
-    top: 2px;
-    right: 2px;
+    // top: 2px;
+    // right: 2px;
     width: 15px;
     height: 15px;
     border-radius: 50%;

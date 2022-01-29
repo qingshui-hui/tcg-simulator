@@ -35,6 +35,7 @@
       <!-- keyをindexにしていると、カード移動後MarkerToolが同じindexの別のカードに移ってしまう。 -->
       <div class="card_wrapper" v-for="card in battleZoneCards" :key="card.id">
         <MarkTool
+          :reverse="side === 'upper'"
           :active="cardIsSelected(card)"
           :color="card.markColor"
           @change="setMarkColor(card, $event)"

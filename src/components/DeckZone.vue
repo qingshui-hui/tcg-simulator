@@ -136,6 +136,9 @@ $card-width: 50px;
 .deck_zone {
   &.upper {
     transform: rotate(180deg);
+    .deck_buttons {
+      transform: rotate(180deg);
+    }
   }
   width: $card-width;
   height: cardHeight($card-width);
@@ -168,6 +171,7 @@ $card-width: 50px;
   }
   .deck_buttons {
     display: flex;
+    height: 100%;
     flex-direction: column;
     align-items: center;
     > * + * {
