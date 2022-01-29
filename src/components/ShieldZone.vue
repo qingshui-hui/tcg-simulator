@@ -27,6 +27,22 @@
             {{ group(card).cardIds.length }}
           </div>
         </div>
+        <div v-if="cardIsSelected(card)" class="card_buttons">
+          <o-button
+            v-if="card.groupId && group(card).cardIds.length > 1"
+            variant="grey-dark"
+            size="small"
+            @click.stop="
+              openWorkSpace({
+                zone: 'shieldCards',
+                cards: card.groupId ? group(card).cards : [card],
+                player: player,
+                single: true,
+              })
+            "
+            >見る</o-button
+          >
+        </div>
       </MarkTool>
     </div>
   </div>
@@ -147,7 +163,7 @@ export default {
     }
   }
   .shield-num {
-    color: rgb(37, 37, 37);
+    color: #fff;
     position: absolute;
     bottom: 3px;
     right: 5px;
@@ -158,6 +174,12 @@ export default {
     width: 50px;
     height: cardHeight(50px);
     background-color: rgb(79, 205, 255);
+  }
+  .card_buttons {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 0%);
   }
 }
 </style>
