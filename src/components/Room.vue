@@ -1,7 +1,7 @@
 <template>
   <div id="app" style="background-color: lightgray">
-    <CHeader></CHeader>
-    <div class="app-wrapper">
+    <CHeader @reset-game="resetGame"></CHeader>
+    <div class="app-wrapper main">
       <ImageViewer>
         <WorkSpace
           :lowerPlayer="lowerPlayer"
@@ -131,14 +131,6 @@
           ></tefuda-zone>
         </div>
       </ImageViewer>
-      <o-dropdown>
-        <template #trigger>
-          <button>ゲームをリセットする</button>
-        </template>
-        <o-dropdown-item :itemActiveClass="'dropdown-item__active'" @click="resetGame"
-          >ゲームをリセットする</o-dropdown-item
-        >
-      </o-dropdown>
     </div>
   </div>
 </template>
