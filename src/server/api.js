@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import deckList from '../helpers/data.js'
 import sampleDeckList from '../helpers/data-sample.js'
-import db from './db.mjs'
+import db from './db.js'
 import { useConfig } from '../plugins/useConfig.js'
 
 const router = Router()

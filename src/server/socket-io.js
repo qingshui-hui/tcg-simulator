@@ -1,26 +1,6 @@
-// これによりほぼcjsの構文で、部分的にejsのimportが使える。
-import { createRequire } from 'module'
-import { dirname } from 'path'
-import { fileURLToPath } from 'url'
-const require = createRequire(import.meta.url);
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-// 1階層上がルートディレクトリ
-const root = __dirname.split('/').slice(0, -1).join('/')
-const filepath = root + '/dist'
-
-const express = require('express');
-const app = express();
-app.use(express.static(filepath))
-
-// cors
-if (process.env.CLIENT_ORIGIN) {
-  const cors = require('cors')
-  // 全てのクロスオリジンリクエストを許可する。
-  app.use(cors())
-}
-
-const server = require('http').createServer(app);
+import { Server } from 'socket.io';
+import { server as appServer } from './app.js'
+import db from './db.js'
 
 const socketIoConfig = process.env.CLIENT_ORIGIN ?
   {
@@ -30,22 +10,9 @@ const socketIoConfig = process.env.CLIENT_ORIGIN ?
       methods: ["GET", "POST"],
     }
   } : {}
-const io = require('socket.io')(server, socketIoConfig);
-
-app.get('/', function (req, res) {
-  res.sendFile(filepath + '/index.html');
-});
-// /roomへの直接アクセスを許可する。
-app.get('/room', function (req, res) {
-  res.sendFile(filepath + '/index.html');
-});
-app.get('/builder', function (req, res) {
-  res.sendFile(filepath + '/index.html');
-});
-
-import apiRouter from './server/api.mjs'
-import db from './server/db.mjs'
-app.use(apiRouter)
+const io = new Server(socketIoConfig)
+io.attach(appServer)
+// require('socket.io')(server, socketIoConfig);
 
 io.on('connection', function (socket) {
   socket.on('room', (roomId) => {
@@ -79,9 +46,4 @@ io.on('connection', function (socket) {
   socket.on("disconnect", () => {
     console.log('ソケットの接続が切断されました。')
   });
-})
-
-const port = process.env.PORT || 8080;
-server.listen(port, () => {
-  console.log(`listening on *:${port}`);
 })
