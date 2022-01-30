@@ -1928,12 +1928,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@oruga-ui/oruga-next@npm:^0.4.8":
-  version: 0.4.8
-  resolution: "@oruga-ui/oruga-next@npm:0.4.8"
+"@oruga-ui/oruga-next@npm:^0.5.3":
+  version: 0.5.3
+  resolution: "@oruga-ui/oruga-next@npm:0.5.3"
   peerDependencies:
     vue: ^3.0.0
-  checksum: 9776d0463052f0018d7458572a0901c5dbedc6516285235b833d2b8975c95f3ef367d05ef72c36d79189839d018a0afc1b8c50bf6792fd9be380e67d2baf9068
+  checksum: c9a0926dfc9a3de3d6a21a1385764f3e666b1c7502f0ffb046e2141a6f509e03b5c5fb667e3449c5714002f89da71a600b5adb57bf66078a7c87508f16aedeb1
   languageName: node
   linkType: hard
 
@@ -5855,7 +5855,7 @@ __metadata:
     "@fortawesome/free-regular-svg-icons": ^5.15.4
     "@fortawesome/free-solid-svg-icons": ^5.15.4
     "@fortawesome/vue-fontawesome": prerelease
-    "@oruga-ui/oruga-next": ^0.4.8
+    "@oruga-ui/oruga-next": ^0.5.3
     "@types/jest": ^27.4.0
     "@vue/cli-plugin-babel": ~4.5.15
     "@vue/cli-plugin-eslint": ~4.5.15
@@ -6066,8 +6066,8 @@ __metadata:
   linkType: hard
 
 "engine.io@npm:~6.1.0":
-  version: 6.1.0
-  resolution: "engine.io@npm:6.1.0"
+  version: 6.1.2
+  resolution: "engine.io@npm:6.1.2"
   dependencies:
     "@types/cookie": ^0.4.1
     "@types/cors": ^2.8.12
@@ -6079,7 +6079,7 @@ __metadata:
     debug: ~4.3.1
     engine.io-parser: ~5.0.0
     ws: ~8.2.3
-  checksum: 37ff47e24c471d47d01ee2afbe9e7603013e256424a554ab73794a5bd4f69f08a4ba7d51f68832dcee028894f74e19043e173a071f26fc1d31493847100fb106
+  checksum: bd98d6ce2b1e868e8ff0f65d7667a885b90bce62065d851ea0394a00c86686925be824ab91237151222d6a5acfd5610634f36966fa9b4c502e7cf362fbdf974a
   languageName: node
   linkType: hard
 
@@ -6984,17 +6984,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.0.0":
-  version: 1.14.6
-  resolution: "follow-redirects@npm:1.14.6"
-  peerDependenciesMeta:
-    debug:
-      optional: true
-  checksum: 7fcdb089a733d2aa39041880790e9f772df009fcd0b243fee7e10acf0e14a8dab5208cf79eb1de35b9cc6033d4dde7f95becadfaa360c50d460b4c730b375e80
-  languageName: node
-  linkType: hard
-
-"follow-redirects@npm:^1.14.7":
+"follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.14.7":
   version: 1.14.7
   resolution: "follow-redirects@npm:1.14.7"
   peerDependenciesMeta:
@@ -10361,11 +10351,11 @@ __metadata:
   linkType: hard
 
 "nanoid@npm:^3.1.30":
-  version: 3.1.30
-  resolution: "nanoid@npm:3.1.30"
+  version: 3.2.0
+  resolution: "nanoid@npm:3.2.0"
   bin:
     nanoid: bin/nanoid.cjs
-  checksum: 276d0d4b0c41c46aeefec5f09f093e4085a2352d06881c845db22b84f8ef72cc8defae6d76bfb1d8a2a128eb2dec42ab148d16582be4e7754c97905806ef57b6
+  checksum: 3d1d5a69fea84e538057cf64106e713931c4ef32af344068ecff153ff91252f39b0f2b472e09b0dfff43ac3cf520c92938d90e6455121fe93976e23660f4fccc
   languageName: node
   linkType: hard
 
