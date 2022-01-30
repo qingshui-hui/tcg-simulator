@@ -35,7 +35,7 @@ module.exports = {
   ],
   testMatch: [
     '<rootDir>/src/components/**/*.spec.[jt]s?(x)',
-    '**/tests/unit/**/*.spec.[jt]s?(x)',
+    '**/test/**/*.spec.[jt]s?(x)',
     '**/__tests__/*.[jt]s?(x)'
   ],
   // https://github.com/facebook/jest/issues/6766
