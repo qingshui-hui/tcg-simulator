@@ -13,4 +13,4 @@
 1. `cd tcg-simulator`
 1. `yarn install`
 1. `yarn build`
-1. `SAMPLE_MODE=true node src/server.mjs`
+1. `SAMPLE_MODE=true node src/server.js`
