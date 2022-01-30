@@ -1,21 +1,20 @@
-// これによりほぼcjsの構文で、部分的にejsのimportが使える。
-import { createRequire } from 'module'
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
-const require = createRequire(import.meta.url);
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const filedir = typeof exports === 'object'
+  ? __dirname : dirname(fileURLToPath(import.meta.url))
+
 // 2階層上がルートディレクトリ
-const root = __dirname.split('/').slice(0, -2).join('/')
+const root = filedir.split('/').slice(0, -2).join('/')
 const filepath = root + '/dist'
 
-const express = require('express');
+import express from 'express'
+import cors from 'cors'
 const app = express();
 app.use(express.static(filepath))
 
 // cors
 if (process.env.CLIENT_ORIGIN) {
-  const cors = require('cors')
   // 全てのクロスオリジンリクエストを許可する。
   app.use(cors())
 }
@@ -34,7 +33,8 @@ app.get('/builder', function (req, res) {
 import apiRouter from './api.js'
 app.use(apiRouter)
 
-const server = require('http').createServer(app);
+import http from 'http'
+const server = http.createServer(app);
 
 export {
   app,

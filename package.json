@@ -45,6 +45,7 @@
     "@vue/test-utils": "next",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^27.4.6",
+    "babel-plugin-transform-import-meta": "^2.1.0",
     "eslint": "^6.8.0",
     "eslint-plugin-vue": "^7.20.0",
     "jest": "^27.4.7",
