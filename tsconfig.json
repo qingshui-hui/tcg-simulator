@@ -9,7 +9,8 @@
       "@/*": ["./src/*"]
     },
     "esModuleInterop": true,
-    "diagnostics": false
+    "diagnostics": false,
+    "outDir": "./dist"
   },
   "exclude": [
     "node_modules",
