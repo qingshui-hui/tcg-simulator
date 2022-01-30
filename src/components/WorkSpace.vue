@@ -154,15 +154,20 @@
                 >手札へ</o-button
               >
               <template v-else-if="['shieldCards'].includes(workSpace.zone)">
-                <!-- 本人確認 -->
+                <!-- 本人確認は無くした -->
                 <o-button
-                  v-if="card.faceDown && !card.showInWorkSpace && isOwner"
+                  v-if="card.faceDown && !card.showInWorkSpace"
                   @click.stop="card.showInWorkSpace = true"
                   >見る</o-button
                 >
-                <o-button v-else @click.stop="moveCard(card, 'tefudaCards')"
-                  >手札へ</o-button
-                >
+                <template v-else>
+                  <o-button @click.stop="moveCard(card, 'battleCards')"
+                    >出す</o-button
+                  >
+                  <o-button @click.stop="moveCard(card, 'tefudaCards')"
+                    >手札</o-button
+                  >
+                </template>
               </template>
               <template v-else-if="['manaCards'].includes(workSpace.zone)">
                 <o-button v-if="!card.tapped" @click.stop="card.tapped = true"

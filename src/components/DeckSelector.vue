@@ -1,5 +1,10 @@
 <template>
-  <o-modal :active="active" :canCancel="canCansel" @close="onClose" :width="600">
+  <o-modal
+    :active="active"
+    :canCancel="canCansel"
+    @close="onClose"
+    :width="600"
+  >
     <div id="deck-form" v-if="!isReady">
       <p class="deckForm_p">デッキを選択してください</p>
       <select name="deck" v-model="deckId">
@@ -28,13 +33,15 @@
             size="small"
             :expanded="true"
             :disabled="scraping"
+            @keypress.prevent="onKeyPress"
             @icon-click="scrape"
           >
           </o-input>
         </o-field>
       </div>
       <div class="deckForm_example">
-        例: https://gachi-matome.com/deckrecipe-detail-dm/?tcgrevo_deck_maker_deck_id=xxxx
+        例:
+        https://gachi-matome.com/deckrecipe-detail-dm/?tcgrevo_deck_maker_deck_id=xxxx
       </div>
     </div>
 
@@ -61,7 +68,28 @@ export default {
       deckList: [],
       scrapeUrl: "",
       scraping: false,
+      errors: {
+        scrapeUrl: "",
+      },
     };
+  },
+  watch: {
+    /**
+     * @param {String} newVal
+     */
+    scrapeUrl(newVal) {
+      if (newVal) {
+        if (
+          newVal.match(/^https:\/\/gachi-matome.com\/deckrecipe-detail-dm/)
+        ) {
+          this.scrape()
+        } else {
+          this.errors.scrapeUrl = "不適切なURLです";
+          return;
+        }
+      }
+      this.errors.scrapeUrl = "";
+    },
   },
   computed: {
     canCansel() {
@@ -71,21 +99,9 @@ export default {
       // 相手プレイヤーのルームのURL
       const roomId = this.$route.query.roomId;
       const player = this.$route.query.player;
-      return encodeURI(`/room?roomId=${roomId}&player=${player == "a" ? "b" : "a"}`);
-    },
-    errors() {
-      return {
-        scrapeUrl: (() => {
-          if (this.scrapeUrl) {
-            if (
-              !this.scrapeUrl.includes("https://gachi-matome.com/deckrecipe-detail-dm")
-            ) {
-              return "不適切なURLです";
-            }
-          }
-          return "";
-        })(),
-      };
+      return encodeURI(
+        `/room?roomId=${roomId}&player=${player == "a" ? "b" : "a"}`
+      );
     },
     allDecks() {
       return [...this.$store.state.decks.data, ...this.deckList];
@@ -121,7 +137,13 @@ export default {
       shieldCards.forEach((c) => {
         c.faceDown = true;
       });
-      this.$emit("move-cards", "yamafudaCards", "shieldCards", shieldCards, this.player);
+      this.$emit(
+        "move-cards",
+        "yamafudaCards",
+        "shieldCards",
+        shieldCards,
+        this.player
+      );
       this.$emit(
         "move-cards",
         "yamafudaCards",
@@ -149,7 +171,7 @@ export default {
       if (!this.scrapeUrl || this.scraping || this.errors.scrapeUrl) return;
       this.scraping = true;
       const url = `${this.useConfig().API_HOST}/api/scrape?url=${encodeURI(
-        this.scrapeUrl
+        this.scrapeUrl.trim()
       )}`;
       axios
         .get(url)
@@ -166,6 +188,10 @@ export default {
           this.scraping = false;
           console.log(err);
         });
+    },
+    onKeyPress() {
+      console.log('aa')
+      this.errors.scrapeUrl = "ペーストのみ可能です"
     },
     onClose() {
       this.$emit("update:active", false);

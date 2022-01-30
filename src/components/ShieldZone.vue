@@ -40,7 +40,7 @@
                 single: true,
               })
             "
-            >見る</o-button
+            >確認</o-button
           >
         </div>
       </MarkTool>
