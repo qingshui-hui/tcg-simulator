@@ -25,6 +25,22 @@
         <a @click="openResetGameModal()">ゲームをリセットする</a>
       </div>
     </nav>
+    <nav class="nav-links">
+      <div class="nav-item">
+        <div>
+          招待リンク
+          <o-tooltip
+            label="コピーしました"
+            position="top"
+            variant="info"
+            :active="copyLinkTooltip"
+            :always="true"
+            ><o-icon pack="fas" icon="copy" @click="copyInviteLink"></o-icon
+          ></o-tooltip>
+        </div>
+        <div style="font-size: 12px">{{ inviteLink }}</div>
+      </div>
+    </nav>
   </div>
   <!-- サイドバーのために使用する仮のモーダル -->
   <o-modal
@@ -42,11 +58,28 @@
 
 <script>
 export default {
+  emits: ['reset-game'],
   data() {
     return {
       sidebarOpen: false,
       resetGameModal: false,
+      copyLinkTooltip: false,
     };
+  },
+  computed: {
+    inviteLink() {
+      const opponentPlayer = this.player === "a" ? "b" : "a";
+      return (
+        window.location.origin +
+        "/room?roomId=" +
+        encodeURI(this.$route.query.roomId) +
+        "&player=" +
+        opponentPlayer
+      );
+    },
+    player() {
+      return this.$route.query.player;
+    },
   },
   methods: {
     openResetGameModal() {
@@ -55,7 +88,14 @@ export default {
     },
     resetGame() {
       this.resetGameModal = false;
-      this.$emit('reset-game');
+      this.$emit("reset-game");
+    },
+    copyInviteLink() {
+      navigator.clipboard.writeText(this.inviteLink);
+      this.copyLinkTooltip = true;
+      window.setTimeout(() => {
+        this.copyLinkTooltip = false;
+      }, 1000);
     },
   },
 };
@@ -103,7 +143,7 @@ export default {
 }
 .nav-links {
   .nav-item {
-    > * {
+    > a {
       cursor: pointer;
     }
     line-height: 1.25rem;

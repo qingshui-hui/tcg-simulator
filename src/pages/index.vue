@@ -33,6 +33,19 @@
             </router-link>
           </td>
         </tr>
+        <tr>
+          <td>部屋x</td>
+          <td colspan="2">
+            <router-link
+              :to="{
+                path: '/room',
+                query: { roomId: randomRoomId(), player: 'a' },
+              }"
+            >
+              <o-button variant="info" size="small">部屋を作る</o-button>
+            </router-link>
+          </td>
+        </tr>
       </table>
       <div style="margin-top: 1rem" v-if="decks.length > 0">
         <router-link to="/builder">
@@ -44,6 +57,8 @@
 </template>
 
 <script>
+import { makeRandomString } from "@/helpers/makeRandomString";
+
 export default {
   data() {
     return {
@@ -53,6 +68,11 @@ export default {
   computed: {
     decks() {
       return this.$store.state.decks.data;
+    },
+  },
+  methods: {
+    randomRoomId() {
+      return makeRandomString(4) + "-" + makeRandomString(3);
     },
   },
 };

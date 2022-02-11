@@ -15,7 +15,6 @@
       <o-button
         @click.stop="selectDeck"
         variant="info"
-        size="medium"
         :style="{ marginTop: '20px' }"
         >選択</o-button
       >
@@ -46,12 +45,27 @@
     </div>
 
     <div v-else-if="!partnerIsReady" id="waiting-player">
-      <p class="deckForm_p">相手プレイヤーが</p>
-      <p class="deckForm_p">デッキを選択するのを待つか、</p>
-      <p class="deckForm_p">ウィンドウをもう一つ開いて、</p>
-      <p class="deckForm_p">同じ部屋番号の</p>
-      <p class="deckForm_p">相手プレイヤーとして、</p>
-      <p class="deckForm_p">デッキを選択してください</p>
+      <p class="deckForm_p">
+        相手プレイヤーがデッキを選択するのを待ってください。
+      </p>
+      <div v-if="player === 'a'">
+        招待リンク:
+        <span style="font-size: 12px">{{ inviteLink }}</span>
+      </div>
+      <div v-if="player === 'a'">
+        <o-tooltip
+          label="コピーしました"
+          position="top"
+          variant="info"
+          size="small"
+          :active="copyLinkTooltip"
+          :always="true"
+        >
+          <o-button variant="info" size="small" @click="copyInviteLink"
+            >招待リンクをコピーする</o-button
+          >
+        </o-tooltip>
+      </div>
     </div>
   </o-modal>
 </template>
@@ -71,6 +85,7 @@ export default {
       errors: {
         scrapeUrl: "",
       },
+      copyLinkTooltip: false,
     };
   },
   watch: {
@@ -79,10 +94,8 @@ export default {
      */
     scrapeUrl(newVal) {
       if (newVal) {
-        if (
-          newVal.match(/^https:\/\/gachi-matome.com\/deckrecipe-detail-dm/)
-        ) {
-          this.scrape()
+        if (newVal.match(/^https:\/\/gachi-matome.com\/deckrecipe-detail-dm/)) {
+          this.scrape();
         } else {
           this.errors.scrapeUrl = "不適切なURLです";
           return;
@@ -105,6 +118,14 @@ export default {
     },
     allDecks() {
       return [...this.$store.state.decks.data, ...this.deckList];
+    },
+    inviteLink() {
+      return (
+        window.location.origin +
+        "/room?roomId=" +
+        encodeURI(this.$route.query.roomId) +
+        "&player=b"
+      );
     },
   },
   mounted() {
@@ -190,11 +211,17 @@ export default {
         });
     },
     onKeyPress() {
-      console.log('aa')
-      this.errors.scrapeUrl = "ペーストのみ可能です"
+      this.errors.scrapeUrl = "ペーストのみ可能です";
     },
     onClose() {
       this.$emit("update:active", false);
+    },
+    copyInviteLink() {
+      navigator.clipboard.writeText(this.inviteLink)
+      this.copyLinkTooltip = true
+      window.setTimeout(() => {
+        this.copyLinkTooltip = false
+      }, 1000)
     },
   },
 };
