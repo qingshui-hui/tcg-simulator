@@ -1,8 +1,5 @@
 # tcg-simulator
 
-## デモページ
-[デモ](https://tcg-demo-1.herokuapp.com/)
-
 ## 環境構築
 ### 必要なツール
 - nodejs 16.x
