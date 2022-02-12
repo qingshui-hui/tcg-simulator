@@ -1,6 +1,6 @@
 <template>
   <div class="markdownWrapper">
-    <div style="margin-bottom: 20px;">
+    <div style="margin-bottom: 20px">
       <router-link to="/">戻る</router-link>
     </div>
     <Markdown class="markdown-body" :source="markdown"></Markdown>
@@ -16,10 +16,15 @@ export default {
       markdown: markdown,
     };
   },
+  created() {
+    this.$store.commit("setting/set", {
+      readAbout: true,
+    });
+  },
   mounted() {
     this.$nextTick(() => {
       document.querySelectorAll("a").forEach((link) => {
-        if (link.href.includes("https://")) {
+        if (!link.href.includes(window.location.origin)) {
           link.target = "_blank";
           link.rel = "noopener";
         }

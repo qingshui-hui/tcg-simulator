@@ -5,7 +5,7 @@ import createPersistedState from "vuex-persistedstate";
 const store = createStore({
   plugins: [createPersistedState({
     // スクレイピングで取得したデッキデータをブラウザのLocal Storageに保存する。
-    paths: ['decks'],
+    paths: ['decks', 'setting'],
   })],
   modules: {
     decks: {
@@ -17,6 +17,19 @@ const store = createStore({
         setData(state, data) {
           state.data = data
         }, // commit('decks/setData')
+      },
+    },
+    setting: {
+      namespaced: true,
+      state: {
+        readAbout: false,
+      },
+      mutations: {
+        set(state, data) {
+          Object.keys(data).forEach(key => {
+            state[key] = data[key]
+          })
+        }, // commit('setting/set')
       },
     },
     builder: {

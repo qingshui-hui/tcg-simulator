@@ -1,7 +1,17 @@
 <template>
   <div>
     <div id="app" style="padding: 20px; background-color: white">
-      <p>部屋を選択してください</p>
+      <p>
+        部屋を選択してください<a
+          class="deckForm_searchField_help"
+          href="https://note.com/tcgsimulator/n/n3f94a7d126f3#46479139-fd8d-4731-8329-32a75616f604"
+          target="_blank"
+          rel="noopener"
+          style="vertical-align: middle"
+        >
+          <o-icon pack="far" icon="question-circle"></o-icon>
+        </a>
+      </p>
       <table class="roomTable" style="margin-top: 20px">
         <thead>
           <th></th>
@@ -51,7 +61,17 @@
         <p v-if="decks.length > 0">
           <router-link to="/builder">自分のデッキを編集</router-link>
         </p>
-        <p><router-link to="/about">このサイトについて</router-link></p>
+        <p>
+          <o-tooltip
+            label="はじめにお読みください"
+            variant="warning"
+            position="right"
+            always
+            :active="!readAbout"
+          >
+            <router-link to="/about">このサイトについて</router-link>
+          </o-tooltip>
+        </p>
       </div>
     </div>
   </div>
@@ -69,6 +89,9 @@ export default {
   computed: {
     decks() {
       return this.$store.state.decks.data;
+    },
+    readAbout() {
+      return this.$store.state.setting.readAbout;
     },
   },
   methods: {

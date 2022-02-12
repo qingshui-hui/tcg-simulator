@@ -20,6 +20,7 @@
       >
       <div :style="{ marginTop: '20px', width: '250px' }">
         <o-field
+          class="deckForm_searchField"
           :variant="errors.scrapeUrl ? 'danger' : ''"
           :message="scraping ? 'デッキ取得中です' : errors.scrapeUrl"
         >
@@ -36,17 +37,28 @@
             @icon-click="scrape"
           >
           </o-input>
+          <a
+            class="deckForm_searchField_help"
+            href="https://note.com/tcgsimulator/n/n3f94a7d126f3#a7ea3459-6fe4-46d1-bc53-3bb7da71b792"
+            target="_blank"
+            rel="noopener"
+          >
+            <o-icon pack="far" icon="question-circle"></o-icon>
+          </a>
         </o-field>
       </div>
       <div class="deckForm_example">
-        例:
-        https://gachi-matome.com/deckrecipe-detail-dm/?tcgrevo_deck_maker_deck_id=xxxx
+        <p>
+          例:
+          https://gachi-matome.com/deckrecipe-detail-dm/?tcgrevo_deck_maker_deck_id=xxxx
+        </p>
+        <p>※フォーマットがオリジナルのデッキのみ使用可能です</p>
       </div>
     </div>
 
     <template v-if="!isReady || !partnerIsReady">
-      <hr v-if="!isReady" style="margin: 20px 0;">
-      <div  id="waiting-player">
+      <hr v-if="!isReady" style="margin: 20px 0" />
+      <div id="waiting-player">
         <p v-if="isReady" class="deckForm_p">
           相手プレイヤーがデッキを選択するのを待ってください。
         </p>
@@ -220,11 +232,11 @@ export default {
       this.$emit("update:active", false);
     },
     copyInviteLink() {
-      navigator.clipboard.writeText(this.inviteLink)
-      this.copyLinkTooltip = true
+      navigator.clipboard.writeText(this.inviteLink);
+      this.copyLinkTooltip = true;
       window.setTimeout(() => {
-        this.copyLinkTooltip = false
-      }, 1000)
+        this.copyLinkTooltip = false;
+      }, 1000);
     },
   },
 };
@@ -252,5 +264,15 @@ export default {
   width: 100%;
   font-size: 12px;
   margin-top: 1rem;
+  > * + * {
+    margin-top: 1rem;
+  }
+}
+.deckForm_searchField {
+  &_help {
+    color: #000;
+    margin-left: 8px;
+    align-self: center;
+  }
 }
 </style>

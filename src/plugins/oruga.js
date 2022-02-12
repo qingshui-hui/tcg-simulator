@@ -31,9 +31,11 @@ import {
   faMinus,
   faPen,
   faCopy,
+  faQuestion,
 } from '@fortawesome/free-solid-svg-icons'
 import {
   faTimesCircle as farTimesCircle,
+  faQuestionCircle as farQuestionCircle,
 } from '@fortawesome/free-regular-svg-icons'
 
 library.add(
@@ -52,4 +54,6 @@ library.add(
   faMinus,
   faPen,
   faCopy,
+  faQuestion,
+  farQuestionCircle,
 )
