@@ -44,29 +44,32 @@
       </div>
     </div>
 
-    <div v-else-if="!partnerIsReady" id="waiting-player">
-      <p class="deckForm_p">
-        相手プレイヤーがデッキを選択するのを待ってください。
-      </p>
-      <div v-if="player === 'a'">
-        招待リンク:
-        <span style="font-size: 12px">{{ inviteLink }}</span>
-      </div>
-      <div v-if="player === 'a'">
-        <o-tooltip
-          label="コピーしました"
-          position="top"
-          variant="info"
-          size="small"
-          :active="copyLinkTooltip"
-          :always="true"
-        >
-          <o-button variant="info" size="small" @click="copyInviteLink"
-            >招待リンクをコピーする</o-button
+    <template v-if="!isReady || !partnerIsReady">
+      <hr v-if="!isReady" style="margin: 20px 0;">
+      <div  id="waiting-player">
+        <p v-if="isReady" class="deckForm_p">
+          相手プレイヤーがデッキを選択するのを待ってください。
+        </p>
+        <div v-if="player === 'a'">
+          招待リンク:
+          <span style="font-size: 12px">{{ inviteLink }}</span>
+        </div>
+        <div v-if="player === 'a'">
+          <o-tooltip
+            label="コピーしました"
+            position="top"
+            variant="info"
+            size="small"
+            :active="copyLinkTooltip"
+            :always="true"
           >
-        </o-tooltip>
+            <o-button variant="info" size="small" @click="copyInviteLink"
+              >招待リンクをコピーする</o-button
+            >
+          </o-tooltip>
+        </div>
       </div>
-    </div>
+    </template>
   </o-modal>
 </template>
 
