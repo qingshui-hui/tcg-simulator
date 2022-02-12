@@ -4809,7 +4809,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:^8.2.0":
+"commander@npm:^6.2.1":
+  version: 6.2.1
+  resolution: "commander@npm:6.2.1"
+  checksum: d7090410c0de6bc5c67d3ca41c41760d6d268f3c799e530aafb73b7437d1826bbf0d2a3edac33f8b57cc9887b4a986dce307fa5557e109be40eadb7c43b21742
+  languageName: node
+  linkType: hard
+
+"commander@npm:^8.0.0, commander@npm:^8.1.0, commander@npm:^8.2.0":
   version: 8.3.0
   resolution: "commander@npm:8.3.0"
   checksum: 0f82321821fc27b83bd409510bb9deeebcfa799ff0bf5d102128b500b7af22872c0c92cb6a0ebc5a4cf19c6b550fba9cedfa7329d18c6442a625f851377bacf0
@@ -5050,6 +5057,20 @@ __metadata:
     browserslist: ^4.18.1
     semver: 7.0.0
   checksum: 4f00f734d8745bcd111e41c79d6195939f6b29951c83cc83f4d50a7d352329367d164b0985b947f83313d7dd31d6ee7b1e20a1d3d8ae7566df744ad914fc4e16
+  languageName: node
+  linkType: hard
+
+"core-js@npm:3":
+  version: 3.21.0
+  resolution: "core-js@npm:3.21.0"
+  checksum: 87df49aa2c5d0a521c52102b6669842dd30b334742e86dd4e0173c51230bc48d610060ab6de0f149766d188325b8c1b84598f901cf455674fe6c03ccc5c8026f
+  languageName: node
+  linkType: hard
+
+"core-js@npm:3.16.1":
+  version: 3.16.1
+  resolution: "core-js@npm:3.16.1"
+  checksum: 7924fa2a7f00e3a33bbe92fe42ba59fbbe7e01557a59824d000976300be3ba224cca20161f61654b3861ea80d244d6adfee6ed3ae6d6d9931210a37510fb7c9b
   languageName: node
   linkType: hard
 
@@ -5923,6 +5944,7 @@ __metadata:
     lowdb: ^3.0.0
     playwright-chromium: ^1.18.1
     raw-loader: ^4.0.2
+    richmd: ^2.2.4
     sass: ^1.49.0
     sass-loader: ^10.2.1
     socket.io: ^4.4.1
@@ -7214,6 +7236,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fs-extra@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "fs-extra@npm:10.0.0"
+  dependencies:
+    graceful-fs: ^4.2.0
+    jsonfile: ^6.0.1
+    universalify: ^2.0.0
+  checksum: 5285a3d8f34b917cf2b66af8c231a40c1623626e9d701a20051d3337be16c6d7cac94441c8b3732d47a92a2a027886ca93c69b6a4ae6aee3c89650d2a8880c0a
+  languageName: node
+  linkType: hard
+
 "fs-extra@npm:^7.0.1":
   version: 7.0.1
   resolution: "fs-extra@npm:7.0.1"
@@ -7225,7 +7258,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fs-extra@npm:^9.0.0":
+"fs-extra@npm:^9.0.0, fs-extra@npm:^9.0.1":
   version: 9.1.0
   resolution: "fs-extra@npm:9.1.0"
   dependencies:
@@ -7744,14 +7777,14 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"highlight.js@npm:^10.7.1":
+"highlight.js@npm:^10.4.1, highlight.js@npm:^10.7.1":
   version: 10.7.3
   resolution: "highlight.js@npm:10.7.3"
   checksum: defeafcd546b535d710d8efb8e650af9e3b369ef53e28c3dc7893eacfe263200bba4c5fcf43524ae66d5c0c296b1af0870523ceae3e3104d24b7abf6374a4fea
   languageName: node
   linkType: hard
 
-"highlight.js@npm:^11.3.1":
+"highlight.js@npm:^11.2.0, highlight.js@npm:^11.3.1":
   version: 11.4.0
   resolution: "highlight.js@npm:11.4.0"
   checksum: df57994d1e6d8d32a0c8826d9b3019b86b36bae570fd849f807b538f12a2188b1aa775e1653c2b591c24eacd736c262dfb193e2bd3b155800ea6f882a611989c
@@ -9639,6 +9672,28 @@ fsevents@^1.2.7:
     json-schema: 0.4.0
     verror: 1.10.0
   checksum: 2ad1b9fdcccae8b3d580fa6ced25de930eaa1ad154db21bbf8478a4d30bbbec7925b5f5ff29b933fba9412b16a17bd484a8da4fdb3663b5e27af95dd693bab2a
+  languageName: node
+  linkType: hard
+
+"katex@npm:^0.12.0":
+  version: 0.12.0
+  resolution: "katex@npm:0.12.0"
+  dependencies:
+    commander: ^2.19.0
+  bin:
+    katex: cli.js
+  checksum: f424c90b2b43034163cee37dd75f7c1f93206580cbaea07703a322010b615c32249d4648974d58f7345ad113431a43c2e8ae2118aed3a06fe37ad46dfdcf6d10
+  languageName: node
+  linkType: hard
+
+"katex@npm:^0.13.13":
+  version: 0.13.24
+  resolution: "katex@npm:0.13.24"
+  dependencies:
+    commander: ^8.0.0
+  bin:
+    katex: cli.js
+  checksum: 1b7c8295867073d0db4f6fb41ef1c0e3418b8e23924ff61b446b36134cb74cdadc7242dfbfb922d9c32f0b15eda6160a08cd30948c4e78141966ca2991a1726b
   languageName: node
   linkType: hard
 
@@ -12751,6 +12806,40 @@ resolve@^1.20.0:
   version: 1.0.0
   resolution: "rgba-regex@npm:1.0.0"
   checksum: 7f2cd271572700faea50753d82524cb2b98f17a5b9722965c7076f6cd674fe545f28145b7ef2cccabc9eca2475c793db16862cd5e7b3784a9f4b8d6496431057
+  languageName: node
+  linkType: hard
+
+"richmd-cli@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "richmd-cli@npm:0.2.0"
+  dependencies:
+    commander: ^6.2.1
+    core-js: 3
+    fs-extra: ^9.0.1
+    highlight.js: ^10.4.1
+    katex: ^0.12.0
+    mkdirp: ^1.0.4
+    richmd: ^2.0.0
+  bin:
+    richmd: lib/script.js
+  checksum: eb36888a62cd3e91a90c1b0b180ae307081cba34dcfa8ddc0aa570b9643a0a660befddd1c1253b3f18ad75b7b3d4be7870b99218d9abfd7d2dbedb53e094c973
+  languageName: node
+  linkType: hard
+
+"richmd@npm:^2.0.0, richmd@npm:^2.2.4":
+  version: 2.2.4
+  resolution: "richmd@npm:2.2.4"
+  dependencies:
+    commander: ^8.1.0
+    core-js: 3.16.1
+    fs-extra: ^10.0.0
+    highlight.js: ^11.2.0
+    katex: ^0.13.13
+    mkdirp: ^1.0.4
+    richmd-cli: ^0.2.0
+  bin:
+    richmd: lib/script.js
+  checksum: ae3a4de989f9ccf66a0f1170bc34a3c590ebe94d3f6bcf2d4281bead1488889cda70ac585ef45020f70a6c1b5c834580c996f6a39d17e06f0aaafcbdf8176e0c
   languageName: node
   linkType: hard
 

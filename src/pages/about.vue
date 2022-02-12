@@ -3,12 +3,14 @@
     <div style="margin-bottom: 20px">
       <router-link to="/">戻る</router-link>
     </div>
-    <Markdown class="markdown-body" :source="markdown"></Markdown>
+    <div v-html="compiledMarkdown" class="markdown-body"></div>
   </div>
 </template>
 
 <script>
 import markdown from "raw-loader!../assets/markdown/about.md";
+import { richmd } from "richmd"
+import 'richmd/richmd.css'
 
 export default {
   data() {
@@ -21,16 +23,11 @@ export default {
       readAbout: true,
     });
   },
-  mounted() {
-    this.$nextTick(() => {
-      document.querySelectorAll("a").forEach((link) => {
-        if (!link.href.includes(window.location.origin)) {
-          link.target = "_blank";
-          link.rel = "noopener";
-        }
-      });
-    });
-  },
+  computed: {
+    compiledMarkdown () {
+      return richmd(this.markdown)
+    }
+  }
 };
 </script>
 
