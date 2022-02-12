@@ -35,7 +35,7 @@
             variant="info"
             :active="copyLinkTooltip"
             :always="true"
-            ><o-icon pack="fas" icon="copy" @click="copyInviteLink"></o-icon
+            ><o-icon class="sidebar_copyLinkIcon" pack="fas" icon="copy" @click="copyInviteLink"></o-icon
           ></o-tooltip>
         </div>
         <div style="font-size: 12px">{{ inviteLink }}</div>
@@ -119,6 +119,18 @@ export default {
   }
 }
 .sidebar {
+  a {
+    color: #000;
+    text-decoration: none;
+  }
+  a:hover {
+    opacity: 0.8;
+  }
+  &_copyLinkIcon {
+    &:hover {
+      cursor: pointer;
+    }
+  }
   &.sidebar--open {
     transform: translateX(0%);
   }
