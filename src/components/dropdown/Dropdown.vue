@@ -400,10 +400,15 @@ export default defineComponent({
       this.toggle();
     },
     onMouseleave() {
-      // if (this.triggers.indexOf('hover') >= 0) {
-      //   this.isActive = false
-      // }
-      this.isHoverable = false;
+      if (this.triggers.indexOf("hover") < 0) return;
+      const mouseLeave = (event) => {
+        if (event.target && !this.isInWhiteList(event.target)) {
+          this.isHoverable = false;
+          this.isActive = false;
+        }
+        document.removeEventListener('mousemove', mouseLeave)
+      }
+      document.addEventListener('mousemove', mouseLeave)
     },
 
     /**

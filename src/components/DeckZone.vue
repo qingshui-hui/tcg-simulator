@@ -83,7 +83,10 @@ export default {
   },
   computed: {
     dropdownTriggers() {
-      return this.$store.state.settings.dropdownTriggers;
+      if (window.innerWidth >= 800 && !this.hasSelectedCard()) {
+        return ['click', 'hover']
+      }
+      return ['click']
     },
     deckViews() {
       // 1~nまでの数字を順に要素とする配列を返す。

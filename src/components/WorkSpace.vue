@@ -48,7 +48,7 @@
         </div>
         <div class="workSpace_cardList gridCardList">
           <div v-for="card in orderedCards" :key="card.id">
-            <Dropdown class="dropdown">
+            <Dropdown class="dropdown" :triggers="dropdownTriggers">
               <template #trigger>
                 <MarkTool
                   :active="cardIsSelected(card)"
@@ -70,7 +70,7 @@
                   </div>
                 </MarkTool>
               </template>
-              <o-dropdown-item>
+              <o-dropdown-item class="drop-item">
                 <span
                   class="drop-item-2"
                   @click.stop="moveCard(card, 'battleCards')"
@@ -82,7 +82,7 @@
                   >手札へ</span
                 >
               </o-dropdown-item>
-              <o-dropdown-item>
+              <o-dropdown-item class="drop-item">
                 <span
                   class="drop-item-2"
                   @click.stop="moveCard(card, 'yamafudaCards', true)"
@@ -94,7 +94,7 @@
                   >/ 下へ</span
                 >
               </o-dropdown-item>
-              <o-dropdown-item>
+              <o-dropdown-item class="drop-item">
                 <span
                   class="drop-item-2"
                   @click.stop="moveCard(card, 'shieldCards')"
@@ -107,7 +107,7 @@
                   >裏返す</span
                 >
               </o-dropdown-item>
-              <o-dropdown-item>
+              <o-dropdown-item class="drop-item">
                 <span
                   class="drop-item-2"
                   @click.stop="moveCard(card, 'manaCards')"
@@ -210,6 +210,12 @@ export default {
   mixins: [mixin.zone],
   props: ["lowerPlayer"],
   computed: {
+    dropdownTriggers() {
+      if (window.innerWidth >= 800 && !this.hasSelectedCard()) {
+        return ['click', 'hover']
+      }
+      return ['click']
+    },
     player() {
       return this.$store.state.workSpace.player;
     },
@@ -471,11 +477,15 @@ $card-width: 120px;
     color: beige;
   }
   .o-drop__menu {
-    top: 40px;
+    top: 20px;
+    padding: 0;
   }
   .o-drop__item {
     display: flex;
     justify-content: space-between;
+  }
+  .drop-item {
+
   }
   .drop-item-2 {
     font-size: 14px;
