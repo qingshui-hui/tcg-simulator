@@ -47,10 +47,11 @@
           </td>
         </tr>
       </table>
-      <div style="margin-top: 1rem" v-if="decks.length > 0">
-        <router-link to="/builder">
-          <p>自分のデッキを編集</p>
-        </router-link>
+      <div class="index_links">
+        <p v-if="decks.length > 0">
+          <router-link to="/builder">自分のデッキを編集</router-link>
+        </p>
+        <p><router-link to="/about">このサイトについて</router-link></p>
       </div>
     </div>
   </div>
@@ -97,5 +98,15 @@ export default {
 }
 a {
   text-decoration: none;
+  color: #000;
+  &:hover {
+    opacity: 0.8;
+  }
+}
+.index_links {
+  margin-top: 2rem;
+  * + * {
+    margin-top: 1rem;
+  }
 }
 </style>

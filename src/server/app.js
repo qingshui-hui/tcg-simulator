@@ -29,6 +29,9 @@ app.get('/room', function (req, res) {
 app.get('/builder', function (req, res) {
   res.sendFile(filepath + '/index.html');
 });
+app.get('/about', function (req, res) {
+  res.sendFile(filepath + '/index.html');
+});
 
 import apiRouter from './api.js'
 app.use(apiRouter)
