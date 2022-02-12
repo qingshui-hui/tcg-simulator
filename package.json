@@ -25,6 +25,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.2",
     "fork-ts-checker-webpack-plugin": "^6.5.0",
+    "github-markdown-css": "^5.1.0",
     "lowdb": "^3.0.0",
     "playwright-chromium": "^1.18.1",
     "socket.io": "^4.4.1",
@@ -33,6 +34,7 @@
     "typescript": "^4.5.5",
     "vue": "^3.2.29",
     "vue-router": "^4.0.12",
+    "vue3-markdown-it": "^1.0.10",
     "vuedraggable": "next",
     "vuex": "^4.0.2",
     "vuex-persistedstate": "^4.1.0"
@@ -52,6 +54,7 @@
     "jest": "^27.4.7",
     "jest-serializer-vue": "^2.0.2",
     "jest-transform-stub": "^2.0.0",
+    "raw-loader": "^4.0.2",
     "sass": "^1.49.0",
     "sass-loader": "^10.2.1",
     "supertest": "^6.2.2",

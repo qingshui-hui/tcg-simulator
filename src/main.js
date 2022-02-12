@@ -43,3 +43,8 @@ useOruga(vueApp)
 // global components
 import Dropdown from './components/dropdown/Dropdown'
 vueApp.component('Dropdown', Dropdown)
+
+//
+// markdown
+import Markdown from './plugins/markdown'
+vueApp.use(Markdown)

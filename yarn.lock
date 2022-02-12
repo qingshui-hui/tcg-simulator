@@ -3392,6 +3392,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"argparse@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "argparse@npm:2.0.1"
+  checksum: 83644b56493e89a254bae05702abf3a1101b4fa4d0ca31df1c9985275a5a5bd47b3c27b7fa0b71098d41114d8ca000e6ed90cad764b306f8a503665e4d517ced
+  languageName: node
+  linkType: hard
+
 "arr-diff@npm:^4.0.0":
   version: 4.0.0
   resolution: "arr-diff@npm:4.0.0"
@@ -5909,11 +5916,13 @@ __metadata:
     eslint-plugin-vue: ^7.20.0
     express: ^4.17.2
     fork-ts-checker-webpack-plugin: ^6.5.0
+    github-markdown-css: ^5.1.0
     jest: ^27.4.7
     jest-serializer-vue: ^2.0.2
     jest-transform-stub: ^2.0.0
     lowdb: ^3.0.0
     playwright-chromium: ^1.18.1
+    raw-loader: ^4.0.2
     sass: ^1.49.0
     sass-loader: ^10.2.1
     socket.io: ^4.4.1
@@ -5925,6 +5934,7 @@ __metadata:
     vue: ^3.2.29
     vue-router: ^4.0.12
     vue3-jest: ^27.0.0-alpha.1
+    vue3-markdown-it: ^1.0.10
     vuedraggable: next
     vuex: ^4.0.2
     vuex-persistedstate: ^4.1.0
@@ -6146,6 +6156,13 @@ __metadata:
   version: 2.2.0
   resolution: "entities@npm:2.2.0"
   checksum: 19010dacaf0912c895ea262b4f6128574f9ccf8d4b3b65c7e8334ad0079b3706376360e28d8843ff50a78aabcb8f08f0a32dbfacdc77e47ed77ca08b713669b3
+  languageName: node
+  linkType: hard
+
+"entities@npm:~2.1.0":
+  version: 2.1.0
+  resolution: "entities@npm:2.1.0"
+  checksum: a10a877e489586a3f6a691fe49bf3fc4e58f06c8e80522f08214a5150ba457e7017b447d4913a3fa041bda06ee4c92517baa4d8d75373eaa79369e9639225ffd
   languageName: node
   linkType: hard
 
@@ -7416,6 +7433,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"github-markdown-css@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "github-markdown-css@npm:5.1.0"
+  checksum: e3472770dedc9508d30a788bc522beb0c993f08b1f098389619174414c3ce558727d8b3d0c6eed50d156ee0cf04ab667e4bca5149dedc7869b54bd38db0cc5fb
+  languageName: node
+  linkType: hard
+
 "glob-parent@npm:^3.1.0":
   version: 3.1.0
   resolution: "glob-parent@npm:3.1.0"
@@ -7726,6 +7750,13 @@ __metadata:
   version: 10.7.3
   resolution: "highlight.js@npm:10.7.3"
   checksum: defeafcd546b535d710d8efb8e650af9e3b369ef53e28c3dc7893eacfe263200bba4c5fcf43524ae66d5c0c296b1af0870523ceae3e3104d24b7abf6374a4fea
+  languageName: node
+  linkType: hard
+
+"highlight.js@npm:^11.3.1":
+  version: 11.4.0
+  resolution: "highlight.js@npm:11.4.0"
+  checksum: df57994d1e6d8d32a0c8826d9b3019b86b36bae570fd849f807b538f12a2188b1aa775e1653c2b591c24eacd736c262dfb193e2bd3b155800ea6f882a611989c
   languageName: node
   linkType: hard
 
@@ -9709,6 +9740,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"linkify-it@npm:^3.0.1":
+  version: 3.0.3
+  resolution: "linkify-it@npm:3.0.3"
+  dependencies:
+    uc.micro: ^1.0.1
+  checksum: 31367a4bb70c5bbc9703246236b504b0a8e049bcd4e0de4291fa50f0ebdebf235b5eb54db6493cb0b1319357c6eeafc4324c9f4aa34b0b943d9f2e11a1268fbc
+  languageName: node
+  linkType: hard
+
 "loader-fs-cache@npm:^1.0.0":
   version: 1.0.3
   resolution: "loader-fs-cache@npm:1.0.3"
@@ -9790,6 +9830,13 @@ __metadata:
   version: 4.6.1
   resolution: "lodash.defaultsdeep@npm:4.6.1"
   checksum: 1f346f16158b760545ca99553cb13e907a28b281425751af6bfe681387b9e5685438a7ddbfd36a8d5cc8bda066867a134aa31416f17e318db8c461c377810a76
+  languageName: node
+  linkType: hard
+
+"lodash.flow@npm:^3.5.0":
+  version: 3.5.0
+  resolution: "lodash.flow@npm:3.5.0"
+  checksum: a9a62ad344e3c5a1f42bc121da20f64dd855aaafecee24b1db640f29b88bd165d81c37ff7e380a7191de6f70b26f5918abcebbee8396624f78f3618a0b18634c
   languageName: node
   linkType: hard
 
@@ -9979,6 +10026,111 @@ __metadata:
   languageName: node
   linkType: hard
 
+"markdown-it-abbr@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "markdown-it-abbr@npm:1.0.4"
+  checksum: b15f7e0d3277965f38639166a22dfa538d40cefe79b6381feba69647bf963505fc5516ee5261183fc28c63b7929f0f04f53b9b84968c04ff2307cc5a30941346
+  languageName: node
+  linkType: hard
+
+"markdown-it-anchor@npm:^8.4.1":
+  version: 8.4.1
+  resolution: "markdown-it-anchor@npm:8.4.1"
+  peerDependencies:
+    "@types/markdown-it": "*"
+    markdown-it: "*"
+  checksum: 76ea34640a380d6cc8d318028a4eb218a7bebbc73ba4572fb9ee48d53b890b37bb7e5271198a79345925e401a9d285a1f2de5b293f661277bc8c3834a04df8a8
+  languageName: node
+  linkType: hard
+
+"markdown-it-deflist@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "markdown-it-deflist@npm:2.1.0"
+  checksum: 6d5b0cc8c0e729cb8d0add4cbfa98cc39bf3cbc8aa33a8bd7dab50da10273aac834b5fc85a36985235ff945048a246ec3688ecaf5469e64668e94b4449f79531
+  languageName: node
+  linkType: hard
+
+"markdown-it-emoji@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "markdown-it-emoji@npm:2.0.0"
+  checksum: 7d25844134d98a4e2cf70d9a14ea4ec5afc3f64740d69c88012795c8a24ed2f286850b72fd4437d60d2fe34f73cc1889a7e8e3ab4663f4fc3a4899991601bbba
+  languageName: node
+  linkType: hard
+
+"markdown-it-footnote@npm:^3.0.3":
+  version: 3.0.3
+  resolution: "markdown-it-footnote@npm:3.0.3"
+  checksum: 3657f943f938603ec74e86a41883bfac5564eec7733b8d74e00894cb2b2b73f823c072bccd8aa07c418ae1e017a4f5d22c6309627dfc2800100fcb2c6c71e24b
+  languageName: node
+  linkType: hard
+
+"markdown-it-highlightjs@npm:^3.6.0":
+  version: 3.6.0
+  resolution: "markdown-it-highlightjs@npm:3.6.0"
+  dependencies:
+    highlight.js: ^11.3.1
+    lodash.flow: ^3.5.0
+  checksum: 4b9042b60bbe630e33cfa0391844962fac9d4c73898cfc1c815290f9629163534422e35330e19b3f5d1cc971081b1d8e4ab2748776eef7cc427377861e427ee4
+  languageName: node
+  linkType: hard
+
+"markdown-it-ins@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "markdown-it-ins@npm:3.0.1"
+  checksum: f4ddc456bf67eeae872bd77146723cd6c6a035b2dfa4c8a6f282c1fc6eb35b503836ac567aee4d6550bbd5e67a014003f52bad4c28661387662e215c3c1ab2ae
+  languageName: node
+  linkType: hard
+
+"markdown-it-mark@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "markdown-it-mark@npm:3.0.1"
+  checksum: cb9d8bee158440938e615d9f2866b6ee3b98666aba7d4c1a78d9df2e0c121a23f2c9172d1f92680883eae9229794a5e6e7e15e76bfd151fadf8be2299330905f
+  languageName: node
+  linkType: hard
+
+"markdown-it-sub@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "markdown-it-sub@npm:1.0.0"
+  checksum: 8b5a71a11f718d787e591e22ed028adc789ba62dac6ca0e22a4714c9533868431a4227dbefb921be39ad3388c25fa019d9a510dffed865811ebcb2cbecbbf53d
+  languageName: node
+  linkType: hard
+
+"markdown-it-sup@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "markdown-it-sup@npm:1.0.0"
+  checksum: 9e593acb8c79dbb917645affde3c46ecb50baa59c740ffe4ecc7bfa470b5b746338f12c65219d6c4112f9f2b01b68cbd151aaabbac878f34e07c7120e5959324
+  languageName: node
+  linkType: hard
+
+"markdown-it-task-lists@npm:^2.1.1":
+  version: 2.1.1
+  resolution: "markdown-it-task-lists@npm:2.1.1"
+  checksum: 8fc634bfc28a47ed582ca1f68af306f86289bdca0ca654de835bc28ac2c0a286894285fab34af21ec3a87e86fd19236bb0562b2dcb4d2fd34a9c992e3d3f41c2
+  languageName: node
+  linkType: hard
+
+"markdown-it-toc-done-right@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "markdown-it-toc-done-right@npm:4.2.0"
+  checksum: 1f6a88a5591ee21fda87aa64ba814e099f5a69f57affdfc222c176959871279907367f18dce962b10e076c6aa61938e137471fdc1dc622327e02b4a6a593c04f
+  languageName: node
+  linkType: hard
+
+"markdown-it@npm:^12.3.2":
+  version: 12.3.2
+  resolution: "markdown-it@npm:12.3.2"
+  dependencies:
+    argparse: ^2.0.1
+    entities: ~2.1.0
+    linkify-it: ^3.0.1
+    mdurl: ^1.0.1
+    uc.micro: ^1.0.5
+  bin:
+    markdown-it: bin/markdown-it.js
+  checksum: 890555711c1c00fa03b936ca2b213001a3b9b37dea140d8445ae4130ce16628392aad24b12e2a0a9935336ca5951f2957a38f4e5309a2e38eab44e25ff32a41e
+  languageName: node
+  linkType: hard
+
 "md5.js@npm:^1.3.4":
   version: 1.3.5
   resolution: "md5.js@npm:1.3.5"
@@ -10001,6 +10153,13 @@ __metadata:
   version: 2.0.4
   resolution: "mdn-data@npm:2.0.4"
   checksum: add3c95e6d03d301b8a8bcfee3de33f4d07e4c5eee5b79f18d6d737de717e22472deadf67c1a8563983c0b603e10d7df40aa8e5fddf18884dfe118ccec7ae329
+  languageName: node
+  linkType: hard
+
+"mdurl@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "mdurl@npm:1.0.1"
+  checksum: 71731ecba943926bfbf9f9b51e28b5945f9411c4eda80894221b47cc105afa43ba2da820732b436f0798fd3edbbffcd1fc1415843c41a87fea08a41cc1e3d02b
   languageName: node
   linkType: hard
 
@@ -12189,6 +12348,18 @@ __metadata:
     iconv-lite: 0.4.24
     unpipe: 1.0.0
   checksum: c6f8d6a75c65c0a047f888cb29efc97f60fb36e950ba2cb31fefce694f98186e844a03367920faa7dc5bffaf33df08aee0b9dd935280e366439fa6492a5b163e
+  languageName: node
+  linkType: hard
+
+"raw-loader@npm:^4.0.2":
+  version: 4.0.2
+  resolution: "raw-loader@npm:4.0.2"
+  dependencies:
+    loader-utils: ^2.0.0
+    schema-utils: ^3.0.0
+  peerDependencies:
+    webpack: ^4.0.0 || ^5.0.0
+  checksum: 51cc1b0d0e8c37c4336b5318f3b2c9c51d6998ad6f56ea09612afcfefc9c1f596341309e934a744ae907177f28efc9f1654eacd62151e82853fcc6d37450e795
   languageName: node
   linkType: hard
 
@@ -14384,6 +14555,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"uc.micro@npm:^1.0.1, uc.micro@npm:^1.0.5":
+  version: 1.0.6
+  resolution: "uc.micro@npm:1.0.6"
+  checksum: 6898bb556319a38e9cf175e3628689347bd26fec15fc6b29fa38e0045af63075ff3fea4cf1fdba9db46c9f0cbf07f2348cd8844889dd31ebd288c29fe0d27e7a
+  languageName: node
+  linkType: hard
+
 "uglify-js@npm:3.4.x":
   version: 3.4.10
   resolution: "uglify-js@npm:3.4.10"
@@ -14843,6 +15021,27 @@ __metadata:
     typescript:
       optional: true
   checksum: 9042972641542744e35bdf4d8a68764fb163fa35c893e56552334aa249b58c088eb0b5490acf78671dc4d3cc144e4e9d6467b37bc469dece34424c0752ddcf83
+  languageName: node
+  linkType: hard
+
+"vue3-markdown-it@npm:^1.0.10":
+  version: 1.0.10
+  resolution: "vue3-markdown-it@npm:1.0.10"
+  dependencies:
+    markdown-it: ^12.3.2
+    markdown-it-abbr: ^1.0.4
+    markdown-it-anchor: ^8.4.1
+    markdown-it-deflist: ^2.1.0
+    markdown-it-emoji: ^2.0.0
+    markdown-it-footnote: ^3.0.3
+    markdown-it-highlightjs: ^3.6.0
+    markdown-it-ins: ^3.0.1
+    markdown-it-mark: ^3.0.1
+    markdown-it-sub: ^1.0.0
+    markdown-it-sup: ^1.0.0
+    markdown-it-task-lists: ^2.1.1
+    markdown-it-toc-done-right: ^4.2.0
+  checksum: b1f679b4d3597faa4870098078257b0039eda71b910dd72ed4e550ed270bf31fc64b3827106369b657139075f1cea88891ce85a267de51fb84631f49a6a9b3c3
   languageName: node
   linkType: hard
 
