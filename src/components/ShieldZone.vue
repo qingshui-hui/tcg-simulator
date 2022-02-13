@@ -126,7 +126,6 @@ export default {
   width: 275px;
   height: cardHeight(50px);
   display: flex;
-  justify-content: space-between;
   flex-direction: row-reverse;
   position: relative;
   overflow-x: scroll;
