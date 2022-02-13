@@ -38,7 +38,9 @@
             :bochiCards="players[upperPlayer]['cards']['bochiCards']"
             :yamafudaCards="players[upperPlayer]['cards']['yamafudaCards']"
             :shieldCards="players[upperPlayer]['cards']['shieldCards']"
-            :shieldCardGroups="players[upperPlayer]['cards']['shieldCardGroups']"
+            :shieldCardGroups="
+              players[upperPlayer]['cards']['shieldCardGroups']
+            "
             v-on:move-cards="moveCards"
           >
             <template #shield-zone>
@@ -46,7 +48,9 @@
                 side="upper"
                 :player="upperPlayer"
                 :shieldCards="players[upperPlayer]['cards']['shieldCards']"
-                :shieldCardGroups="players[upperPlayer]['cards']['shieldCardGroups']"
+                :shieldCardGroups="
+                  players[upperPlayer]['cards']['shieldCardGroups']
+                "
                 v-on:move-cards="moveCards"
                 @group-card="groupCard"
               ></ShieldZone>
@@ -65,7 +69,9 @@
             :side="'upper'"
             :player="upperPlayer"
             :battleCards="players[upperPlayer]['cards']['battleCards']"
-            :battleCardGroups="players[upperPlayer]['cards']['battleCardGroups']"
+            :battleCardGroups="
+              players[upperPlayer]['cards']['battleCardGroups']
+            "
             v-on:move-cards="moveCards"
             @group-card="groupCard"
             @emit-room-state="emitRoomState"
@@ -82,7 +88,9 @@
             :side="'lower'"
             :player="lowerPlayer"
             :battleCards="players[lowerPlayer]['cards']['battleCards']"
-            :battleCardGroups="players[lowerPlayer]['cards']['battleCardGroups']"
+            :battleCardGroups="
+              players[lowerPlayer]['cards']['battleCardGroups']
+            "
             v-on:move-cards="moveCards"
             @group-card="groupCard"
             @emit-room-state="emitRoomState"
@@ -94,7 +102,9 @@
             :bochiCards="players[lowerPlayer]['cards']['bochiCards']"
             :yamafudaCards="players[lowerPlayer]['cards']['yamafudaCards']"
             :shieldCards="players[lowerPlayer]['cards']['shieldCards']"
-            :shieldCardGroups="players[lowerPlayer]['cards']['shieldCardGroups']"
+            :shieldCardGroups="
+              players[lowerPlayer]['cards']['shieldCardGroups']
+            "
             v-on:move-cards="moveCards"
           >
             <template #shield-zone>
@@ -102,7 +112,9 @@
                 side="lower"
                 :player="lowerPlayer"
                 :shieldCards="players[lowerPlayer]['cards']['shieldCards']"
-                :shieldCardGroups="players[lowerPlayer]['cards']['shieldCardGroups']"
+                :shieldCardGroups="
+                  players[lowerPlayer]['cards']['shieldCardGroups']
+                "
                 v-on:move-cards="moveCards"
                 @group-card="groupCard"
               ></ShieldZone>
@@ -243,14 +255,18 @@ export default {
       // 並べ替え
       if (["battleCardGroups", "shieldCardGroups"].includes(to)) {
         // fromCardをtoCardの前に移す。
-        Util.arrayInsertBefore(this.players[player]["cards"][from], toCard, fromCard);
+        Util.arrayInsertBefore(
+          this.players[player]["cards"][from],
+          toCard,
+          fromCard
+        );
       }
       // 状態の変更を送信する
       if (!this.useConfig().WS_ENABLED) return;
       this.$socket.emit("cards-moved", this.players[player]);
     },
     // groupNameはbattleCardGroupsかshieldCardGroups
-    ungroupCard({ groupName, card, player }) {
+    ungroupCard({ groupName, card, player, zone }) {
       // シールドのグループの場合はカードの行き先がわからず、注意が必要。
       const groupIndex = this.players[player]["cards"][groupName].findIndex(
         (g) => g.id === card.groupId
@@ -262,6 +278,21 @@ export default {
         group.cardIds.findIndex((id) => id === card.id),
         1
       );
+      // カードが一枚だけのグループは消す。
+      if (group.cardIds.length === 1) {
+        const lastCardIndex = this.players[player]["cards"][zone].findIndex(
+          (c) => c.id === group.cardIds[0]
+        );
+        if (lastCardIndex) {
+          const lastCard = this.players[player]["cards"][zone][lastCardIndex];
+          this.ungroupCard({
+            groupName,
+            card: lastCard,
+            player,
+            zone,
+          });
+        }
+      }
       // cardIdsが0になったグループは自動で消す。
       if (group.cardIds.length === 0) {
         this.players[player]["cards"][groupName].splice(groupIndex, 1);
@@ -278,14 +309,17 @@ export default {
       const card = selectedCards[0];
       if (card.groupId) {
         this.ungroupCard({
+          zone: from,
           groupName: card.group,
           card,
           player,
         });
-        card.group = null;
       }
       // 手札、マナ、墓地へ行く場合は表向きにする。
-      if (["tefudaCards", "manaCards", "bochiCards"].includes(to) && to !== from) {
+      if (
+        ["tefudaCards", "manaCards", "bochiCards"].includes(to) &&
+        to !== from
+      ) {
         selectedCards.forEach((card) => {
           card.faceDown = false;
         });
@@ -305,7 +339,7 @@ export default {
       // 違うゾーンへ移動するときはタップとマークを解除する。
       if (to !== from) {
         selectedCards.forEach((card) => {
-          card.markColor = '';
+          card.markColor = "";
           card.tapped = false;
         });
       }
@@ -364,7 +398,9 @@ export default {
       //
     },
     async getRoomState() {
-      const res = await fetch(`${this.useConfig().API_HOST}/api/rooms/${this.roomId}`);
+      const res = await fetch(
+        `${this.useConfig().API_HOST}/api/rooms/${this.roomId}`
+      );
       const room = await res.json();
       if (room.a) {
         this.players.a = room.a;
