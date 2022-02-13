@@ -47,7 +47,12 @@
           </div>
         </div>
         <div class="workSpace_cardList gridCardList">
-          <div v-for="card in orderedCards" :key="card.id">
+          <div
+            v-for="card in orderedCards"
+            :key="card.id"
+            @mouseenter="setHoveredCard(card)"
+            @mouseleave="setHoveredCard(null)"
+          >
             <Dropdown class="dropdown" :triggers="dropdownTriggers">
               <template #trigger>
                 <MarkTool
@@ -212,9 +217,9 @@ export default {
   computed: {
     dropdownTriggers() {
       if (window.innerWidth >= 800 && !this.hasSelectedCard()) {
-        return ['click', 'hover']
+        return ["click", "hover"];
       }
-      return ['click']
+      return ["click"];
     },
     player() {
       return this.$store.state.workSpace.player;
@@ -484,7 +489,6 @@ $card-width: 120px;
     justify-content: space-between;
   }
   .drop-item {
-
   }
   .drop-item-2 {
     font-size: 14px;

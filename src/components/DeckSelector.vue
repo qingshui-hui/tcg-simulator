@@ -167,9 +167,14 @@ export default {
         this.allDecks[this.deckId].cards,
         this.player === "a"
       );
-      console.log('selected deck', deck)
+      console.log("selected deck", deck);
       const cardMap = await Deck.fetchCardsData(deck);
-      console.log('card data', cardMap);
+      deck.forEach((c) => {
+        if (Object.prototype.hasOwnProperty.call(cardMap, c.mainCardId)) {
+          c.text = cardMap[c.mainCardId].card_text;
+        }
+      });
+      console.log("card data", cardMap);
       // fromのカードは存在しなくても良いため、仮にyamafudaCardsにしている。
       const shieldCards = deck.slice(0, 5);
       shieldCards.forEach((c) => {
@@ -214,7 +219,7 @@ export default {
       axios
         .get(url)
         .then((res) => {
-          console.log('fetched deck', res);
+          console.log("fetched deck", res);
           this.$store.commit("decks/setData", [
             res.data,
             ...this.$store.state.decks.data,

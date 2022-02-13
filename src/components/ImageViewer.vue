@@ -3,14 +3,26 @@
     <div
       class="imageDisplay"
       :class="{ hidden: display.hidden, blur: display.blur }"
-      :style="[
-        display.left ? { left: '5px' } : { right: '5px' },
-        { width: `${style.width}px` },
-      ]"
+      :style="[display.left ? { left: '5px' } : { right: '5px' }]"
     >
-      <div v-if="display.imageUrl" class="imageDisplay_image">
-        <!-- ディスプレイが邪魔をして操作ができない時のために、クリックで閉じる -->
-        <img :src="display.imageUrl" @click.stop="display.imageUrl = ''" />
+      <div
+        v-if="
+          hoveredCard && (!hoveredCard.faceDown || hoveredCard.showInWorkSpace)
+        "
+        class="imageDisplay_image"
+        :style="{ width: `${style.width}px` }"
+      >
+        <img :src="hoveredCard.imageUrl" />
+      </div>
+      <div
+        class="imageDisplay_cardText"
+        v-if="
+          hoveredCard &&
+          (!hoveredCard.faceDown || hoveredCard.showInWorkSpace) &&
+          hoveredCard.text
+        "
+      >
+        {{ hoveredCard.text }}
       </div>
     </div>
     <!-- slot -->
@@ -48,6 +60,8 @@
 </template>
 
 <script>
+import { mapMutations, mapState } from "vuex/dist/vuex.cjs";
+
 export default {
   data() {
     return {
@@ -65,7 +79,11 @@ export default {
       },
     };
   },
+  computed: {
+    ...mapState(["hoveredCard"]),
+  },
   methods: {
+    ...mapMutations(["setHoveredCard"]),
     traceMouseMove(event) {
       if (this.display.hidden) {
         return;
@@ -101,20 +119,27 @@ export default {
 <style lang="scss" scoped>
 /* display */
 .imageDisplay {
-  // background-image: url('http://localhost:3333/dmbd07-a-010.jpg');
-  // width: 300px;
   position: fixed;
-  top: 10px;
+  top: 2px;
   // left: 10px;
   z-index: 12; // ワークスペースより大きくする
   &.blur {
     opacity: 0.6;
   }
   &_image {
+    margin-left: auto;
     width: 100%;
     img {
       width: 100%;
     }
+  }
+  &_cardText {
+    border-radius: 8px;
+    background-color: #fff;
+    padding: 8px;
+    font-size: 12px;
+    white-space: pre-line;
+    width: 360px;
   }
 }
 </style>

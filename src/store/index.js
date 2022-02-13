@@ -48,6 +48,7 @@ const store = createStore({
     return {
       selectMode: false, // カードを重ねるときに使用。
       selectedCard: null, // セレクトモードではないが、カードを選択するとき使用する。
+      hoveredCard: null,
       workSpace: {
         active: false,
         cards: [],
@@ -69,6 +70,9 @@ const store = createStore({
     },
     setSelectedCard(state, card) {
       state.selectedCard = card
+    },
+    setHoveredCard(state, card) {
+      state.hoveredCard = card
     },
     openWorkSpace(state, { cards, zone, player, single = false }) {
       // 既に開いている状態で、同じゾーンを開こうとした場合は閉じる。
