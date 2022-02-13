@@ -20,7 +20,7 @@
           <span class="shield-id">{{ card.shieldId }}</span>
           <!-- 裏向きのカードの場合表示されない。 -->
           <img v-if="!card.faceDown" :src="card.imageUrl" />
-          <span class="shield-reverse" v-else />
+          <img v-else :src="card.backImageUrl" />
           <div
             v-if="card.groupId && group(card).cardIds.length > 1"
             class="shield-num"
@@ -122,17 +122,20 @@ export default {
   @return calc($value * 908 / 650);
 }
 .shield-zone {
+  background-color: rgb(79, 205, 255);
   width: 275px;
   height: cardHeight(50px);
   display: flex;
   flex-direction: row-reverse;
   position: relative;
   overflow-x: scroll;
+  margin-right: 8px;
   > * {
-    margin-right: 5px;
+    margin-right: 2px;
   }
   &.upper {
     flex-direction: row;
+    margin-left: 8px;
     .shield-card {
       transform: rotate(180deg);
     }
@@ -173,7 +176,6 @@ export default {
     display: block;
     width: 50px;
     height: cardHeight(50px);
-    background-color: rgb(79, 205, 255);
   }
   .card_buttons {
     position: absolute;

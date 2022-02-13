@@ -10,7 +10,7 @@
           </template>
         </div>
       </div>
-      <div class="blue-wrapper" :class="side">
+      <div class="shield-wrapper" :class="side">
         <!-- シールドゾーン -->
         <slot name="shield-zone"></slot>
         <!-- デッキゾーン -->
@@ -101,15 +101,15 @@ $card-width: 50px;
       margin-top: 10px;
     }
   }
-  .blue-wrapper {
+  .shield-wrapper {
     margin-left: 10px;
-    background-color: blue;
     display: flex;
     align-items: center;
     width: 380px;
     &.upper {
       flex-direction: row-reverse;
       .bochi {
+        margin-right: 5px;
         transform: rotate(180deg);
       }
       .bochi_text {
@@ -164,7 +164,9 @@ $card-width: 50px;
     text-align: center;
     width: 60px;
     height: cardHeight(50px);
-    background-color: purple;
+
+    background-image: url("../assets/images/bochi.jpg");
+    background-size: cover;
     cursor: pointer;
     img {
     }
