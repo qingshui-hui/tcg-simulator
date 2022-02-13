@@ -1,9 +1,25 @@
 const START_ID_A = 1;
 const START_ID_B = 101;
 
-import { useConfig } from '../plugins/useConfig'
+import { useConfig } from '../plugins/useConfig.js'
+import axios from 'axios';
 
 export class Deck {
+  /**
+   *
+   * @param {Array} cards
+   * @returns {Object}
+   */
+  static async fetchCardsData(cards) {
+    // nodejsサーバー側で使用する。
+    const mainCardIds = [...new Set(cards.map((c) => c.mainCardId))].filter(id => !!id)
+    if (mainCardIds.length === 0) {
+      return {}
+    }
+    const res = await axios.get(`${useConfig().API_HOST}/api/cards?cardIds=${mainCardIds.join(',')}`)
+    return res.data
+  }
+
   static prepareDeck(deckCards, playerA = false) {
     let cards = [];
     deckCards.forEach(data => {
@@ -14,6 +30,7 @@ export class Deck {
           imageId: data.imageId,
           imageUrl: data.imageUrl,
           backImageUrl: data.backImageUrl,
+          mainCardId: data.mainCardId,
         });
       }
     })
@@ -33,6 +50,7 @@ export class Deck {
         id: startId + i,
         imageUrl: c.imageUrl || `${imageHost}/${c.imageId}`,
         backImageUrl: c.backImageUrl || `${imageHost}/card-back.jpg`,
+        mainCardId: c.mainCardId,
       }
     })
     return shuffledCards;
@@ -76,5 +94,20 @@ export class Deck {
       array[r] = tmp;
     }
     return array;
+  }
+
+  static groupByCardId(cards) {
+    return cards.reduce((result, current) => {
+      const element = result.find((p) => p.imageUrl === current.imageUrl);
+      if (element) {
+        element.time++;
+      } else {
+        result.push({
+          ...current,
+          time: 1,
+        });
+      }
+      return result;
+    }, []);
   }
 }
