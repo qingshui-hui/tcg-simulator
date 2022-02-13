@@ -44,6 +44,18 @@
               @click.stop="shuffleCards('yamafudaCards', workSpace.cards)"
               >シャッフル</o-button
             >
+            <template v-if="
+                ['chojigenCards'].includes(workSpace.zone)
+              ">
+              <o-button
+                @click.stop="faceDownAllCards(true)"
+                >全て裏にする</o-button
+              >
+              <o-button
+                @click.stop="faceDownAllCards(false)"
+                >全て表にする</o-button
+              >
+            </template>
           </div>
         </div>
         <div class="workSpace_cardList gridCardList">
@@ -240,6 +252,7 @@ export default {
         shieldCards: "シールドゾーン",
         tefudaCards: "手札",
         yamafudaCards: "山札",
+        chojigenCards: "超次元ゾーン",
       };
       if (this.workSpace.single && this.workSpace.zone === "shieldCards") {
         return "シールド";
@@ -298,6 +311,12 @@ export default {
         c.tapped = true;
       });
       this.closeWorkSpace();
+    },
+    faceDownAllCards(faceDown = true) {
+      // 超次元ゾーンで使用
+      this.workSpace.cards.forEach((c) => {
+        c.faceDown = faceDown;
+      });
     },
     // 操作したプレイヤーだけが見ることができる。
     // カードを裏返すのとは違う。

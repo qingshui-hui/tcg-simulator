@@ -163,20 +163,13 @@ export default {
   },
   methods: {
     async selectDeck() {
-      const deck = Deck.prepareDeck(
-        this.allDecks[this.deckId].cards,
+      const deck = await Deck.prepareDeckForGame(
+        this.allDecks[this.deckId],
         this.player === "a"
       );
       console.log("selected deck", deck);
-      const cardMap = await Deck.fetchCardsData(deck);
-      deck.forEach((c) => {
-        if (Object.prototype.hasOwnProperty.call(cardMap, c.mainCardId)) {
-          c.text = cardMap[c.mainCardId].card_text;
-        }
-      });
-      console.log("card data", cardMap);
       // fromのカードは存在しなくても良いため、仮にyamafudaCardsにしている。
-      const shieldCards = deck.slice(0, 5);
+      const shieldCards = deck.cards.slice(0, 5);
       shieldCards.forEach((c) => {
         c.faceDown = true;
       });
@@ -191,10 +184,10 @@ export default {
         "move-cards",
         "yamafudaCards",
         "tefudaCards",
-        deck.slice(5, 10),
+        deck.cards.slice(5, 10),
         this.player
       );
-      const yamafudaCards = deck.slice(10, 40);
+      const yamafudaCards = deck.cards.slice(10, 40);
       yamafudaCards.forEach((c) => {
         c.faceDown = true;
       });
@@ -205,7 +198,17 @@ export default {
         yamafudaCards,
         this.player
       );
-      this.$emit("selected", true);
+      this.$emit(
+        "move-cards",
+        "yamafudaCards",
+        "chojigenCards",
+        deck.chojigenCards,
+        this.player
+      );
+      this.$emit("selected", {
+        deck,
+        player: this.player,
+      });
       if (this.partnerIsReady) {
         this.$emit("update:active", false);
       }

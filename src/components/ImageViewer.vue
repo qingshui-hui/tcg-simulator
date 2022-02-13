@@ -6,23 +6,18 @@
       :style="[display.left ? { left: '5px' } : { right: '5px' }]"
     >
       <div
-        v-if="
-          hoveredCard && (!hoveredCard.faceDown || hoveredCard.showInWorkSpace)
-        "
+        v-if="cardIsVisible"
         class="imageDisplay_image"
         :style="{ width: `${style.width}px` }"
       >
-        <img :src="hoveredCard.imageUrl" />
+        <img v-if="hoveredCard.faceDown" :src="hoveredCard.backImageUrl" />
+        <img v-else :src="hoveredCard.imageUrl" />
       </div>
       <div
         class="imageDisplay_cardText"
-        v-if="
-          hoveredCard &&
-          (!hoveredCard.faceDown || hoveredCard.showInWorkSpace) &&
-          hoveredCard.text
-        "
+        v-if="cardIsVisible && hoveredCard.text"
       >
-        {{ hoveredCard.text }}
+        {{ cardText }}
       </div>
     </div>
     <!-- slot -->
@@ -81,6 +76,40 @@ export default {
   },
   computed: {
     ...mapState(["hoveredCard"]),
+    cardIsVisible() {
+      if (this.hoveredCard) {
+        if (!this.hoveredCard.faceDown || this.hoveredCard.showInWorkSpace) {
+          return true;
+        }
+        if (
+          this.hoveredCard.faceDown &&
+          !this.hoveredCard.backImageUrl.includes("/card-back.jpg")
+        ) {
+          return true;
+        }
+      }
+      return false;
+    },
+    cardText() {
+      /** @type {String} */
+      const text = this.hoveredCard.text
+      if (this.hoveredCard && text) {
+        if (this.hoveredCard.faceDown) {
+          if (this.hoveredCard.backText) {
+            return this.hoveredCard.backText
+          }
+          if (text.match(/─{3,}龍解後─{3,}/)) {
+            return text.split(/─{3,}龍解後─{3,}/)[1]
+          }
+        } else {
+          if (text.match(/─{3,}龍解後─{3,}/)) {
+            return text.split(/─{3,}龍解後─{3,}/)[0]
+          }
+        }
+        return text
+      }
+      return ''
+    }
   },
   methods: {
     ...mapMutations(["setHoveredCard"]),

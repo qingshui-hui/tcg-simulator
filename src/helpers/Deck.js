@@ -20,40 +20,80 @@ export class Deck {
     return res.data
   }
 
-  static prepareDeck(deckCards, playerA = false) {
-    let cards = [];
-    deckCards.forEach(data => {
+  /**
+   * ゲーム内で一意になるようなカードIDをカードに付与する
+   * @param {Object} deck
+   * @param {Boolean} playerA
+   * @returns
+   */
+  static async prepareDeckForGame(deck, playerA = false) {
+    const mainCards = [];
+    const chojigenCards = [];
+    const startId = playerA ? START_ID_A : START_ID_B;
+    const imageHost = useConfig().IMAGE_HOST;
+    let count = startId;
+    deck.cards.forEach(c => {
       // デッキメーカーから取り込んだデータにはtimeがないことによる対応。
-      const times = data.time || 1
+      const times = c.time || 1
       for (let i = 0; i < times; i++) {
-        cards.push({
-          imageId: data.imageId,
-          imageUrl: data.imageUrl,
-          backImageUrl: data.backImageUrl,
-          mainCardId: data.mainCardId,
+        mainCards.push({
+          ...c,
+          imageUrl: c.imageUrl || `${imageHost}/${c.imageId}`,
+          backImageUrl: c.backImageUrl || `${imageHost}/card-back.jpg`,
+          mainCardId: c.mainCardId,
         });
       }
     })
-    return this.prepareCardsForGame(cards, playerA)
-  }
-
-  /**
-   * ゲーム内で一意になるようなカードIDをカードに付与する
-   */
-  static prepareCardsForGame(cards, playerA = false) {
-    let shuffledCards = Deck.shuffle(cards);
-    const startId = playerA ? START_ID_A : START_ID_B;
-    const imageHost = useConfig().IMAGE_HOST
-    // id が特定のカード名と結びつかないように、シャッフルしてから
-    shuffledCards = shuffledCards.map((c, i) => {
+    deck.cards = Deck.shuffle(mainCards).map(c => {
       return {
-        id: startId + i,
-        imageUrl: c.imageUrl || `${imageHost}/${c.imageId}`,
-        backImageUrl: c.backImageUrl || `${imageHost}/card-back.jpg`,
-        mainCardId: c.mainCardId,
+        ...c,
+        id: count++,
       }
     })
-    return shuffledCards;
+    //
+    // 超次元ゾーン
+    if (deck.chojigenCards && deck.chojigenCards.length > 0) {
+      deck.chojigenCards.forEach(c => {
+        const times = c.time || 1
+        for (let i = 0; i < times; i++) {
+          chojigenCards.push({
+            ...c,
+            imageUrl: c.imageUrl || `${imageHost}/${c.imageId}`,
+            backImageUrl: c.backImageUrl || `${imageHost}/card-back.jpg`,
+            mainCardId: c.mainCardId,
+          });
+        }
+      })
+      // 超次元のカードはシャッフル不要
+      deck.chojigenCards = chojigenCards.map(c => {
+        return {
+          ...c,
+          id: count++,
+          isChojigen: true,
+        }
+      })
+      deck.hasChojigen = true
+    } else {
+      deck.chojigenCards = chojigenCards;
+    }
+    //
+    // カードにテキストを追加
+    const cardMap = await Deck.fetchCardsData([
+      ...deck.cards,
+      ...deck.chojigenCards,
+    ]);
+    deck.cards.forEach((c) => {
+      if (Object.prototype.hasOwnProperty.call(cardMap, c.mainCardId)) {
+        c.text = c.text || cardMap[c.mainCardId].card_text;
+      }
+    });
+    deck.chojigenCards.forEach((c) => {
+      if (Object.prototype.hasOwnProperty.call(cardMap, c.mainCardId)) {
+        c.text = c.text || cardMap[c.mainCardId].card_text;
+      }
+    });
+    console.log("card data", cardMap);
+    return deck
   }
 
   static formatData(deckD) {

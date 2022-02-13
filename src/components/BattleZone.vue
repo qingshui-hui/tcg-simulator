@@ -103,7 +103,7 @@
             >
           </template>
           <o-button
-            v-if="card.faceDown"
+            v-if="card.faceDown && !card.isChojigen"
             variant="grey-dark"
             @click.stop="card.faceDown = !card.faceDown"
             >裏返す</o-button

@@ -34,6 +34,8 @@
             @mouseleave="setHoveredCard(null)"
           />
         </div>
+        <!-- 超次元ゾーン -->
+        <slot name="chojigenZone"></slot>
       </div>
     </div>
   </div>
@@ -102,7 +104,7 @@ $card-width: 50px;
   .player-zone {
     // background-color: blue;
     display: flex;
-    width: 380px;
+    width: 430px;
     > * {
       align-self: center;
     }
@@ -118,7 +120,7 @@ $card-width: 50px;
     margin-left: 10px;
     display: flex;
     align-items: center;
-    width: 380px;
+    width: 430px;
     &.upper {
       flex-direction: row-reverse;
       .bochi {

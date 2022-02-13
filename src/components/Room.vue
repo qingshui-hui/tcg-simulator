@@ -16,7 +16,7 @@
           :isReady="players[lowerPlayer].isReady"
           :partnerIsReady="players[upperPlayer].isReady"
           @moveCards="moveCards"
-          @selected="players[lowerPlayer].isReady = true"
+          @selected="onDeckSelected"
         ></DeckSelector>
 
         <div id="js_gameBoard">
@@ -128,6 +128,15 @@
                 @group-card="groupCard"
               ></DeckZone>
             </template>
+            <template #chojigenZone>
+              <ChojigenZone
+                side="lower"
+                :player="lowerPlayer"
+                :chojigenCards="players[lowerPlayer]['cards']['chojigenCards']"
+                :hasChojigen="players[lowerPlayer].hasChojigen"
+                @move-cards="moveCards"
+              ></ChojigenZone>
+            </template>
           </player-zone>
           <mana-zone
             :side="'lower'"
@@ -160,6 +169,7 @@ import DeckSelector from "./DeckSelector.vue";
 import ShieldZone from "./ShieldZone.vue";
 import CHeader from "./CHeader.vue";
 import DeckZone from "./DeckZone.vue";
+import ChojigenZone from "./ChojigenZone.vue";
 
 function initialData({ roomId }) {
   return {
@@ -172,6 +182,7 @@ function initialData({ roomId }) {
           shieldCards: [],
           tefudaCards: [],
           yamafudaCards: [],
+          chojigenCards: [],
           // cardGroups
           battleCardGroups: [],
           shieldCardGroups: [],
@@ -179,6 +190,7 @@ function initialData({ roomId }) {
         name: "a",
         roomId: roomId,
         isReady: false,
+        hasChojigen: false,
       },
       b: {
         cards: {
@@ -188,6 +200,7 @@ function initialData({ roomId }) {
           shieldCards: [],
           tefudaCards: [],
           yamafudaCards: [],
+          chojigenCards: [],
           // cardGroups
           battleCardGroups: [],
           shieldCardGroups: [],
@@ -195,6 +208,7 @@ function initialData({ roomId }) {
         name: "b",
         roomId: roomId,
         isReady: false,
+        hasChojigen: false,
       },
     },
     deckSelectorActive: false,
@@ -215,6 +229,7 @@ export default {
     ShieldZone,
     CHeader,
     DeckZone,
+    ChojigenZone,
   },
   data() {
     const data = initialData({
@@ -228,6 +243,10 @@ export default {
     },
   },
   methods: {
+    onDeckSelected({deck, player}) {
+      this.players[player].isReady = true
+      this.players[player].hasChojigen = !!deck.hasChojigen
+    },
     groupCard({ from, to, fromCard, toCard, player }) {
       // 情報をカードに追加
       // card.groupはできれば使いたくない。moveCards内でのみ使用。
