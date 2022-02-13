@@ -64,6 +64,15 @@
                 @group-card="groupCard"
               ></DeckZone>
             </template>
+            <template #chojigenZone>
+              <ChojigenZone
+                side="upper"
+                :player="upperPlayer"
+                :chojigenCards="players[upperPlayer]['cards']['chojigenCards']"
+                :hasChojigen="players[upperPlayer].hasChojigen"
+                @move-cards="moveCards"
+              ></ChojigenZone>
+            </template>
           </PlayerZone>
           <BattleZone
             :side="'upper'"

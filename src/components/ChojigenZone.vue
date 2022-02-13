@@ -1,5 +1,9 @@
 <template>
-  <div class="chojigenZone" :class="{chojigenZone_hidden: !hasChojigen}" @click.stop="clickChojigenZone">
+  <div
+    class="chojigenZone"
+    :class="[{ chojigenZone_hidden: !hasChojigen }, side]"
+    @click.stop="clickChojigenZone"
+  >
     <div
       v-if="selectMode && selectMode.player === player"
       class="chojigenZone_text"
@@ -52,6 +56,10 @@ $card-width: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
+  &.upper {
+    margin-left: 0;
+    margin-right: 8px;
+  }
   &_hidden {
     opacity: 0;
   }
