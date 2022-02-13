@@ -341,7 +341,6 @@ export default {
       ) {
         return;
       }
-      console.log("click outside");
       if (event.target.closest("#js_gameBoard")) {
         this.closeWorkSpace();
       }
