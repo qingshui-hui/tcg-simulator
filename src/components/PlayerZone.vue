@@ -78,6 +78,7 @@ export default {
     },
     clickShieldButton() {
       if (this.hasSelectedCard()) {
+        this.selectMode.card.faceDown = true;
         this.moveSelectedCard("shieldCards");
         return;
       }
