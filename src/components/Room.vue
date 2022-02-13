@@ -396,8 +396,6 @@ export default {
     // サーバーからデータを取得する。
     await this.getRoomState();
     if (this.$socket) {
-      console.log("listen event");
-
       //
       // イベントをリッスン
       this.$socket.on("cards-moved", (playerData) => {
