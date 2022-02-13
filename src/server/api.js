@@ -32,38 +32,58 @@ router.get('/api/decks', async function (req, res) {
 // https://elements.heroku.com/buildpacks/playwright-community/heroku-playwright-buildpack
 // 特定のブラウザのみに対応するplaywrightを使用。
 import { chromium } from 'playwright-chromium'
+import { Deck } from '../helpers/Deck.js'
+
+router.get('/api/cards', async (req, res) => {
+  const apiRes = await axios.get(`https://d23r8jlqp3e2gc.cloudfront.net/api/v1/dm/cards?main-card-ids=${req.query.cardIds}`)
+  if (apiRes.data) {
+    const map = {}
+    apiRes.data.forEach(c => {
+      map[c.main_card_id] = c
+    })
+    return res.json(map)
+  }
+  return res.json({})
+})
 
 router.get('/api/scrape', async (req, res) => {
-  const browser = await chromium.launch({
-    // headless: false // setting this to true will not run the UI
-  });
+  const browser = await chromium.launch();
 
   const page = await browser.newPage();
   await page.goto(req.query.url);
-  // たまに0件になるため、クリックで待つ。
-  await page.locator('.deck-area-gachimatome [data-toggle=modal]').first().click()
-
-  // https://playwright.dev/docs/api/class-locator#locator-element-handles
-  // https://github.com/microsoft/playwright/issues/10648
-  // Is there way to iterate the Locator elements?
-  const cardImgsLocator = page.locator('.deck-area-gachimatome .modal-body img')
-
-  const cardImgsCount = await cardImgsLocator.count()
-  console.log(`cardImgsCount: ${cardImgsCount}`)
-
+  const deckData = await page.evaluate(async () => {
+    // カテゴリーIDを取得
+    const categoryId = getCategoryId(`dm`)
+    // デッキIDを取得
+    const params = new URLSearchParams(window.location.search)
+    const deckId = params.get('tcgrevo_deck_maker_deck_id')
+    // デッキ詳細のモデルを初期化
+    const deckRecipeInfo = new DeckRecipeInfo(categoryId, deckId, `https://storage.googleapis.com/ka-nabell-card-images/img/s/card/card100244663_1.jpg`)
+    await deckRecipeInfo.updateDeckDetail()
+    await deckRecipeInfo.loadComplete()
+    return deckRecipeInfo.deckCardData
+  })
+  //
+  // 取得したデータを処理する。
   const deck = {
-    name: await page.locator('.deck-title-and-updateAt.p-1 .dm-deck-fontsize-middle').first().textContent(),
-    from: 'deck-maker',
-    cards: [],
+    name: deckData.name,
+    dmDeckId: deckData.dm_deck_id,
   }
-  for (let i = 0; i < cardImgsCount; i++) {
-    // log.info(await cardImgsLocator.nth(i))
-    deck.cards.push({
-      imageUrl: await cardImgsLocator.nth(i).getAttribute('src')
-    })
-  }
-  console.log(deck)
+  deck.chojigenCards = deckData.hyper_spatial_cards
+  deck.cards = Deck.groupByCardId(deckData.main_cards.map((c) => {
+    return {
+      imageUrl: `https://storage.googleapis.com/ka-nabell-card-images/img/card/${c.large_image_url}`,
+      mainCardId: c.main_card_id,
+    }
+  }))
+  deck.chojigenCards = Deck.groupByCardId(deckData.hyper_spatial_cards.map((c) => {
+    return {
+      imageUrl: `https://storage.googleapis.com/ka-nabell-card-images/img/card/${c.large_image_url}`,
+      mainCardId: c.main_card_id,
+    }
+  }))
   await browser.close();
+  // レスポンス
   res.json(deck)
 })
 

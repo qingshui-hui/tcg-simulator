@@ -9,6 +9,8 @@
         'is-selected': cardIsSelected(card),
       }"
       @click.stop="clickShield(card)"
+      @mouseenter="setHoveredCard(card)"
+      @mouseleave="setHoveredCard(null)"
     >
       <MarkTool
         :reverse="side === 'upper'"

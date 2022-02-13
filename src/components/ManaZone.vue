@@ -22,6 +22,8 @@
             class="card_wrapper"
             v-for="(card, index) in tappedCards"
             :key="index"
+            @mouseenter="setHoveredCard(card)"
+            @mouseleave="setHoveredCard(null)"
           >
             <div
               class="card"
@@ -46,6 +48,8 @@
             class="card_wrapper"
             v-for="(card, index) in normalCards"
             :key="index"
+            @mouseenter="setHoveredCard(card)"
+            @mouseleave="setHoveredCard(null)"
           >
             <div
               class="card"

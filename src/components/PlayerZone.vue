@@ -3,10 +3,14 @@
     <div class="player-zone" :class="side">
       <div class="player-counter" :class="side">
         <div class="shieldButton" @click.stop="clickShieldButton">
-          <div v-if="hasSelectedCard()" class="shieldButton_text__single">シールドへ</div>
+          <div v-if="hasSelectedCard()" class="shieldButton_text__single">
+            シールドへ
+          </div>
           <template v-else>
             <div class="shieldButton_text">シールド</div>
-            <div class="shieldButton_count">{{ countableShieldCards.length }}</div>
+            <div class="shieldButton_count">
+              {{ countableShieldCards.length }}
+            </div>
           </template>
         </div>
       </div>
@@ -17,10 +21,18 @@
         <slot name="deck-zone"></slot>
         <!-- 墓地 -->
         <div class="bochi" @click.stop="clickBochi">
-          <div v-if="selectMode && selectMode.player === player" class="bochi_text">
+          <div
+            v-if="selectMode && selectMode.player === player"
+            class="bochi_text"
+          >
             墓地へ
           </div>
-          <img v-else-if="lastCard(bochiCards)" :src="lastCard(bochiCards).imageUrl" />
+          <img
+            v-else-if="lastCard(bochiCards)"
+            :src="lastCard(bochiCards).imageUrl"
+            @mouseenter="setHoveredCard(lastCard(bochiCards))"
+            @mouseleave="setHoveredCard(null)"
+          />
         </div>
       </div>
     </div>
@@ -66,6 +78,7 @@ export default {
     },
     clickShieldButton() {
       if (this.hasSelectedCard()) {
+        this.selectMode.card.faceDown = true;
         this.moveSelectedCard("shieldCards");
         return;
       }

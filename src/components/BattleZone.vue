@@ -33,7 +33,13 @@
       }"
     >
       <!-- keyをindexにしていると、カード移動後MarkerToolが同じindexの別のカードに移ってしまう。 -->
-      <div class="card_wrapper" v-for="card in battleZoneCards" :key="card.id">
+      <div
+        class="card_wrapper"
+        v-for="card in battleZoneCards"
+        :key="card.id"
+        @mouseenter="setHoveredCard(card)"
+        @mouseleave="setHoveredCard(null)"
+      >
         <MarkTool
           :reverse="side === 'upper'"
           :active="cardIsSelected(card)"

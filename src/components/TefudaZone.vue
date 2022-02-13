@@ -1,10 +1,18 @@
 <template>
   <div class="tefuda-zone-wrapper" :class="side">
     <div class="tefuda-zone" :class="side">
-      <div class="card_wrapper" v-for="(card, index) in tefudaCards" :key="index">
+      <div
+        class="card_wrapper"
+        v-for="(card, index) in tefudaCards"
+        :key="index"
+        @mouseenter="setHoveredCard(card)"
+        @mouseleave="setHoveredCard(null)"
+      >
         <div
           class="card"
-          :class="[{ 'is-selected': selectMode && selectMode.card.id === card.id }]"
+          :class="[
+            { 'is-selected': selectMode && selectMode.card.id === card.id },
+          ]"
         >
           <!-- 対戦相手の手札は常に裏向き -->
           <div v-if="side === 'upper'">
