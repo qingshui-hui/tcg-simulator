@@ -11,7 +11,6 @@ router.get('/api/rooms/:roomId', async function (req, res) {
     return res.json({})
   }
   const room = (await getRoomCache(req.params.roomId)) || {}
-  console.log(room)
   res.json(room)
 })
 
