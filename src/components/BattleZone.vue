@@ -91,6 +91,13 @@
             >
             <template v-else>
               <o-button
+                v-if="card.isChojigen"
+                variant="grey-dark"
+                size="small"
+                @click.stop="setCardState(card, { faceDown: !card.faceDown })"
+                >裏返す</o-button
+              >
+              <o-button
                 variant="grey-dark"
                 size="small"
                 @click.stop="
@@ -101,19 +108,12 @@
                 "
                 >重ねる</o-button
               >
-              <o-button
-                v-if="card.isChojigen"
-                variant="grey-dark"
-                size="small"
-                @click.stop="setCardState(card, { faceDown: !card.faceDown })"
-                >裏返す</o-button
-              >
             </template>
           </template>
           <o-button
             v-if="card.faceDown && !card.isChojigen"
             variant="grey-dark"
-            @click.stop="card.faceDown = !card.faceDown"
+            @click.stop="setCardState(card, { faceDown: !card.faceDown })"
             >裏返す</o-button
           >
           <!-- アンタップ or タップ -->
