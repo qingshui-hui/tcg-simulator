@@ -1,6 +1,6 @@
 import { Server } from 'socket.io';
 import { server as appServer } from './app.js'
-import db from './db.js'
+import { setRoomCache } from './redisClient.js'
 
 const socketIoConfig = process.env.CLIENT_ORIGIN ?
   {
@@ -26,22 +26,8 @@ io.on('connection', function (socket) {
   })
   socket.on('cards-moved', async (data) => {
     // 送信者を除いく部屋のユーザーに送信。
-    socket.to('room' + data.roomId).emit('cards-moved', data);
-    console.log(`cards-moved room${data.roomId}`)
-    // dbアダプタを取得
-    await db.read()
-    // data.nameはプレイヤー名
-    if (!db.data.rooms[data.roomId]) {
-      db.data.rooms[data.roomId] = { a: null, b: null }
-    }
-    db.data.rooms[data.roomId][data.name] = data
-    await db.write()
-    console.log(`stored-data room${data.roomId}`)
-  })
-  socket.on('set-message', (data) => {
-    console.log(data)
-    // 部屋の全てのユーザーに送信
-    // io.in('room' + data.roomId).emit('set-message', data);
+    socket.to('room' + data.roomId).emit('cards-moved', data)
+    setRoomCache(data.roomId, data)
   })
   socket.on("disconnect", () => {
     console.log('ソケットの接続が切断されました。')
