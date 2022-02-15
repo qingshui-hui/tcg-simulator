@@ -126,12 +126,16 @@ export default {
 .shield-zone {
   background-color: rgb(79, 205, 255);
   width: 275px;
-  height: cardHeight(50px);
+  height: cardHeight(50px) + 8px;
   display: flex;
   flex-direction: row-reverse;
   position: relative;
   overflow-x: scroll;
   margin-right: 8px;
+  &::-webkit-scrollbar {
+    // 下のスクロールバーの幅だけスクロール可能になっているので消す。
+    width: 0px;
+  }
   > * {
     margin-right: 2px;
   }
