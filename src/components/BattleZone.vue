@@ -89,18 +89,26 @@
               @click.stop="clickCard($event, card)"
               >キャンセル</o-button
             >
-            <o-button
-              v-else
-              variant="grey-dark"
-              size="small"
-              @click.stop="
-                setSelectMode({
-                  ...selectMode,
-                  selectingTarget: true,
-                })
-              "
-              >重ねる</o-button
-            >
+            <template v-else>
+              <o-button
+                variant="grey-dark"
+                size="small"
+                @click.stop="
+                  setSelectMode({
+                    ...selectMode,
+                    selectingTarget: true,
+                  })
+                "
+                >重ねる</o-button
+              >
+              <o-button
+                v-if="card.isChojigen"
+                variant="grey-dark"
+                size="small"
+                @click.stop="setCardState(card, { faceDown: !card.faceDown })"
+                >裏返す</o-button
+              >
+            </template>
           </template>
           <o-button
             v-if="card.faceDown && !card.isChojigen"
