@@ -16,7 +16,11 @@ const setRoomCache = async (roomId, roomData) => {
   }
   await client.connec
   room[roomData.name] = roomData
-  await client.set(`json:room:${roomId}`, JSON.stringify(room))
+  // 期限は1時間に設定。
+  client.multi()
+    .set(`json:room:${roomId}`, JSON.stringify(room))
+    .expire(`json:room:${roomId}`, 60 * 60 * 60)
+    .exec()
 }
 
 export {
