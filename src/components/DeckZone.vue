@@ -47,7 +47,7 @@
     </template>
     <template v-if="yamafudaCards.length > 0">
       <o-dropdown-item aria-role="listitem" @click="openDeck"
-        >開く</o-dropdown-item
+        >山札を確認</o-dropdown-item
       >
       <o-dropdown-item
         aria-role="listitem"
