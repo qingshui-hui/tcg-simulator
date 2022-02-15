@@ -1,15 +1,18 @@
 import { Router } from 'express'
 import deckList from '../helpers/data.js'
 import sampleDeckList from '../helpers/data-sample.js'
-import db from './db.js'
 import { useConfig } from '../plugins/useConfig.js'
+import { getRoomCache } from './redisClient.js'
 
 const router = Router()
 
 router.get('/api/rooms/:roomId', async function (req, res) {
-  await db.read()
-  const data = db.data.rooms[req.params.roomId] || {}
-  res.json(data)
+  if (!req.params.roomId) {
+    return res.json({})
+  }
+  const room = (await getRoomCache(req.params.roomId)) || {}
+  console.log(room)
+  res.json(room)
 })
 
 import axios from 'axios'
