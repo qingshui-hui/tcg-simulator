@@ -26,7 +26,6 @@
     "express": "^4.17.2",
     "fork-ts-checker-webpack-plugin": "^6.5.0",
     "github-markdown-css": "^5.1.0",
-    "lowdb": "^3.0.0",
     "playwright-chromium": "^1.18.1",
     "redis": "^4.0.3",
     "socket.io": "^4.4.1",
