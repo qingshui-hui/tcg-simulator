@@ -22,6 +22,15 @@ mixin.zone = {
       // 状態を送信
       this.emitState();
     },
+    setCardState(card, cardState) {
+      Object.keys(cardState).forEach((key) => {
+        if (['tapped', 'faceDown'].includes(key)) {
+          card[key] = cardState[key];
+        }
+      })
+      // 状態を送信
+      this.emitState();
+    },
     setMarkColor(card, color) {
       this.setSelectMode(null);
       card.markColor = color;

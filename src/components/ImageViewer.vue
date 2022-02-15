@@ -10,7 +10,10 @@
         class="imageDisplay_image"
         :style="{ width: `${style.width}px` }"
       >
-        <img v-if="hoveredCard.faceDown" :src="hoveredCard.backImageUrl" />
+        <img
+          v-if="hoveredCard.faceDown && !hoveredCard.showInWorkSpace"
+          :src="hoveredCard.backImageUrl"
+        />
         <img v-else :src="hoveredCard.imageUrl" />
       </div>
       <div
@@ -92,24 +95,24 @@ export default {
     },
     cardText() {
       /** @type {String} */
-      const text = this.hoveredCard.text
+      const text = this.hoveredCard.text;
       if (this.hoveredCard && text) {
         if (this.hoveredCard.faceDown) {
           if (this.hoveredCard.backText) {
-            return this.hoveredCard.backText
+            return this.hoveredCard.backText;
           }
           if (text.match(/─{3,}龍解後─{3,}/)) {
-            return text.split(/─{3,}龍解後─{3,}/)[1]
+            return text.split(/─{3,}龍解後─{3,}/)[1];
           }
         } else {
           if (text.match(/─{3,}龍解後─{3,}/)) {
-            return text.split(/─{3,}龍解後─{3,}/)[0]
+            return text.split(/─{3,}龍解後─{3,}/)[0];
           }
         }
-        return text
+        return text;
       }
-      return ''
-    }
+      return "";
+    },
   },
   methods: {
     ...mapMutations(["setHoveredCard"]),

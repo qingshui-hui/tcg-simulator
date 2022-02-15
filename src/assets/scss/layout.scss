@@ -1,13 +1,26 @@
-@import url('../../../node_modules/github-markdown-css/github-markdown-light.css');
+@import url("../../../node_modules/github-markdown-css/github-markdown-light.css");
 
 body {
 }
 .app-wrapper {
   position: relative;
   overflow-x: scroll;
+  // スクロールバーのスタイル
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background-color: lightgray;
+    border-radius: 10px;
+}
+  ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.8);
+  }
 }
 .main {
-    margin-left: 10px;
+  margin-left: 10px;
 }
 
 #canvas {

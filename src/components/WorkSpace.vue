@@ -432,7 +432,7 @@ $card-width: 120px;
     .workSpace_inner {
       max-width: 100px;
       max-height: 100px;
-      overflow-y: scroll;
+      overflow-y: auto;
     }
     .bottomMenu {
       display: none;
@@ -441,7 +441,7 @@ $card-width: 120px;
   &_inner {
     // height: 60vh;
     max-height: 60vh;
-    overflow-y: scroll;
+    overflow-y: auto;
     @media screen and (max-device-width: 700px) {
       margin: 0;
       max-width: 100vw;

@@ -170,8 +170,10 @@ $card-width: 70px;
   .tefuda-zone {
     height: 100%;
     display: flex;
-    overflow-x: scroll;
     max-width: 410px;
+    &.upper {
+      overflow-x: auto;
+    }
     .card_wrapper {
       position: relative;
     }

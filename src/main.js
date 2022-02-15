@@ -14,9 +14,6 @@ vueApp.use(router)
 import store from './store'
 vueApp.use(store)
 
-// マウント
-vueApp.mount('#app')
-
 //
 // useConfig
 import useConfig from './plugins/useConfig'
@@ -48,3 +45,7 @@ vueApp.component('Dropdown', Dropdown)
 // markdown
 import Markdown from './plugins/markdown'
 vueApp.use(Markdown)
+
+//
+// マウント
+vueApp.mount('#app')
