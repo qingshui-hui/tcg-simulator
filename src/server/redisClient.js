@@ -5,8 +5,15 @@ const client = createClient({
 })
 
 const getRoomCache = async (roomId) => {
-  const room = JSON.parse(await client.get(`json:room:${roomId}`))
-  return room
+  try {
+    const room = JSON.parse(await client.get(`json:room:${roomId}`))
+    return room
+  } catch (err) {
+    if (!client.isOpen) {
+      client.connect().catch()
+    }
+    console.log(err)
+  }
 }
 
 const setRoomCache = async (roomId, roomData) => {
@@ -14,13 +21,18 @@ const setRoomCache = async (roomId, roomData) => {
   if (!room) {
     room = { a: null, b: null }
   }
-  await client.connec
   room[roomData.name] = roomData
   // 期限は1時間に設定。
   client.multi()
     .set(`json:room:${roomId}`, JSON.stringify(room))
     .expire(`json:room:${roomId}`, 60 * 60 * 60)
     .exec()
+    .catch(err => {
+      console.log(err)
+      if (!client.isOpen) {
+        client.connect().catch()
+      }
+    })
 }
 
 export {
