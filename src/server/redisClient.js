@@ -10,7 +10,7 @@ const getRoomCache = async (roomId) => {
     return room
   } catch (err) {
     if (!client.isOpen) {
-      client.connect().catch()
+      client.connect().catch((err) => {console.log(err)})
     }
     console.log(err)
   }
@@ -30,7 +30,7 @@ const setRoomCache = async (roomId, roomData) => {
     .catch(err => {
       console.log(err)
       if (!client.isOpen) {
-        client.connect().catch()
+        client.connect().catch((err) => {console.log(err)})
       }
     })
 }
