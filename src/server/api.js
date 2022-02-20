@@ -37,15 +37,20 @@ import { chromium } from 'playwright-chromium'
 import { Deck } from '../helpers/Deck.js'
 
 router.get('/api/cards', async (req, res) => {
-  const apiRes = await axios.get(`https://d23r8jlqp3e2gc.cloudfront.net/api/v1/dm/cards?main-card-ids=${req.query.cardIds}`)
-  if (apiRes.data) {
-    const map = {}
-    apiRes.data.forEach(c => {
-      map[c.main_card_id] = c
-    })
-    return res.json(map)
+  try {
+    const apiRes = await axios.get(`https://d23r8jlqp3e2gc.cloudfront.net/api/v1/dm/cards?main-card-ids=${req.query.cardIds}`)
+    if (apiRes.data) {
+      const map = {}
+      apiRes.data.forEach(c => {
+        map[c.main_card_id] = c
+      })
+      return res.json(map)
+    }
+    res.json({})
+  } catch (err) {
+    console.log(err)
+    return res.json({})
   }
-  return res.json({})
 })
 
 router.get('/api/scrape', async (req, res) => {

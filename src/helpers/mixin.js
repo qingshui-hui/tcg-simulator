@@ -22,20 +22,6 @@ mixin.zone = {
       // 状態を送信
       this.emitState();
     },
-    setCardState(card, cardState) {
-      Object.keys(cardState).forEach((key) => {
-        if (['tapped', 'faceDown'].includes(key)) {
-          card[key] = cardState[key];
-        }
-      })
-      // 状態を送信
-      this.emitState();
-    },
-    setMarkColor(card, color) {
-      this.setSelectMode(null);
-      card.markColor = color;
-      this.emitState();
-    },
     hasSelectedCard() {
       // セレクトモードと本人であることを確認
       return this.selectMode && this.selectMode.player === this.player
@@ -66,7 +52,17 @@ mixin.zone = {
     emitState() {
       this.$emit('emit-room-state', this.player)
     },
-    ...mapMutations(['openWorkSpace', 'closeWorkSpace', 'setSelectMode', 'setSelectedCard', 'setHoveredCard']),
+    changeCardsStateInZone(cards, cardState) { // shortcut
+      this.changeCardsState({
+        from: this.zone,
+        player: this.player,
+        cards,
+        cardState,
+      })
+      this.setSelectMode(null);
+      this.emitState();
+    },
+    ...mapMutations(['openWorkSpace', 'closeWorkSpace', 'setSelectMode', 'setSelectedCard', 'setHoveredCard', 'changeCardsState']),
   }
 }
 

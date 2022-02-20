@@ -167,7 +167,6 @@
 
 <script>
 import { Deck } from "@/helpers/Deck";
-import { Util } from "@/helpers/Util";
 import WorkSpace from "./WorkSpace.vue";
 import ImageViewer from "./ImageViewer.vue";
 import TefudaZone from "./TefudaZone.vue";
@@ -179,54 +178,13 @@ import ShieldZone from "./ShieldZone.vue";
 import CHeader from "./CHeader.vue";
 import DeckZone from "./DeckZone.vue";
 import ChojigenZone from "./ChojigenZone.vue";
-
-function initialData({ roomId }) {
-  return {
-    players: {
-      a: {
-        cards: {
-          manaCards: [],
-          battleCards: [],
-          bochiCards: [],
-          shieldCards: [],
-          tefudaCards: [],
-          yamafudaCards: [],
-          chojigenCards: [],
-          // cardGroups
-          battleCardGroups: [],
-          shieldCardGroups: [],
-        },
-        name: "a",
-        roomId: roomId,
-        isReady: false,
-        hasChojigen: false,
-      },
-      b: {
-        cards: {
-          manaCards: [],
-          battleCards: [],
-          bochiCards: [],
-          shieldCards: [],
-          tefudaCards: [],
-          yamafudaCards: [],
-          chojigenCards: [],
-          // cardGroups
-          battleCardGroups: [],
-          shieldCardGroups: [],
-        },
-        name: "b",
-        roomId: roomId,
-        isReady: false,
-        hasChojigen: false,
-      },
-    },
-    deckSelectorActive: false,
-  };
-}
+import { mapState } from "vuex";
+import moveCardsMixin from "./room/moveCardsMixin"
 
 export default {
   name: "c-app",
   props: ["upperPlayer", "lowerPlayer"],
+  mixins: [moveCardsMixin],
   components: {
     WorkSpace,
     ImageViewer,
@@ -241,163 +199,22 @@ export default {
     ChojigenZone,
   },
   data() {
-    const data = initialData({
-      roomId: this.$route.query.roomId,
-    });
-    return data;
+    return {
+      deckSelectorActive: false,
+    };
   },
   computed: {
+    ...mapState({
+      players: (state) => state.room.players,
+    }),
     roomId() {
       return this.$route.query.roomId;
     },
   },
   methods: {
-    onDeckSelected({deck, player}) {
-      this.players[player].isReady = true
-      this.players[player].hasChojigen = !!deck.hasChojigen
-    },
-    groupCard({ from, to, fromCard, toCard, player }) {
-      // 情報をカードに追加
-      // card.groupはできれば使いたくない。moveCards内でのみ使用。
-      fromCard.group = to;
-      toCard.group = to;
-      if (toCard.groupId) {
-        // ターゲットのカードが既にグループ化されていた場合、
-        // 既存のグループに追加する。
-        const group = this.players[player]["cards"][to].find(
-          (g) => g.id === toCard.groupId
-        );
-        group.cardIds.unshift(fromCard.id);
-        fromCard.groupId = toCard.groupId;
-      } else {
-        // 新しくグループを作成する。
-        // TODO: 被らない文字列にする。
-        const groupId = `${toCard.id}-${fromCard.id}`;
-        this.players[player]["cards"][to].push({
-          id: groupId,
-          cardIds: [fromCard.id, toCard.id],
-        });
-        fromCard.groupId = groupId;
-        toCard.groupId = groupId;
-      }
-      // 並べ替え
-      if (["battleCardGroups", "shieldCardGroups"].includes(to)) {
-        // fromCardをtoCardの前に移す。
-        Util.arrayInsertBefore(
-          this.players[player]["cards"][from],
-          toCard,
-          fromCard
-        );
-      }
-      // 状態の変更を送信する
-      if (!this.useConfig().WS_ENABLED) return;
-      this.$socket.emit("cards-moved", this.players[player]);
-    },
-    // groupNameはbattleCardGroupsかshieldCardGroups
-    ungroupCard({ groupName, card, player, zone }) {
-      // シールドのグループの場合はカードの行き先がわからず、注意が必要。
-      const groupIndex = this.players[player]["cards"][groupName].findIndex(
-        (g) => g.id === card.groupId
-      );
-      const group = this.players[player]["cards"][groupName].find(
-        (g) => g.id === card.groupId
-      );
-      this.players[player]["cards"][groupName][groupIndex].cardIds.splice(
-        group.cardIds.findIndex((id) => id === card.id),
-        1
-      );
-      // カードが一枚だけのグループは消す。
-      if (group.cardIds.length === 1) {
-        const lastCardIndex = this.players[player]["cards"][zone].findIndex(
-          (c) => c.id === group.cardIds[0]
-        );
-        if (lastCardIndex) {
-          const lastCard = this.players[player]["cards"][zone][lastCardIndex];
-          this.ungroupCard({
-            groupName,
-            card: lastCard,
-            player,
-            zone,
-          });
-        }
-      }
-      // cardIdsが0になったグループは自動で消す。
-      if (group.cardIds.length === 0) {
-        this.players[player]["cards"][groupName].splice(groupIndex, 1);
-      }
-      card.groupId = null;
-      card.group = null;
-    },
-    moveCard: function (from, to, card, player, prepend = false) {
-      // GRゾーン, 超次元ゾーンを考えると、一枚ずつの方が、処理しやすい
-      this.moveCards(from, to, [card], player, prepend);
-    },
-    moveCards: function (from, to, selectedCards, player, prepend = false) {
-      // 先頭のカードがグループに属していた場合、そのグループから抜ける。
-      const card = selectedCards[0];
-      if (card.groupId) {
-        this.ungroupCard({
-          zone: from,
-          groupName: card.group,
-          card,
-          player,
-        });
-      }
-      // 手札、マナ、墓地へ行く場合は表向きにする。
-      if (
-        ["tefudaCards", "manaCards", "bochiCards"].includes(to) &&
-        to !== from
-      ) {
-        selectedCards.forEach((card) => {
-          card.faceDown = false;
-        });
-      }
-      // 山札から、場に出る時には表向きにする。
-      if (from === "yamafudaCards" && to === "battleCards") {
-        selectedCards.forEach((card) => {
-          card.faceDown = false;
-        });
-      }
-      // 山札へ行くときは裏向きにする。
-      if (["yamafudaCards"].includes(to) && to !== from) {
-        selectedCards.forEach((card) => {
-          card.faceDown = true;
-        });
-      }
-      // 違うゾーンへ移動するときはタップとマークを解除する。
-      if (to !== from) {
-        selectedCards.forEach((card) => {
-          card.markColor = "";
-          card.tapped = false;
-        });
-      }
-      this.players[player]["cards"][from] = Util.arrayRemoveCards(
-        this.players[player]["cards"][from],
-        selectedCards
-      );
-      if (prepend) {
-        this.players[player]["cards"][to] = Util.arrayPrependCards(
-          this.players[player]["cards"][to],
-          selectedCards
-        );
-      } else {
-        this.players[player]["cards"][to] = Util.arrayAppendCards(
-          this.players[player]["cards"][to],
-          selectedCards
-        );
-      }
-      // 少し待てば、レンダリングが完了しているため、うまくいった。
-      if (to === "tefudaCards") {
-        setTimeout(() => {
-          this.scrollZone(
-            ".tefuda-zone." + (player === this.upperPlayer ? "upper" : "lower"),
-            "left"
-          );
-        }, 300);
-      }
-      if (!this.useConfig().WS_ENABLED) return;
+    onDeckSelected({ deck, player }) {
       this.players[player].isReady = true;
-      this.$socket.emit("cards-moved", this.players[player]);
+      this.players[player].hasChojigen = !!deck.hasChojigen;
     },
     emitRoomState() {
       if (this.$socket) {
@@ -444,7 +261,7 @@ export default {
       }
     },
     resetGame() {
-      this.players = initialData({ roomId: this.roomId }).players;
+      this.$store.commit("resetGame");
       window.scrollTo({
         top: 0,
         // behavior: "smooth",

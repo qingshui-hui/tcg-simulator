@@ -44,7 +44,7 @@
           :reverse="side === 'upper'"
           :active="cardIsSelected(card)"
           :color="card.markColor"
-          @change="setMarkColor(card, $event)"
+          @change="changeCardsStateInZone([card], { markColor: $event })"
         >
           <div
             class="card in-battle"
@@ -94,7 +94,7 @@
                 v-if="card.isChojigen"
                 variant="grey-dark"
                 size="small"
-                @click.stop="setCardState(card, { faceDown: !card.faceDown })"
+                @click.stop="changeCardsStateInZone([card], { faceDown: !card.faceDown })"
                 >裏返す</o-button
               >
               <o-button
@@ -113,7 +113,7 @@
           <o-button
             v-if="card.faceDown && !card.isChojigen"
             variant="grey-dark"
-            @click.stop="setCardState(card, { faceDown: !card.faceDown })"
+            @click.stop="changeCardsStateInZone([card], { faceDown: !card.faceDown })"
             >裏返す</o-button
           >
           <!-- アンタップ or タップ -->
@@ -121,10 +121,13 @@
             <o-button
               v-if="card.tapped"
               variant="grey-dark"
-              @click.stop="toggleTap(card)"
+              @click.stop="changeCardsStateInZone([card], { tapped: false })"
               >アンタップ</o-button
             >
-            <o-button v-else variant="grey-dark" @click.stop="toggleTap(card)"
+            <o-button
+              v-else
+              variant="grey-dark"
+              @click.stop="changeCardsStateInZone([card], { tapped: true })"
               >タップ</o-button
             >
           </template>
@@ -142,6 +145,11 @@ export default {
   props: ["player", "battleCards", "battleCardGroups", "side"],
   components: { MarkTool },
   mixins: [mixin.zone],
+  data() {
+    return {
+      zone: "battleCards",
+    };
+  },
   computed: {
     battleZoneCards() {
       // 表示するカードのIDのリスト
@@ -182,14 +190,14 @@ export default {
         // カードを重ねる。
         // moveSelectedCardでselectModeがnullになるので、情報を残しておく。
         const fromCard = this.selectMode.card;
-        this.moveSelectedCard("battleCards");
         this.$emit("group-card", {
-          from: "battleCards",
-          to: "battleCardGroups",
+          from: this.selectMode.zone,
+          to: "battleCards",
           fromCard: fromCard,
           toCard: card,
           player: this.player,
         });
+        this.setSelectMode(null);
         return;
       }
     },

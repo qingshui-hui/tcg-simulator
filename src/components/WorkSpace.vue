@@ -44,15 +44,11 @@
               @click.stop="shuffleCards('yamafudaCards', workSpace.cards)"
               >シャッフル</o-button
             >
-            <template v-if="
-                ['chojigenCards'].includes(workSpace.zone)
-              ">
-              <o-button
-                @click.stop="faceDownAllCards(true)"
+            <template v-if="['chojigenCards'].includes(workSpace.zone)">
+              <o-button @click.stop="faceDownAllCards(true)"
                 >全て裏にする</o-button
               >
-              <o-button
-                @click.stop="faceDownAllCards(false)"
+              <o-button @click.stop="faceDownAllCards(false)"
                 >全て表にする</o-button
               >
             </template>
@@ -70,7 +66,9 @@
                 <MarkTool
                   :active="cardIsSelected(card)"
                   :color="card.markColor"
-                  @change="setMarkColor(card, $event)"
+                  @change="
+                    changeCardsStateInZone([card], { markColor: $event })
+                  "
                 >
                   <div class="card with-info" :class="{ tapped: card.tapped }">
                     <span class="card-id card-info" v-if="card.groupId">{{
@@ -235,6 +233,9 @@ export default {
     },
     player() {
       return this.$store.state.workSpace.player;
+    },
+    zone() {
+      return this.$store.state.workSpace.zone;
     },
     orderedCards() {
       if (this.workSpace.zone === "manaCards") {

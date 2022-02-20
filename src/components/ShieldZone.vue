@@ -16,7 +16,7 @@
         :reverse="side === 'upper'"
         :active="cardIsSelected(card)"
         :color="card.markColor"
-        @change="setMarkColor(card, $event)"
+        @change="changeCardsStateInZone([card], { markColor: $event })"
       >
         <div class="shield-card card">
           <span class="shield-id">{{ card.shieldId }}</span>
