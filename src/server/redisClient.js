@@ -25,7 +25,7 @@ const setRoomCache = async (roomId, roomData) => {
   // 期限は1時間に設定。
   client.multi()
     .set(`json:room:${roomId}`, JSON.stringify(room))
-    .expire(`json:room:${roomId}`, 60 * 60 * 60)
+    .expire(`json:room:${roomId}`, 24 * 60 * 60)
     .exec()
     .catch(err => {
       console.log(err)
