@@ -7,7 +7,6 @@
           :lowerPlayer="lowerPlayer"
           @move-cards="moveCards"
           @shuffle-cards="shuffleCards"
-          @emit-room-state="emitRoomState"
         ></WorkSpace>
 
         <DeckSelector
@@ -24,13 +23,13 @@
             :side="'upper'"
             :player="upperPlayer"
             :tefudaCards="players[upperPlayer]['cards']['tefudaCards']"
-            v-on:move-cards="moveCards"
+            @move-cards="moveCards"
           ></TefudaZone>
           <ManaZone
             :side="'upper'"
             :player="upperPlayer"
             :manaCards="players[upperPlayer]['cards']['manaCards']"
-            v-on:move-cards="moveCards"
+            @move-cards="moveCards"
           ></ManaZone>
           <PlayerZone
             :side="'upper'"
@@ -41,7 +40,7 @@
             :shieldCardGroups="
               players[upperPlayer]['cards']['shieldCardGroups']
             "
-            v-on:move-cards="moveCards"
+            @move-cards="moveCards"
           >
             <template #shield-zone>
               <ShieldZone
@@ -51,7 +50,7 @@
                 :shieldCardGroups="
                   players[upperPlayer]['cards']['shieldCardGroups']
                 "
-                v-on:move-cards="moveCards"
+                @move-cards="moveCards"
                 @group-card="groupCard"
               ></ShieldZone>
             </template>
@@ -60,7 +59,7 @@
                 side="upper"
                 :player="upperPlayer"
                 :yamafudaCards="players[upperPlayer]['cards']['yamafudaCards']"
-                v-on:move-cards="moveCards"
+                @move-cards="moveCards"
                 @group-card="groupCard"
               ></DeckZone>
             </template>
@@ -81,9 +80,8 @@
             :battleCardGroups="
               players[upperPlayer]['cards']['battleCardGroups']
             "
-            v-on:move-cards="moveCards"
+            @move-cards="moveCards"
             @group-card="groupCard"
-            @emit-room-state="emitRoomState"
           ></BattleZone>
 
           <!-- <MessageBox :upper-player="upperPlayer"
@@ -100,9 +98,8 @@
             :battleCardGroups="
               players[lowerPlayer]['cards']['battleCardGroups']
             "
-            v-on:move-cards="moveCards"
+            @move-cards="moveCards"
             @group-card="groupCard"
-            @emit-room-state="emitRoomState"
           ></BattleZone>
 
           <player-zone
@@ -114,7 +111,7 @@
             :shieldCardGroups="
               players[lowerPlayer]['cards']['shieldCardGroups']
             "
-            v-on:move-cards="moveCards"
+            @move-cards="moveCards"
           >
             <template #shield-zone>
               <ShieldZone
@@ -124,7 +121,7 @@
                 :shieldCardGroups="
                   players[lowerPlayer]['cards']['shieldCardGroups']
                 "
-                v-on:move-cards="moveCards"
+                @move-cards="moveCards"
                 @group-card="groupCard"
               ></ShieldZone>
             </template>
@@ -133,7 +130,7 @@
                 side="lower"
                 :player="lowerPlayer"
                 :yamafudaCards="players[lowerPlayer]['cards']['yamafudaCards']"
-                v-on:move-cards="moveCards"
+                @move-cards="moveCards"
                 @group-card="groupCard"
               ></DeckZone>
             </template>
@@ -151,13 +148,13 @@
             :side="'lower'"
             :player="lowerPlayer"
             :manaCards="players[lowerPlayer]['cards']['manaCards']"
-            v-on:move-cards="moveCards"
+            @move-cards="moveCards"
           ></mana-zone>
           <tefuda-zone
             :side="'lower'"
             :player="lowerPlayer"
             :tefudaCards="players[lowerPlayer]['cards']['tefudaCards']"
-            v-on:move-cards="moveCards"
+            @move-cards="moveCards"
           ></tefuda-zone>
         </div>
       </ImageViewer>
@@ -216,13 +213,6 @@ export default {
       this.players[player].isReady = true;
       this.players[player].hasChojigen = !!deck.hasChojigen;
     },
-    emitRoomState() {
-      if (this.$socket) {
-        // 今のところバトルゾーンとマナゾーンのタップ状態を送信するために使用。
-        this.$socket.emit("cards-moved", this.players[this.lowerPlayer]);
-        // this.$socket.emit("cards-moved", this.players[this.upperPlayer])
-      }
-    },
     shuffleCards(from, cards, player) {
       this.players[player]["cards"][from] = Deck.shuffle(cards);
       const shuffleMessage = {
@@ -276,20 +266,6 @@ export default {
   async mounted() {
     // サーバーからデータを取得する。
     await this.getRoomState();
-    if (this.$socket) {
-      //
-      // イベントをリッスン
-      this.$socket.on("cards-moved", (playerData) => {
-        this.players[playerData.name] = playerData;
-      });
-      this.$socket.on(
-        "set-message",
-        function (data) {
-          // this.message[data.player] = data.message;
-          this.expireMessage(data.message, data.player);
-        }.bind(this)
-      );
-    }
     // デバッグのために公開
     window.$room = this;
   },

@@ -29,6 +29,24 @@ io.on('connection', function (socket) {
     socket.to('room' + data.roomId).emit('cards-moved', data)
     setRoomCache(data.roomId, data)
   })
+  socket.on('room-history-changed', (data) => {
+    socket.to('room' + data.roomId).emit('room-history-changed', data)
+    // {
+    //   command: 'pushGameHistories',
+    //   history: {
+    //     id: 'y0LjHpwqbFb3',
+    //     from: 'battleCards',
+    //     cards: [ [Object] ],
+    //     player: 'a',
+    //     command: 'changeCardsState',
+    //     oldState: { fromCards: [Array], cards: [Array] }
+    //   },
+    //   roomId: '1'
+    // }
+  })
+  socket.on('save-room-state', (data) => {
+    socket.to('room' + data.roomId).emit('save-room-state', date)
+  })
   socket.on("disconnect", () => {
     console.log('ソケットの接続が切断されました。')
   });

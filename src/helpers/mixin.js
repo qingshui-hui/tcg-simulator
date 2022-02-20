@@ -6,7 +6,13 @@ mixin.zone = {
   computed: {
     // mapStateヘルパー
     // https://vuex.vuejs.org/ja/guide/state.html#mapstate-%E3%83%98%E3%83%AB%E3%83%8F%E3%82%9A%E3%83%BC
-    ...mapState(['workSpace', 'selectMode', 'selectedCard', 'hoveredCard'])
+    ...mapState(['workSpace', 'selectMode', 'selectedCard', 'hoveredCard']),
+    ...mapState({
+      gameHistories: state => state.room.gameHistories,
+    }),
+    roomId() {
+      return this.$route.query.roomId;
+    },
   },
   methods: {
     moveCard(from, to, card, prepend = false) {
@@ -60,7 +66,11 @@ mixin.zone = {
         cardState,
       })
       this.setSelectMode(null);
-      this.emitState();
+      this.$socket.emit("room-history-changed", {
+        command: 'pushGameHistories',
+        history: this.gameHistories[this.gameHistories.length - 1],
+        roomId: this.roomId,
+      });
     },
     ...mapMutations(['openWorkSpace', 'closeWorkSpace', 'setSelectMode', 'setSelectedCard', 'setHoveredCard', 'changeCardsState']),
   }

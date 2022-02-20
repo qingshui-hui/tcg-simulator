@@ -1,5 +1,6 @@
 import { Util } from '../helpers/Util'
 import { moveCardsRule } from '../game/GameRules'
+import { makeRandomString } from '@/helpers/makeRandomString';
 
 const ZONE_GROUP_MAP = {
   battleCards: "battleCardGroups",
@@ -94,9 +95,15 @@ export default {
     resetGame(state) {
       Object.assign(state, defaultState());
     },
-    popGameHistories(state) {
+    popGameHistories(state, { history = null } = {}) {
+      let lastHistory;
       if (state.gameHistories.length === 0) return;
-      const lastHistory = state.gameHistories.pop()
+      if (history) {
+        state.gameHistories = state.gameHistories.filter(h => h.id !== history.id);
+        lastHistory = history;
+      } else {
+        lastHistory = state.gameHistories.pop();
+      }
       const { player, from, to, oldState, command } = lastHistory
       if (command === 'moveCards') {
         state.players[player]["cards"][from] = oldState.fromCards;
@@ -162,6 +169,7 @@ export default {
       );
       // ゲームログに保存
       state.gameHistories.push({
+        id: makeRandomString(12),
         from,
         fromCard,
         to,
@@ -220,6 +228,7 @@ export default {
       }
       // ゲームログに保存
       state.gameHistories.push({
+        id: makeRandomString(12),
         from,
         to,
         cards: oldState.cards,
@@ -230,10 +239,7 @@ export default {
       })
     },
     changeCardsState(state, {
-      from,
-      cards,
-      player,
-      cardState,
+      from, cards, player, cardState,
     }) {
       const oldState = {
         fromCards: JSON.parse(JSON.stringify(state.players[player]["cards"][from])),
@@ -250,12 +256,30 @@ export default {
       })
       // ゲームログに保存
       state.gameHistories.push({
+        id: makeRandomString(12),
         from,
         cards: oldState.cards,
+        cardState,
         player,
         command: 'changeCardsState',
         oldState,
       })
     },
   },
+  actions: {
+    pushGameHistories({ commit }, { history }) {
+      if (history.command === 'moveCards') {
+        const { from, to, cards, player, prepend } = history;
+        commit('moveCards', { from, to, cards, player, prepend })
+      }
+      if (history.command === 'groupCard') {
+        const { from, to, fromCard, toCard, player } = history;
+        commit('groupCard', { from, to, fromCard, toCard, player });
+      }
+      if (history.command === 'changeCardsState') {
+        const { from, cards, player, cardState } = history;
+        commit('changeCardsState', { from, cards, player, cardState })
+      }
+    },
+  }
 }
