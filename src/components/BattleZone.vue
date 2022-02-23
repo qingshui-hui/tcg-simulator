@@ -94,7 +94,9 @@
                 v-if="card.isChojigen"
                 variant="grey-dark"
                 size="small"
-                @click.stop="changeCardsStateInZone([card], { faceDown: !card.faceDown })"
+                @click.stop="
+                  changeCardsStateInZone([card], { faceDown: !card.faceDown })
+                "
                 >裏返す</o-button
               >
               <o-button
@@ -113,7 +115,9 @@
           <o-button
             v-if="card.faceDown && !card.isChojigen"
             variant="grey-dark"
-            @click.stop="changeCardsStateInZone([card], { faceDown: !card.faceDown })"
+            @click.stop="
+              changeCardsStateInZone([card], { faceDown: !card.faceDown })
+            "
             >裏返す</o-button
           >
           <!-- アンタップ or タップ -->
@@ -137,12 +141,18 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+// @ts-nocheck
+import { defineComponent, PropType } from "vue";
+import { Player } from "types";
 import mixin from "@/helpers/mixin.js";
 import { MarkTool } from ".";
 
-export default {
-  props: ["player", "battleCards", "battleCardGroups", "side"],
+export default defineComponent({
+  props: {
+    player: Object as PropType<Player>,
+    side: String,
+  },
   components: { MarkTool },
   mixins: [mixin.zone],
   data() {
@@ -151,10 +161,18 @@ export default {
     };
   },
   computed: {
+    battleCards() {
+      return this.player.cards.battleCards;
+    },
+    battleCardGroups() {
+      return this.player.cards.battleCardGroups;
+    },
     battleZoneCards() {
       // 表示するカードのIDのリスト
-      const firstCardIds = this.battleCardGroups.map((g) => g.cardIds[0]);
-      const visibleCards = this.battleCards.filter((c) => {
+      const firstCardIds = this.player.cards.battleCardGroups.map(
+        (g) => g.cardIds[0]
+      );
+      const visibleCards = this.player.cards.battleCards.filter((c) => {
         return !c.groupId || firstCardIds.includes(c.id);
       });
       return visibleCards;
@@ -183,7 +201,7 @@ export default {
         this.setSelectMode({
           card,
           zone: "battleCards",
-          player: this.player,
+          playerId: this.player.id,
         });
         return;
       } else {
@@ -195,14 +213,14 @@ export default {
           to: "battleCards",
           fromCard: fromCard,
           toCard: card,
-          player: this.player,
+          player: this.player.id,
         });
         this.setSelectMode(null);
         return;
       }
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

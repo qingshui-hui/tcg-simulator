@@ -55,7 +55,7 @@
           setSelectMode({
             zone: 'yamafudaCards',
             card: yamafudaCards[0],
-            player,
+            playerId: player.id,
             selectingTarget: true,
           })
         "
@@ -70,11 +70,17 @@
   </Dropdown>
 </template>
 
-<script>
+<script lang="ts">
+// @ts-nocheck
+import { defineComponent, PropType } from 'vue';
+import { Player } from 'types';
 import mixin from "@/helpers/mixin.js";
 
-export default {
-  props: ["player", "yamafudaCards", "side"],
+export default defineComponent({
+  props: {
+    player: Object as PropType<Player>,
+    side: String,
+  },
   mixins: [mixin.zone],
   data() {
     return {
@@ -82,6 +88,9 @@ export default {
     };
   },
   computed: {
+    yamafudaCards() {
+      return this.player.cards.yamafudaCards;
+    },
     dropdownTriggers() {
       if (window.innerWidth >= 800 && !this.hasSelectedCard()) {
         return ['click', 'hover']
@@ -126,7 +135,7 @@ export default {
       });
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

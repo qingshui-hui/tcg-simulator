@@ -22,7 +22,7 @@
         <!-- 墓地 -->
         <div class="bochi" @click.stop="clickBochi">
           <div
-            v-if="selectMode && selectMode.player === player"
+            v-if="hasSelectedCard()"
             class="bochi_text"
           >
             墓地へ
@@ -41,13 +41,28 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+// @ts-nocheck
+import { defineComponent, PropType } from 'vue';
+import { Player } from 'types';
 import mixin from "@/helpers/mixin.js";
 
-export default {
-  props: ["player", "bochiCards", "shieldCards", "shieldCardGroups", "side"],
+export default defineComponent({
+  props: {
+    player: Object as PropType<Player>,
+    side: String,
+  },
   mixins: [mixin.zone],
   computed: {
+    bochiCards() {
+      return this.player.cards.bochiCards;
+    },
+    shieldCards() {
+      return this.player.cards.shieldCards;
+    },
+    shieldCardGroups() {
+      return this.player.cards.shieldCardGroups;
+    },
     countableShieldCards() {
       // グループ化されているカードは一つとカウントする。
       const firstCardIds = this.shieldCardGroups.map((g) => g.cardIds[0]);
@@ -91,7 +106,7 @@ export default {
       });
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

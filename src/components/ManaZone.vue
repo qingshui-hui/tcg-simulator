@@ -31,7 +31,7 @@
               @click.stop="clickCard(card)"
             >
               <img v-if="!card.faceDown" :src="card.imageUrl" />
-              <img v-else src="card.backImageUrl" />
+              <img v-else :src="card.backImageUrl" />
             </div>
             <div v-if="cardIsSelected(card)" class="card_bottomButton">
               <o-button
@@ -74,11 +74,17 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+// @ts-nocheck
+import { defineComponent, PropType } from 'vue';
+import { Player } from 'types';
 import mixin from "@/helpers/mixin.js";
 
-export default {
-  props: ["player", "manaCards", "side"],
+export default defineComponent({
+  props: {
+    player: Object as PropType<Player>,
+    side: String,
+  },
   mixins: [mixin.zone],
   data() {
     return {
@@ -86,13 +92,16 @@ export default {
     };
   },
   computed: {
+    manaCards() {
+      return this.player.cards.manaCards;
+    },
     normalCards() {
-      return this.manaCards.filter((card) => {
+      return this.player.cards.manaCards.filter((card) => {
         return card.tapped !== true;
       });
     },
     tappedCards() {
-      return this.manaCards.filter((card) => {
+      return this.player.cards.manaCards.filter((card) => {
         return card.tapped === true;
       });
     },
@@ -108,11 +117,8 @@ export default {
           return;
         }
         if (this.selectMode.card.tapped) {
-          this.manaCards.forEach((c) => {
-            c.tapped = false;
-          });
-          this.setSelectMode(null);
-          this.emitState();
+          // 全てアンタップする。
+          this.changeCardsStateInZone(this.manaCards, { tapped: false });
           return;
         }
       }
@@ -132,12 +138,12 @@ export default {
       this.setSelectMode({
         card,
         zone: "manaCards",
-        player: this.player,
+        playerId: this.player.id,
       });
       return;
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

@@ -87,7 +87,6 @@
 
 <script lang="ts">
 // @ts-nocheck
-
 import { defineComponent, PropType } from 'vue'
 import { Deck } from "@/helpers/Deck";
 import axios from "axios";

@@ -70,7 +70,7 @@
           @click.stop="
             openWorkSpace({
               zone,
-              cards,
+              cards: tefudaCards,
               player,
             })
           "
@@ -89,11 +89,17 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+// @ts-nocheck
+import { defineComponent, PropType } from 'vue';
+import { Player } from 'types';
 import mixin from "@/helpers/mixin.js";
 
-export default {
-  props: ["player", "tefudaCards", "side"],
+export default defineComponent({
+  props: {
+    player: Object as PropType<Player>,
+    side: String,
+  },
   mixins: [mixin.zone],
   data() {
     return {
@@ -101,8 +107,8 @@ export default {
     };
   },
   computed: {
-    cards() {
-      return this.tefudaCards;
+    tefudaCards() {
+      return this.player.cards.tefudaCards;
     },
   },
   methods: {
@@ -114,13 +120,13 @@ export default {
       }
       // 選択する
       this.setSelectMode({
-        player: this.player,
+        playerId: this.player.id,
         card,
         zone: this.zone,
       });
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

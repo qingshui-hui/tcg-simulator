@@ -5,7 +5,7 @@
     @click.stop="clickChojigenZone"
   >
     <div
-      v-if="selectMode && selectMode.player === player"
+      v-if="hasSelectedCard()"
       class="chojigenZone_text"
     >
       超次元<br />ゾーンへ
@@ -14,14 +14,28 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+// @ts-nocheck
+import { defineComponent, PropType } from 'vue';
+import { Player } from 'types';
 import mixin from "@/helpers/mixin.js";
 
-export default {
-  props: ["player", "chojigenCards", "side", "hasChojigen"],
+export default defineComponent({
+  props: {
+    player: Object as PropType<Player>,
+    side: String,
+  },
   mixins: [mixin.zone],
   data() {
     return {};
+  },
+  computed: {
+    chojigenCards() {
+      return this.player.cards.chojigenCards;
+    },
+    hasChojigen() {
+      return this.player.hasChojigen;
+    },
   },
   methods: {
     clickChojigenZone() {
@@ -36,7 +50,7 @@ export default {
       this.moveSelectedCard("chojigenCards");
     },
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>

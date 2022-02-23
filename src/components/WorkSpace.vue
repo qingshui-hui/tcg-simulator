@@ -118,7 +118,9 @@
                 <span
                   v-if="isOwner"
                   class="drop-item-2"
-                  @click.stop="openCard(card)"
+                  @click.stop="
+                    this.changeCardsStateInZone([card], { faceDown: false })
+                  "
                   >裏返す</span
                 >
               </o-dropdown-item>
@@ -185,10 +187,18 @@
                 </template>
               </template>
               <template v-else-if="['manaCards'].includes(workSpace.zone)">
-                <o-button v-if="!card.tapped" @click.stop="card.tapped = true"
+                <o-button
+                  v-if="!card.tapped"
+                  @click.stop="
+                    this.changeCardsStateInZone([card], { tapped: true })
+                  "
                   >タップ</o-button
                 >
-                <o-button v-else @click.stop="card.tapped = false"
+                <o-button
+                  v-else
+                  @click.stop="
+                    this.changeCardsStateInZone([card], { tapped: false })
+                  "
                   >アンタップ</o-button
                 >
               </template>
@@ -216,11 +226,13 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+// @ts-nocheck
+import { defineComponent } from "vue";
 import mixin from "../helpers/mixin.js";
 import { MarkTool } from "./index.js";
 
-export default {
+export default defineComponent({
   components: { MarkTool },
   mixins: [mixin.zone],
   props: ["lowerPlayer"],
@@ -267,7 +279,7 @@ export default {
       return "";
     },
     isOwner() {
-      return this.player === this.lowerPlayer;
+      return this.player.id === this.lowerPlayer.id;
     },
   },
   watch: {
@@ -285,46 +297,29 @@ export default {
         });
         // セレクトモードをオフにする。
         this.setSelectMode(null);
-        // 状態を送信
-        this.emitState();
       }
     },
   },
   methods: {
-    openCard(card) {
-      card.faceDown = !card.faceDown;
-      this.$forceUpdate();
-    },
     openAllCards() {
+      // 操作したプレイヤーだけが見ることができる。
+      // カードを裏返すのとは違う。
       // 山札とシールドでしか使わない想定
       this.workSpace.cards.forEach((c) => {
         c.showInWorkSpace = true;
       });
     },
     untapAllCards() {
-      this.workSpace.cards.forEach((c) => {
-        c.tapped = false;
-      });
+      this.changeCardsStateInZone(this.workSpace.cards, { tapped: false });
       this.closeWorkSpace();
     },
     tapAllCards() {
-      this.workSpace.cards.forEach((c) => {
-        c.tapped = true;
-      });
+      this.changeCardsStateInZone(this.workSpace.cards, { tapped: false });
       this.closeWorkSpace();
     },
     faceDownAllCards(faceDown = true) {
       // 超次元ゾーンで使用
-      this.workSpace.cards.forEach((c) => {
-        c.faceDown = faceDown;
-      });
-    },
-    // 操作したプレイヤーだけが見ることができる。
-    // カードを裏返すのとは違う。
-    showAllInWorkSpace() {
-      this.workSpace.cards.forEach((c) => {
-        c.showInWorkSpace = true;
-      });
+      this.changeCardsStateInZone(this.workSpace.cards, { faceDown: faceDown });
     },
     moveCard(card, to, prepend = false) {
       // ワークスペースから移動したカードを消す。
@@ -346,7 +341,7 @@ export default {
         from,
         to,
         [card],
-        this.workSpace.player,
+        this.workSpace.player.id,
         prepend
       );
       // カードが0枚になったらワークスペースを閉じる。
@@ -381,7 +376,7 @@ export default {
       document.removeEventListener("click", this.clickedOutside);
     }
   },
-};
+});
 </script>
 
 <style lang="scss">

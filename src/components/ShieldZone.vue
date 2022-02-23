@@ -50,14 +50,20 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+// @ts-nocheck
+import { defineComponent, PropType } from 'vue';
+import { Player } from 'types';
 // Dropdownを使うと、スクロールゾーンの中にメニューが表示されて何も見えない問題があった。
 import mixin from "../helpers/mixin";
 import MarkTool from "./mark-tool/MarkTool.vue";
 
-export default {
+export default defineComponent({
   components: { MarkTool },
-  props: ["player", "shieldCards", "shieldCardGroups", "side"],
+  props: {
+    player: Object as PropType<Player>,
+    side: String,
+  },
   mixins: [mixin.zone],
   data() {
     return {
@@ -66,6 +72,12 @@ export default {
     };
   },
   computed: {
+    shieldCards() {
+      return this.player.cards.shieldCards;
+    },
+    shieldCardGroups() {
+      return this.player.cards.shieldCardGroups;
+    },
     countableShieldCards() {
       // グループ化されているカードは一つとカウントする。
       const firstCardIds = this.shieldCardGroups.map((g) => g.cardIds[0]);
@@ -94,7 +106,7 @@ export default {
         return;
       }
       if (this.selectTargetMode()) {
-        if (this.selectMode.player === this.player) {
+        if (this.selectMode.playerId === this.player.id) {
           // カードを重ねる。
           // moveSelectedCardでselectModeがnullになるので、情報を残しておく。
           const fromCard = this.selectMode.card;
@@ -104,7 +116,7 @@ export default {
             to: this.groupZone,
             fromCard: fromCard,
             toCard: card,
-            player: this.player,
+            player: this.player.id,
           });
         }
         return;
@@ -112,11 +124,11 @@ export default {
       this.setSelectMode({
         card,
         zone: "shieldCards",
-        player: this.player,
+        playerId: this.player.id,
       });
     },
   },
-};
+});
 </script>
 
 <style lang="scss">
