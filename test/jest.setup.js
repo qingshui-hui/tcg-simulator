@@ -33,6 +33,7 @@ config.global.stubs["o-icon"] = ClientOnlyStub;
 
 // raw-loader
 // https://stackoverflow.com/questions/55118947/how-to-test-raw-loaded-data-with-react
+/* global jest */
 jest.mock("raw-loader!../assets/markdown/about.md", () => "", {
   virtual: true,
 });

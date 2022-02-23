@@ -68,6 +68,8 @@ router.get("/api/scrape", async (req, res) => {
   const page = await browser.newPage();
   await page.goto(req.query.url);
   const deckData = await page.evaluate(async () => {
+    /* global getCategoryId, DeckRecipeInfo */
+    // 上: https://stackoverflow.com/a/41552229
     // カテゴリーIDを取得
     const categoryId = getCategoryId(`dm`);
     // デッキIDを取得
