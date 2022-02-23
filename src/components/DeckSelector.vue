@@ -5,7 +5,7 @@
     @close="onClose"
     :width="600"
   >
-    <div id="deck-form" v-if="!isReady">
+    <div id="deck-form" v-if="!lowerPlayer.isReady">
       <p class="deckForm_p">デッキを選択してください</p>
       <select name="deck" v-model="deckId">
         <option v-for="(deck, index) in allDecks" :key="index" :value="index">
@@ -56,17 +56,17 @@
       </div>
     </div>
 
-    <template v-if="!isReady || !partnerIsReady">
-      <hr v-if="!isReady" style="margin: 20px 0" />
+    <template v-if="!lowerPlayer.isReady || !upperPlayer.isReady">
+      <hr v-if="!lowerPlayer.isReady" style="margin: 20px 0" />
       <div id="waiting-player">
-        <p v-if="isReady" class="deckForm_p">
+        <p v-if="lowerPlayer.isReady" class="deckForm_p">
           相手プレイヤーがデッキを選択するのを待ってください。
         </p>
-        <div v-if="player === 'a'">
+        <div>
           招待リンク:
           <span style="font-size: 12px">{{ inviteLink }}</span>
         </div>
-        <div v-if="player === 'a'">
+        <div>
           <o-tooltip
             label="コピーしました"
             position="top"
@@ -85,12 +85,22 @@
   </o-modal>
 </template>
 
-<script>
+<script lang="ts">
+// @ts-nocheck
+
+import { defineComponent, PropType } from 'vue'
 import { Deck } from "@/helpers/Deck";
 import axios from "axios";
+import { Player } from 'types';
 
-export default {
-  props: ["isReady", "player", "partnerIsReady", "active"],
+export default defineComponent({
+  props: {
+    active: Boolean,
+    // https://vuejs.org/guide/typescript/options-api.html#typing-component-props
+    upperPlayer: Object as PropType<Player>,
+    lowerPlayer: Object as PropType<Player>,
+    roomId: String,
+  },
   data() {
     return {
       deckId: 0,
@@ -121,34 +131,23 @@ export default {
   },
   computed: {
     canCansel() {
-      return this.isReady;
-    },
-    tabUrl() {
-      // 相手プレイヤーのルームのURL
-      const roomId = this.$route.query.roomId;
-      const player = this.$route.query.player;
-      return encodeURI(
-        `/room?roomId=${roomId}&player=${player == "a" ? "b" : "a"}`
-      );
+      return this.lowerPlayer.isReady;
     },
     allDecks() {
       return [...this.$store.state.decks.data, ...this.deckList];
     },
     inviteLink() {
+      // 相手プレイヤーのルームのURL
       return (
         window.location.origin +
         "/room?roomId=" +
-        encodeURI(this.$route.query.roomId) +
-        "&player=b"
+        encodeURI(this.roomId) +
+        "&player=" +
+        encodeURI(this.upperPlayer.id)
       );
     },
   },
   mounted() {
-    // クエリストリングにdeckIdが存在したときのショートカット。
-    if (this.$route.query.deckId) {
-      this.deckId = this.$route.query.deckId;
-      this.selectDeck();
-    }
     // GC Storageからデータを取得する。
     // httpsとhttpの場合でcorsの挙動に差があり、httpの方を利用した。
     const deckUrl = `${this.useConfig().API_HOST}/api/decks`;
@@ -165,7 +164,7 @@ export default {
     async selectDeck() {
       const deck = await Deck.prepareDeckForGame(
         this.allDecks[this.deckId],
-        this.player === "a"
+        this.lowerPlayer.id === "a"
       );
       console.log("selected deck", deck);
       // fromのカードは存在しなくても良いため、仮にyamafudaCardsにしている。
@@ -178,14 +177,14 @@ export default {
         "yamafudaCards",
         "shieldCards",
         shieldCards,
-        this.player
+        this.lowerPlayer.id
       );
       this.$emit(
         "move-cards",
         "yamafudaCards",
         "tefudaCards",
         deck.cards.slice(5, 10),
-        this.player
+        this.lowerPlayer.id
       );
       const yamafudaCards = deck.cards.slice(10, 40);
       yamafudaCards.forEach((c) => {
@@ -196,20 +195,20 @@ export default {
         "yamafudaCards",
         "yamafudaCards",
         yamafudaCards,
-        this.player
+        this.lowerPlayer.id
       );
       this.$emit(
         "move-cards",
         "yamafudaCards",
         "chojigenCards",
         deck.chojigenCards,
-        this.player
+        this.lowerPlayer.id
       );
       this.$emit("selected", {
         deck,
-        player: this.player,
+        player: this.lowerPlayer.id,
       });
-      if (this.partnerIsReady) {
+      if (this.upperPlayer.isReady) {
         this.$emit("update:active", false);
       }
     },
@@ -249,7 +248,7 @@ export default {
       }, 1000);
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

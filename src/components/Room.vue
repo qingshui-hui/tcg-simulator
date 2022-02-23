@@ -11,9 +11,9 @@
 
         <DeckSelector
           v-model:active="deckSelectorActive"
-          :player="lowerPlayerId"
-          :isReady="players[lowerPlayerId].isReady"
-          :partnerIsReady="players[upperPlayerId].isReady"
+          :upperPlayer="upperPlayer"
+          :lowerPlayer="lowerPlayer"
+          :roomId="roomId"
           @moveCards="moveCards"
           @selected="onDeckSelected"
         ></DeckSelector>
@@ -162,7 +162,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+// @ts-nocheck
+
 import { Deck } from "@/helpers/Deck";
 import WorkSpace from "./WorkSpace.vue";
 import ImageViewer from "./ImageViewer.vue";
