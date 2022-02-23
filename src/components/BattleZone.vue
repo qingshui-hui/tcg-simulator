@@ -55,7 +55,7 @@
               'is-selected': cardIsSelected(card),
             }"
             :draggable="!card.groupId"
-            @click.stop="clickCard($event, card)"
+            @click.stop="clickCard(card)"
           >
             <img
               v-if="card.faceDown === true"
@@ -86,7 +86,7 @@
               v-if="selectTargetMode() && selectMode.card.id === card.id"
               variant="grey-dark"
               size="small"
-              @click.stop="clickCard($event, card)"
+              @click.stop="clickCard(card)"
               >キャンセル</o-button
             >
             <template v-else>
@@ -142,9 +142,8 @@
 </template>
 
 <script lang="ts">
-// @ts-nocheck
 import { defineComponent, PropType } from "vue";
-import { Player } from "types";
+import { Card, CardGroup, Player } from "types";
 import mixin from "@/helpers/mixin.js";
 import { MarkTool } from ".";
 
@@ -170,9 +169,9 @@ export default defineComponent({
     battleZoneCards() {
       // 表示するカードのIDのリスト
       const firstCardIds = this.player.cards.battleCardGroups.map(
-        (g) => g.cardIds[0]
+        (g: CardGroup) => g.cardIds[0]
       );
-      const visibleCards = this.player.cards.battleCards.filter((c) => {
+      const visibleCards = this.player.cards.battleCards.filter((c: Card) => {
         return !c.groupId || firstCardIds.includes(c.id);
       });
       return visibleCards;
@@ -180,17 +179,17 @@ export default defineComponent({
   },
   methods: {
     // リレーション
-    group(card) {
+    group(card: Card) {
       if (!card.groupId) {
         return null;
       }
       const group = {
-        ...this.battleCardGroups.find((g) => g.id === card.groupId),
+        ...this.battleCardGroups.find((g: CardGroup) => g.id === card.groupId),
       };
-      group.cards = this.battleCards.filter((c) => c.groupId === group.id);
+      group.cards = this.battleCards.filter((c: Card) => c.groupId === group.id);
       return group;
     },
-    clickCard(event, card) {
+    clickCard(card: Card) {
       if (this.cardIsSelected(card)) {
         // 選択中のカードと同じカードがクリックされた場合、
         // セレクトモードを終了。

@@ -1,43 +1,42 @@
-export interface Player {
-  cards: {
-    manaCards: Card[],
-    battleCards: Card[],
-    bochiCards: Card[],
-    shieldCards: Card[],
-    tefudaCards: Card[],
-    yamafudaCards: Card[],
-    chojigenCards: Card[],
-    // cardGroups
-    battleCardGroups: Card[],
-    shieldCardGroups: Card[],
-  },
-  id: string,
-  roomId: string,
-  isReady: boolean,
-  hasChojigen: boolean,
-}
+import { Player, Card, CardGroup } from "./entities";
 
-export interface Card {
-  imageUrl: String,
-  backImageUrl: String,
-}
+export { Player, Card, CardGroup };
 
 // vuex
-import { ComponentCustomProperties } from 'vue'
-import { Store } from 'vuex'
+import { ComponentCustomProperties } from "vue";
+import { Store } from "vuex";
 
-declare module '@vue/runtime-core' {
+export interface State {
+  selectMode: boolean;
+  selectedCard: Card;
+  hoveredCard: Card;
+  workSpace: {
+    active: boolean;
+    cards: Card[];
+    zone: string;
+    player: Player;
+    minimal: boolean;
+    single: boolean;
+  };
+  settings: {
+    dropdownTriggers: string[];
+  };
+}
+
+declare module "@vue/runtime-core" {
   // `this.$store` の型付けを提供する
   interface ComponentCustomProperties {
-    $store: Store<State>,
+    $store: Store<State>;
   }
 }
 
 // useConfig
-import { useConfig } from '../src/plugins/useConfig'
+import { useConfig } from "../src/plugins/useConfig";
+import { Socket } from "socket.io-client";
 
-declare module '@vue/runtime-core' {
+declare module "@vue/runtime-core" {
   interface ComponentCustomProperties {
-    useConfig: useConfig,
+    useConfig: useConfig;
+    $socket: Socket;
   }
 }

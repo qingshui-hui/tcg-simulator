@@ -3,11 +3,7 @@
     <CHeader @reset-game="resetGame"></CHeader>
     <div class="app-wrapper main">
       <ImageViewer>
-        <WorkSpace
-          :lowerPlayer="lowerPlayer"
-          @move-cards="moveCards"
-          @shuffle-cards="shuffleCards"
-        ></WorkSpace>
+        <WorkSpace :lowerPlayer="lowerPlayer" @move-cards="moveCards" @shuffle-cards="shuffleCards"></WorkSpace>
 
         <DeckSelector
           v-model:active="deckSelectorActive"
@@ -19,21 +15,9 @@
         ></DeckSelector>
 
         <div id="js_gameBoard">
-          <TefudaZone
-            :side="'upper'"
-            :player="upperPlayer"
-            @move-cards="moveCards"
-          ></TefudaZone>
-          <ManaZone
-            :side="'upper'"
-            :player="upperPlayer"
-            @move-cards="moveCards"
-          ></ManaZone>
-          <PlayerZone
-            :side="'upper'"
-            :player="upperPlayer"
-            @move-cards="moveCards"
-          >
+          <TefudaZone :side="'upper'" :player="upperPlayer" @move-cards="moveCards"></TefudaZone>
+          <ManaZone :side="'upper'" :player="upperPlayer" @move-cards="moveCards"></ManaZone>
+          <PlayerZone :side="'upper'" :player="upperPlayer" @move-cards="moveCards">
             <template #shield-zone>
               <ShieldZone
                 side="upper"
@@ -51,11 +35,7 @@
               ></DeckZone>
             </template>
             <template #chojigenZone>
-              <ChojigenZone
-                side="upper"
-                :player="upperPlayer"
-                @move-cards="moveCards"
-              ></ChojigenZone>
+              <ChojigenZone side="upper" :player="upperPlayer" @move-cards="moveCards"></ChojigenZone>
             </template>
           </PlayerZone>
           <BattleZone
@@ -74,11 +54,7 @@
             @group-card="groupCard"
           ></BattleZone>
 
-          <PlayerZone
-            :side="'lower'"
-            :player="lowerPlayer"
-            @move-cards="moveCards"
-          >
+          <PlayerZone :side="'lower'" :player="lowerPlayer" @move-cards="moveCards">
             <template #shield-zone>
               <ShieldZone
                 side="lower"
@@ -96,23 +72,11 @@
               ></DeckZone>
             </template>
             <template #chojigenZone>
-              <ChojigenZone
-                side="lower"
-                :player="lowerPlayer"
-                @move-cards="moveCards"
-              ></ChojigenZone>
+              <ChojigenZone side="lower" :player="lowerPlayer" @move-cards="moveCards"></ChojigenZone>
             </template>
           </PlayerZone>
-          <ManaZone
-            :side="'lower'"
-            :player="lowerPlayer"
-            @move-cards="moveCards"
-          ></ManaZone>
-          <TefudaZone
-            :side="'lower'"
-            :player="lowerPlayer"
-            @move-cards="moveCards"
-          ></TefudaZone>
+          <ManaZone :side="'lower'" :player="lowerPlayer" @move-cards="moveCards"></ManaZone>
+          <TefudaZone :side="'lower'" :player="lowerPlayer" @move-cards="moveCards"></TefudaZone>
         </div>
       </ImageViewer>
     </div>
@@ -121,7 +85,8 @@
 
 <script lang="ts">
 // @ts-nocheck
-import { defineComponent } from 'vue'
+import { defineComponent } from "vue";
+import { Player } from "types";
 import { Deck } from "@/helpers/Deck";
 import WorkSpace from "./WorkSpace.vue";
 import ImageViewer from "./ImageViewer.vue";
@@ -135,7 +100,7 @@ import CHeader from "./CHeader.vue";
 import DeckZone from "./DeckZone.vue";
 import ChojigenZone from "./ChojigenZone.vue";
 import { mapState } from "vuex";
-import moveCardsMixin from "./room/moveCardsMixin"
+import moveCardsMixin from "./room/moveCardsMixin";
 
 export default defineComponent({
   name: "c-app",
@@ -167,15 +132,15 @@ export default defineComponent({
     ...mapState({
       players: (state) => state.room.players,
     }),
-    upperPlayer() {
+    upperPlayer(): Player {
       return this.$store.state.room.players[this.upperPlayerId];
     },
-    lowerPlayer() {
+    lowerPlayer(): Player {
       return this.$store.state.room.players[this.lowerPlayerId];
     },
   },
   methods: {
-    onDeckSelected({ deck, player }) {
+    onDeckSelected({ deck, player }: { player: String }) {
       this.players[player].isReady = true;
       this.players[player].hasChojigen = !!deck.hasChojigen;
     },
