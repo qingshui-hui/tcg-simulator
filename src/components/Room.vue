@@ -4,16 +4,16 @@
     <div class="app-wrapper main">
       <ImageViewer>
         <WorkSpace
-          :lowerPlayer="lowerPlayer"
+          :lowerPlayer="lowerPlayerId"
           @move-cards="moveCards"
           @shuffle-cards="shuffleCards"
         ></WorkSpace>
 
         <DeckSelector
           v-model:active="deckSelectorActive"
-          :player="lowerPlayer"
-          :isReady="players[lowerPlayer].isReady"
-          :partnerIsReady="players[upperPlayer].isReady"
+          :player="lowerPlayerId"
+          :isReady="players[lowerPlayerId].isReady"
+          :partnerIsReady="players[upperPlayerId].isReady"
           @moveCards="moveCards"
           @selected="onDeckSelected"
         ></DeckSelector>
@@ -21,34 +21,34 @@
         <div id="js_gameBoard">
           <TefudaZone
             :side="'upper'"
-            :player="upperPlayer"
-            :tefudaCards="players[upperPlayer]['cards']['tefudaCards']"
+            :player="upperPlayerId"
+            :tefudaCards="players[upperPlayerId]['cards']['tefudaCards']"
             @move-cards="moveCards"
           ></TefudaZone>
           <ManaZone
             :side="'upper'"
-            :player="upperPlayer"
-            :manaCards="players[upperPlayer]['cards']['manaCards']"
+            :player="upperPlayerId"
+            :manaCards="players[upperPlayerId]['cards']['manaCards']"
             @move-cards="moveCards"
           ></ManaZone>
           <PlayerZone
             :side="'upper'"
-            :player="upperPlayer"
-            :bochiCards="players[upperPlayer]['cards']['bochiCards']"
-            :yamafudaCards="players[upperPlayer]['cards']['yamafudaCards']"
-            :shieldCards="players[upperPlayer]['cards']['shieldCards']"
+            :player="upperPlayerId"
+            :bochiCards="players[upperPlayerId]['cards']['bochiCards']"
+            :yamafudaCards="players[upperPlayerId]['cards']['yamafudaCards']"
+            :shieldCards="players[upperPlayerId]['cards']['shieldCards']"
             :shieldCardGroups="
-              players[upperPlayer]['cards']['shieldCardGroups']
+              players[upperPlayerId]['cards']['shieldCardGroups']
             "
             @move-cards="moveCards"
           >
             <template #shield-zone>
               <ShieldZone
                 side="upper"
-                :player="upperPlayer"
-                :shieldCards="players[upperPlayer]['cards']['shieldCards']"
+                :player="upperPlayerId"
+                :shieldCards="players[upperPlayerId]['cards']['shieldCards']"
                 :shieldCardGroups="
-                  players[upperPlayer]['cards']['shieldCardGroups']
+                  players[upperPlayerId]['cards']['shieldCardGroups']
                 "
                 @move-cards="moveCards"
                 @group-card="groupCard"
@@ -57,8 +57,8 @@
             <template #deck-zone>
               <DeckZone
                 side="upper"
-                :player="upperPlayer"
-                :yamafudaCards="players[upperPlayer]['cards']['yamafudaCards']"
+                :player="upperPlayerId"
+                :yamafudaCards="players[upperPlayerId]['cards']['yamafudaCards']"
                 @move-cards="moveCards"
                 @group-card="groupCard"
               ></DeckZone>
@@ -66,19 +66,19 @@
             <template #chojigenZone>
               <ChojigenZone
                 side="upper"
-                :player="upperPlayer"
-                :chojigenCards="players[upperPlayer]['cards']['chojigenCards']"
-                :hasChojigen="players[upperPlayer].hasChojigen"
+                :player="upperPlayerId"
+                :chojigenCards="players[upperPlayerId]['cards']['chojigenCards']"
+                :hasChojigen="players[upperPlayerId].hasChojigen"
                 @move-cards="moveCards"
               ></ChojigenZone>
             </template>
           </PlayerZone>
           <BattleZone
             :side="'upper'"
-            :player="upperPlayer"
-            :battleCards="players[upperPlayer]['cards']['battleCards']"
+            :player="upperPlayerId"
+            :battleCards="players[upperPlayerId]['cards']['battleCards']"
             :battleCardGroups="
-              players[upperPlayer]['cards']['battleCardGroups']
+              players[upperPlayerId]['cards']['battleCardGroups']
             "
             @move-cards="moveCards"
             @group-card="groupCard"
@@ -93,10 +93,10 @@
 
           <BattleZone
             :side="'lower'"
-            :player="lowerPlayer"
-            :battleCards="players[lowerPlayer]['cards']['battleCards']"
+            :player="lowerPlayerId"
+            :battleCards="players[lowerPlayerId]['cards']['battleCards']"
             :battleCardGroups="
-              players[lowerPlayer]['cards']['battleCardGroups']
+              players[lowerPlayerId]['cards']['battleCardGroups']
             "
             @move-cards="moveCards"
             @group-card="groupCard"
@@ -104,22 +104,22 @@
 
           <player-zone
             :side="'lower'"
-            :player="lowerPlayer"
-            :bochiCards="players[lowerPlayer]['cards']['bochiCards']"
-            :yamafudaCards="players[lowerPlayer]['cards']['yamafudaCards']"
-            :shieldCards="players[lowerPlayer]['cards']['shieldCards']"
+            :player="lowerPlayerId"
+            :bochiCards="players[lowerPlayerId]['cards']['bochiCards']"
+            :yamafudaCards="players[lowerPlayerId]['cards']['yamafudaCards']"
+            :shieldCards="players[lowerPlayerId]['cards']['shieldCards']"
             :shieldCardGroups="
-              players[lowerPlayer]['cards']['shieldCardGroups']
+              players[lowerPlayerId]['cards']['shieldCardGroups']
             "
             @move-cards="moveCards"
           >
             <template #shield-zone>
               <ShieldZone
                 side="lower"
-                :player="lowerPlayer"
-                :shieldCards="players[lowerPlayer]['cards']['shieldCards']"
+                :player="lowerPlayerId"
+                :shieldCards="players[lowerPlayerId]['cards']['shieldCards']"
                 :shieldCardGroups="
-                  players[lowerPlayer]['cards']['shieldCardGroups']
+                  players[lowerPlayerId]['cards']['shieldCardGroups']
                 "
                 @move-cards="moveCards"
                 @group-card="groupCard"
@@ -128,8 +128,8 @@
             <template #deck-zone>
               <DeckZone
                 side="lower"
-                :player="lowerPlayer"
-                :yamafudaCards="players[lowerPlayer]['cards']['yamafudaCards']"
+                :player="lowerPlayerId"
+                :yamafudaCards="players[lowerPlayerId]['cards']['yamafudaCards']"
                 @move-cards="moveCards"
                 @group-card="groupCard"
               ></DeckZone>
@@ -137,23 +137,23 @@
             <template #chojigenZone>
               <ChojigenZone
                 side="lower"
-                :player="lowerPlayer"
-                :chojigenCards="players[lowerPlayer]['cards']['chojigenCards']"
-                :hasChojigen="players[lowerPlayer].hasChojigen"
+                :player="lowerPlayerId"
+                :chojigenCards="players[lowerPlayerId]['cards']['chojigenCards']"
+                :hasChojigen="players[lowerPlayerId].hasChojigen"
                 @move-cards="moveCards"
               ></ChojigenZone>
             </template>
           </player-zone>
           <mana-zone
             :side="'lower'"
-            :player="lowerPlayer"
-            :manaCards="players[lowerPlayer]['cards']['manaCards']"
+            :player="lowerPlayerId"
+            :manaCards="players[lowerPlayerId]['cards']['manaCards']"
             @move-cards="moveCards"
           ></mana-zone>
           <tefuda-zone
             :side="'lower'"
-            :player="lowerPlayer"
-            :tefudaCards="players[lowerPlayer]['cards']['tefudaCards']"
+            :player="lowerPlayerId"
+            :tefudaCards="players[lowerPlayerId]['cards']['tefudaCards']"
             @move-cards="moveCards"
           ></tefuda-zone>
         </div>
@@ -180,7 +180,7 @@ import moveCardsMixin from "./room/moveCardsMixin"
 
 export default {
   name: "c-app",
-  props: ["upperPlayer", "lowerPlayer"],
+  props: ["upperPlayerId", "lowerPlayerId", "roomId"],
   mixins: [moveCardsMixin],
   components: {
     WorkSpace,
@@ -204,8 +204,11 @@ export default {
     ...mapState({
       players: (state) => state.room.players,
     }),
-    roomId() {
-      return this.$route.query.roomId;
+    upperPlayer() {
+      return this.$store.state.room.players[this.upperPlayerId];
+    },
+    lowerPlayer() {
+      return this.$store.state.room.players[this.lowerPlayerId];
     },
   },
   methods: {

@@ -1,7 +1,8 @@
 <template>
   <Room
-    :upper-player="upperPlayer"
-    :lower-player="lowerPlayer"
+    :upper-player-id="upperPlayer"
+    :lower-player-id="lowerPlayer"
+    :room-id="roomId"
   ></Room>
 </template>
 
