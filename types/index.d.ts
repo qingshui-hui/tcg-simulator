@@ -1,6 +1,6 @@
-import { Player, Card, CardGroup } from "./entities";
+import { Player, Card, CardGroup, Room } from "./entities";
 
-export { Player, Card, CardGroup };
+export { Player, Card, CardGroup, Room };
 
 // vuex
 import { ComponentCustomProperties } from "vue";

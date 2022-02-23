@@ -29,3 +29,10 @@ export interface CardGroup {
   id: String,
   cardIds: String[],
 }
+
+export interface Room {
+  players: {
+    a: Player,
+    b: Player,
+  }
+}

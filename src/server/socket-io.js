@@ -27,7 +27,7 @@ io.on('connection', function (socket) {
   socket.on('cards-moved', async (data) => {
     // 送信者を除いく部屋のユーザーに送信。
     socket.to('room' + data.roomId).emit('cards-moved', data)
-    setRoomCache(data.roomId, data)
+    // setRoomCache(data.roomId, data)
   })
   socket.on('room-history-changed', (data) => {
     socket.to('room' + data.roomId).emit('room-history-changed', data)
@@ -45,7 +45,8 @@ io.on('connection', function (socket) {
     // }
   })
   socket.on('save-room-state', (data) => {
-    socket.to('room' + data.roomId).emit('save-room-state', date)
+    console.log(data);
+    setRoomCache(data.roomId, data)
   })
   socket.on("disconnect", () => {
     console.log('ソケットの接続が切断されました。')
