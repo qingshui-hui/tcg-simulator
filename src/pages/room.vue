@@ -34,5 +34,8 @@ export default {
       console.log("room" + this.roomId + "に入室しました")
     }
   },
+  unmounted() {
+    this.$store.commit('resetGame');
+  },
 }
 </script>
