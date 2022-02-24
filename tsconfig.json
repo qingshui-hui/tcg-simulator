@@ -1,11 +1,18 @@
 {
   // https://v3.nuxtjs.org/concepts/typescript
   "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "importHelpers": true,
+    "jsx": "preserve",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
     "allowJs": true,
     "incremental": true, // faster compile
     "skipLibCheck": true,
     "strict": true,
     "strictNullChecks": false,
+    "sourceMap": true,
     "baseUrl": "./",
     "paths": {
       "@/*": ["./src/*"]
