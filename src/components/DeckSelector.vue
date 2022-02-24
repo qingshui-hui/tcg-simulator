@@ -1,23 +1,11 @@
 <template>
-  <o-modal
-    :active="active"
-    :canCancel="canCansel"
-    @close="onClose"
-    :width="600"
-  >
+  <o-modal :active="active" :canCancel="canCansel" @close="onClose" :width="600">
     <div id="deck-form" v-if="!lowerPlayer.isReady">
       <p class="deckForm_p">デッキを選択してください</p>
       <select name="deck" v-model="deckId">
-        <option v-for="(deck, index) in allDecks" :key="index" :value="index">
-          {{ deck.name }}
-        </option>
+        <option v-for="(deck, index) in allDecks" :key="index" :value="index">{{ deck.name }}</option>
       </select>
-      <o-button
-        @click.stop="selectDeck"
-        variant="info"
-        :style="{ marginTop: '20px' }"
-        >選択</o-button
-      >
+      <o-button @click.stop="selectDeck" variant="info" :style="{ marginTop: '20px' }">選択</o-button>
       <div :style="{ marginTop: '20px', width: '250px' }">
         <o-field
           class="deckForm_searchField"
@@ -35,8 +23,7 @@
             :disabled="scraping"
             @keypress.prevent="onKeyPress"
             @icon-click="scrape"
-          >
-          </o-input>
+          ></o-input>
           <a
             class="deckForm_searchField_help"
             href="https://note.com/tcgsimulator/n/n3f94a7d126f3#a7ea3459-6fe4-46d1-bc53-3bb7da71b792"
@@ -59,9 +46,7 @@
     <template v-if="!lowerPlayer.isReady || !upperPlayer.isReady">
       <hr v-if="!lowerPlayer.isReady" style="margin: 20px 0" />
       <div id="waiting-player">
-        <p v-if="lowerPlayer.isReady" class="deckForm_p">
-          相手プレイヤーがデッキを選択するのを待ってください。
-        </p>
+        <p v-if="lowerPlayer.isReady" class="deckForm_p">相手プレイヤーがデッキを選択するのを待ってください。</p>
         <div>
           招待リンク:
           <span style="font-size: 12px">{{ inviteLink }}</span>
@@ -75,9 +60,7 @@
             :active="copyLinkTooltip"
             :always="true"
           >
-            <o-button variant="info" size="small" @click="copyInviteLink"
-              >招待リンクをコピーする</o-button
-            >
+            <o-button variant="info" size="small" @click="copyInviteLink">招待リンクをコピーする</o-button>
           </o-tooltip>
         </div>
       </div>
@@ -87,10 +70,11 @@
 
 <script lang="ts">
 // @ts-nocheck
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType } from "vue";
 import { Deck } from "@/helpers/Deck";
 import axios from "axios";
-import { Player } from 'types';
+import { Player } from "types";
+import { mapMutations } from "vuex";
 
 export default defineComponent({
   props: {
@@ -160,11 +144,21 @@ export default defineComponent({
       });
   },
   methods: {
+    ...mapMutations(["addCardData"]),
     async selectDeck() {
       const deck = await Deck.prepareDeckForGame(
         this.allDecks[this.deckId],
         this.lowerPlayer.id === "a"
       );
+      //
+      // カードにテキストを追加
+      const cardMap = await Deck.fetchCardsData([
+        ...deck.cards,
+        ...deck.chojigenCards,
+      ]);
+      this.addCardData(cardMap);
+      //
+      console.log("card data", cardMap);
       console.log("selected deck", deck);
       // fromのカードは存在しなくても良いため、仮にyamafudaCardsにしている。
       const shieldCards = deck.cards.slice(0, 5);

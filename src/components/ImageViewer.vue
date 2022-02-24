@@ -5,23 +5,14 @@
       :class="{ hidden: display.hidden, blur: display.blur }"
       :style="[display.left ? { left: '5px' } : { right: '5px' }]"
     >
-      <div
-        v-if="cardIsVisible"
-        class="imageDisplay_image"
-        :style="{ width: `${style.width}px` }"
-      >
+      <div v-if="cardIsVisible" class="imageDisplay_image" :style="{ width: `${style.width}px` }">
         <img
           v-if="hoveredCard.faceDown && !hoveredCard.showInWorkSpace"
           :src="hoveredCard.backImageUrl"
         />
         <img v-else :src="hoveredCard.imageUrl" />
       </div>
-      <div
-        class="imageDisplay_cardText"
-        v-if="cardIsVisible && hoveredCard.text"
-      >
-        {{ cardText }}
-      </div>
+      <div class="imageDisplay_cardText" v-if="cardIsVisible && cardText">{{ cardText }}</div>
     </div>
     <!-- slot -->
     <slot></slot>
@@ -49,7 +40,7 @@
           :checked="explanation.show"
           @change="explanation.show = $event.target.checked"
         />説明表示
-      </label> -->
+      </label>-->
     </div>
     <div id="explanation" v-if="explanation.show">
       <p></p>
@@ -58,6 +49,7 @@
 </template>
 
 <script>
+import { Card } from "@/entities/card";
 import { mapMutations, mapState } from "vuex/dist/vuex.cjs";
 
 export default {
@@ -79,6 +71,12 @@ export default {
   },
   computed: {
     ...mapState(["hoveredCard"]),
+    ...mapState({
+      cardData: (state) => state.room.cardData,
+    }),
+    card() {
+      return Card(this.hoveredCard, this.cardData);
+    },
     cardIsVisible() {
       if (this.hoveredCard) {
         if (!this.hoveredCard.faceDown || this.hoveredCard.showInWorkSpace) {
@@ -95,11 +93,12 @@ export default {
     },
     cardText() {
       /** @type {String} */
-      const text = this.hoveredCard.text;
-      if (this.hoveredCard && text) {
-        if (this.hoveredCard.faceDown) {
-          if (this.hoveredCard.backText) {
-            return this.hoveredCard.backText;
+      const card = Card(this.hoveredCard, this.cardData)
+      const text = card ? card.text : "";
+      if (card && text) {
+        if (card.faceDown) {
+          if (card.backText) {
+            return card.backText;
           }
           if (text.match(/─{3,}龍解後─{3,}/)) {
             return text.split(/─{3,}龍解後─{3,}/)[1];

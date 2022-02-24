@@ -119,7 +119,7 @@
                   v-if="isOwner"
                   class="drop-item-2"
                   @click.stop="
-                    this.changeCardsStateInZone([card], { faceDown: false })
+                    this.changeCardsStateInZone([card], { faceDown: !card.faceDown })
                   "
                   >裏返す</span
                 >
