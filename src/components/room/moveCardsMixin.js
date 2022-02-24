@@ -4,6 +4,7 @@ export default {
   computed: {
     ...mapState({
       gameHistories: (state) => state.room.gameHistories,
+      cardData: (state) => state.room.cardData,
     }),
   },
   methods: {
@@ -17,6 +18,8 @@ export default {
       this.$socket.emit("save-room-state", {
         roomId: this.roomId,
         players: this.players,
+        // gameHistories: this.gameHistories,
+        // cardData: this.cardData,
       });
     },
     emitPopGameHistories() {

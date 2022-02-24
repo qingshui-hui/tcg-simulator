@@ -157,6 +157,8 @@ export default defineComponent({
         ...deck.chojigenCards,
       ]);
       this.addCardData(cardMap);
+      // 送信
+      this.$socket.emit("add-card-data", { roomId: this.roomId, cardData: cardMap });
       //
       console.log("card data", cardMap);
       console.log("selected deck", deck);
