@@ -168,11 +168,8 @@ export default defineComponent({
         `${this.useConfig().API_HOST}/api/rooms/${this.roomId}`
       );
       const room = await res.json();
-      if (room.a) {
-        this.players.a = room.a;
-      }
-      if (room.b) {
-        this.players.b = room.b;
+      if (room) {
+        this.$store.commit("setRoom", room);
       }
       // 片方がデッキ未選択であれば、モーダルを表示する。
       if (!this.players.a.isReady || !this.players.b.isReady) {
