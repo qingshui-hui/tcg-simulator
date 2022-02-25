@@ -15,11 +15,7 @@ router.get("/api/rooms/:roomId", async function (req, res) {
   if (!room) {
     return res.json({});
   }
-  // TODO: フロントでの受け取り方を修正し、直接roomを返せるようにする。
-  res.json({
-    a: room.players.a,
-    b: room.players.b,
-  });
+  res.json(room);
 });
 
 import axios from "axios";
@@ -42,6 +38,7 @@ router.get("/api/decks", async function (req, res) {
 // 特定のブラウザのみに対応するplaywrightを使用。
 import { chromium } from "playwright-chromium";
 import { Deck } from "../helpers/Deck.js";
+import { setLog } from "./db.js";
 
 router.get("/api/cards", async (req, res) => {
   try {
@@ -111,6 +108,14 @@ router.get("/api/scrape", async (req, res) => {
   await browser.close();
   // レスポンス
   res.json(deck);
+});
+
+router.post("/api/logs/:logId", async function (req, res) {
+  if (!req.params.logId) {
+    return res.json({});
+  }
+  setLog(req.params.logId, req.params.log);
+  return res.json({});
 });
 
 export default router;

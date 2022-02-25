@@ -97,6 +97,9 @@ export default {
         ...cardData,
       };
     },
+    setRoom(state, room) {
+      Object.assign(state, room);
+    },
     resetGame(state) {
       Object.assign(state, defaultState());
     },

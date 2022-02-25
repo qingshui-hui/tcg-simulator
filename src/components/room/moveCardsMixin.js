@@ -18,7 +18,7 @@ export default {
       this.$socket.emit("save-room-state", {
         roomId: this.roomId,
         players: this.players,
-        // gameHistories: this.gameHistories,
+        gameHistories: this.gameHistories,
         // cardData: this.cardData,
       });
     },
