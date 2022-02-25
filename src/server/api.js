@@ -38,7 +38,7 @@ router.get("/api/decks", async function (req, res) {
 // 特定のブラウザのみに対応するplaywrightを使用。
 import { chromium } from "playwright-chromium";
 import { Deck } from "../helpers/Deck.js";
-import { setLog } from "./db.js";
+import { getLog, getLogIds, setLog } from "./db.js";
 
 router.get("/api/cards", async (req, res) => {
   try {
@@ -108,6 +108,20 @@ router.get("/api/scrape", async (req, res) => {
   await browser.close();
   // レスポンス
   res.json(deck);
+});
+
+router.get("/api/logs", async function (req, res) {
+  const logIds = await getLogIds();
+  const logs = logIds.map((lid) => ({ id: lid }));
+  return res.json(logs);
+});
+
+router.get("/api/logs/:logId", async function (req, res) {
+  const log = await getLog(req.params.logId);
+  if (log) {
+    return res.json(log);
+  }
+  return res.json(null);
 });
 
 router.post("/api/logs/:logId", async function (req, res) {

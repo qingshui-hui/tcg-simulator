@@ -2,6 +2,7 @@
 node_modules
 /dist
 /memo
+db.local.json
 
 # env files
 .env

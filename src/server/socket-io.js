@@ -1,5 +1,6 @@
 import { Server } from "socket.io";
 import { server as appServer } from "./app.js";
+import { setLog } from "./db.js";
 import { getRoomCache, setRoomCache } from "./redisClient.js";
 
 const socketIoConfig = process.env.CLIENT_ORIGIN
@@ -59,6 +60,8 @@ io.on("connection", function (socket) {
   });
   socket.on("save-room-state", (data) => {
     setRoomCache(data.roomId, data);
+    // TODO: 開発の場合と本番環境の場合で処理を変える。
+    setLog(data.roomId, data);
   });
   socket.on("disconnect", () => {
     console.log("ソケットの接続が切断されました。");
