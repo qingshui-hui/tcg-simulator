@@ -43,6 +43,13 @@ mixin.zone = {
       }
       return false;
     },
+    cardIsHovered(card) {
+      if (!card) return false
+      if (this.hoveredCard && this.hoveredCard.id === card.id) {
+        return true;
+      }
+      return false;
+    },
     moveSelectedCard(to, prepend = false) {
       if (!this.selectMode) return
       // 本人確認
