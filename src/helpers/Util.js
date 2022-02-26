@@ -43,3 +43,36 @@ export class Util {
     return array
   }
 }
+
+export function ungroupCardResult({ card, zoneCards, zoneGroups }) {
+  // シールドのグループの場合はカードの行き先がわからず、注意が必要。
+  const groupIndex = zoneGroups.findIndex((g) => g.id === card.groupId);
+  if (groupIndex === -1) {
+    card.groupId = null;
+    return {
+      cards: zoneCards,
+      groups: zoneGroups,
+    };
+  }
+  let groupCardIds = zoneGroups[groupIndex].cardIds;
+  groupCardIds = groupCardIds.filter((id) => id !== card.id);
+  zoneGroups[groupIndex].cardIds = groupCardIds; // 結果に反映
+  // カードが一枚だけのグループは消す。
+  if (groupCardIds.length === 1) {
+    zoneGroups.splice(groupIndex, 1);
+    const lastCardIndex = zoneCards.findIndex((c) => c.id === groupCardIds[0]);
+    if (lastCardIndex !== -1) {
+      const lastCard = zoneCards[lastCardIndex];
+      lastCard.groupId = null;
+    }
+  }
+  // cardIdsが0になったグループは自動で消す。
+  if (groupCardIds.length === 0) {
+    zoneGroups.splice(groupIndex, 1);
+  }
+  card.groupId = null;
+  return {
+    cards: zoneCards,
+    groups: zoneGroups,
+  };
+}
