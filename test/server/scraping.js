@@ -2,7 +2,8 @@
 
 const chromium = require('playwright-chromium').chromium
 
-const url = 'https://gachi-matome.com/deckrecipe-detail-dm/?tcgrevo_deck_maker_deck_id=eb1afe80-4be0-4c7c-b004-5df9c21aed6e'
+// const url = 'https://gachi-matome.com/deckrecipe-detail-dm/?tcgrevo_deck_maker_deck_id=eb1afe80-4be0-4c7c-b004-5df9c21aed6e'
+const url = 'https://gachi-matome.com/deckrecipe-detail-dm/?tcgrevo_deck_maker_deck_id=eb1afe80-4be0-4c7c-b004-5df9c21aed'
 
 const groupByCardId = (cards) => {
   return cards.reduce((result, current) => {
@@ -24,7 +25,11 @@ const main = async () => {
   const browser = await chromium.launch();
   // ページ遷移
   const page = await browser.newPage();
-  await page.goto(url);
+  const pageRes = await page.goto(url);
+  if (![200].includes(pageRes.status())) {
+    throw new Error('invalid_url');
+    //
+  }
 
   const deckData = await page.evaluate(async () => {
     // カテゴリーIDを取得
@@ -34,10 +39,18 @@ const main = async () => {
     const deckId = params.get('tcgrevo_deck_maker_deck_id')
     // デッキ詳細のモデルを初期化
     const deckRecipeInfo = new DeckRecipeInfo(categoryId, deckId, `https://storage.googleapis.com/ka-nabell-card-images/img/s/card/card100244663_1.jpg`)
-    await deckRecipeInfo.updateDeckDetail()
-    await deckRecipeInfo.loadComplete()
+    try {
+      await deckRecipeInfo.updateDeckDetail()
+      await deckRecipeInfo.loadComplete()
+    } catch (err) {
+      //
+    }
     return deckRecipeInfo.deckCardData
   })
+  if (!deckData) {
+    throw new Error('failed_fetch_data');
+    // デッキデータ取得に失敗した場合の処理。
+  }
   // console.log(deckData)
 
   const deck = {

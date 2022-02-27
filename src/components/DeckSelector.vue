@@ -52,7 +52,7 @@
           例:
           https://gachi-matome.com/deckrecipe-detail-dm/?tcgrevo_deck_maker_deck_id=xxxx
         </p>
-        <p>※フォーマットがオリジナルのデッキのみ使用可能です</p>
+        <p>※フォーマットがオリジナルのデッキのみ取得可能です</p>
       </div>
     </div>
 
@@ -231,7 +231,9 @@ export default {
           this.scraping = false;
         })
         .catch((err) => {
+          // this.scrapeUrl = "";
           this.scraping = false;
+          this.errors.scrapeUrl = "デッキデータの取得に失敗しました";
           console.log(err);
         });
     },
