@@ -63,7 +63,12 @@ router.get("/api/scrape", async (req, res) => {
   const browser = await chromium.launch();
 
   const page = await browser.newPage();
-  await page.goto(req.query.url);
+  const pageRes = await page.goto(req.query.url);
+  //
+  if (![200].includes(pageRes.status())) {
+    // throw new Error('invalid_url');
+    return res.sendStatus(404);
+  }
   const deckData = await page.evaluate(async () => {
     /* global getCategoryId, DeckRecipeInfo */
     // 上: https://stackoverflow.com/a/41552229
@@ -73,15 +78,20 @@ router.get("/api/scrape", async (req, res) => {
     const params = new URLSearchParams(window.location.search);
     const deckId = params.get("tcgrevo_deck_maker_deck_id");
     // デッキ詳細のモデルを初期化
-    const deckRecipeInfo = new DeckRecipeInfo(
-      categoryId,
-      deckId,
-      `https://storage.googleapis.com/ka-nabell-card-images/img/s/card/card100244663_1.jpg`
-    );
-    await deckRecipeInfo.updateDeckDetail();
-    await deckRecipeInfo.loadComplete();
-    return deckRecipeInfo.deckCardData;
-  });
+    const deckRecipeInfo = new DeckRecipeInfo(categoryId, deckId, `https://storage.googleapis.com/ka-nabell-card-images/img/s/card/card100244663_1.jpg`)
+    try {
+      await deckRecipeInfo.updateDeckDetail()
+      await deckRecipeInfo.loadComplete()
+    } catch (err) {
+      // pass
+      // データ取得は正しくできても$ in not definedというエラーが起こっており、スルーすべき。
+    }
+    return deckRecipeInfo.deckCardData
+  })
+  if (!deckData) {
+    return res.sendStatus(404);
+    // throw new Error('failed_fetch_data');
+  }
   //
   // 取得したデータを処理する。
   const deck = {
