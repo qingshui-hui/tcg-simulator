@@ -7,9 +7,7 @@
         variant="danger"
         rounded
         @click.stop="moveSelectedCard('battleCards', true)"
-      >
-        出す
-      </o-button>
+      >出す</o-button>
       <o-icon
         v-else
         class="openZoneButton battleZoneButton"
@@ -26,17 +24,15 @@
         "
       ></o-icon>
     </div>
-    <div
-      class="battle-zone"
-      :class="{
-        [side]: true,
-      }"
-    >
+    <div class="battle-zone" :class="{
+      [side]: true,
+    }">
       <!-- keyをindexにしていると、カード移動後MarkerToolが同じindexの別のカードに移ってしまう。 -->
       <div
         class="card_wrapper"
-        v-for="card in battleZoneCards"
+        v-for="(card, index) in battleZoneCards"
         :key="card.id"
+        :style="cardStyle(index, card)"
         @mouseenter="setHoveredCard(card)"
         @mouseleave="setHoveredCard(null)"
       >
@@ -57,11 +53,7 @@
             :draggable="!card.groupId"
             @click.stop="clickCard(card)"
           >
-            <img
-              v-if="card.faceDown === true"
-              :src="card.backImageUrl"
-              draggable="false"
-            />
+            <img v-if="card.faceDown === true" :src="card.backImageUrl" draggable="false" />
             <img v-else :src="card.imageUrl" draggable="false" />
           </div>
         </MarkTool>
@@ -79,16 +71,14 @@
                 single: true,
               })
             "
-            >見る</o-button
-          >
+          >見る</o-button>
           <template v-else>
             <o-button
               v-if="selectTargetMode() && selectMode.card.id === card.id"
               variant="grey-dark"
               size="small"
               @click.stop="clickCard(card)"
-              >キャンセル</o-button
-            >
+            >キャンセル</o-button>
             <template v-else>
               <o-button
                 v-if="card.isChojigen"
@@ -97,8 +87,7 @@
                 @click.stop="
                   changeCardsStateInZone([card], { faceDown: !card.faceDown })
                 "
-                >裏返す</o-button
-              >
+              >裏返す</o-button>
               <o-button
                 variant="grey-dark"
                 size="small"
@@ -108,8 +97,7 @@
                     selectingTarget: true,
                   })
                 "
-                >重ねる</o-button
-              >
+              >重ねる</o-button>
             </template>
           </template>
           <o-button
@@ -118,22 +106,19 @@
             @click.stop="
               changeCardsStateInZone([card], { faceDown: !card.faceDown })
             "
-            >裏返す</o-button
-          >
+          >裏返す</o-button>
           <!-- アンタップ or タップ -->
           <template v-else>
             <o-button
               v-if="card.tapped"
               variant="grey-dark"
               @click.stop="changeCardsStateInZone([card], { tapped: false })"
-              >アンタップ</o-button
-            >
+            >アンタップ</o-button>
             <o-button
               v-else
               variant="grey-dark"
               @click.stop="changeCardsStateInZone([card], { tapped: true })"
-              >タップ</o-button
-            >
+            >タップ</o-button>
           </template>
         </div>
       </div>
@@ -145,7 +130,7 @@
 import { defineComponent, PropType } from "vue";
 import { Card, CardGroup, Player } from "types";
 import mixin from "@/helpers/mixin.js";
-import { MarkTool } from ".";
+import { MarkTool } from "@/components";
 
 export default defineComponent({
   props: {
@@ -178,6 +163,31 @@ export default defineComponent({
     },
   },
   methods: {
+    cardStyle(index: number, card: Card) { // Number should be lowercase: number
+      const style = {
+        zIndex: `${40 - index}`,
+      };
+      if (this.cardIsSelected(card)) {
+        style.zIndex = '50';
+      }
+      if (this.battleZoneCards.length <= 6) {
+        // 500 / 6 = 83.3
+        return { ...style, marginRight: "10px" }
+      }
+      if (this.battleZoneCards.length <= 10) {
+        // 500 / 10 = 50
+        return { ...style, marginRight: "-20px" };
+      }
+      if (this.battleZoneCards.length <= 15) {
+        // 500 / 15 = 33.3
+        return { ...style, marginRight: "-37px" };
+      }
+      if (this.battleZoneCards.length <= 20) {
+        // 500 / 20 = 25
+        return { ...style, marginRight: "-45px" };
+      }
+      return { ...style, marginRight: "-45px", marginBottom: "10px" };
+    },
     // リレーション
     group(card: Card) {
       if (!card.groupId) {
@@ -222,12 +232,12 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "@/assets/scss/mixin.scss";
 @function cardHeight($value) {
   @return calc($value * 908 / 650);
 }
-$card-width: 100px;
+$card-width: 70px;
 .battle-zone-wrapper {
   display: flex;
   img {
@@ -261,10 +271,12 @@ $card-width: 100px;
     min-height: cardHeight($card-width);
     // overflow-x: scroll;
     // height: cardHeight($card-width);
-    max-width: 700px; // 800 - margin-left
+    width: 500px;
+    max-width: 500px; // 800 - margin-left
     > * {
+      // marginはcardStyleで指定
       flex-shrink: 0;
-      margin: 0 10px 10px 0;
+      margin-bottom: 0;
     }
     &.upper {
       margin-top: 10px;
@@ -277,7 +289,7 @@ $card-width: 100px;
           // あとはtranslateXでy座標を調整する。
           transform: rotate(90deg) translateX(-100%);
           transform-origin: left bottom;
-          width: cardHeight($card-width);
+          width: $card-width; // 幅を固定する
         }
       }
     }
@@ -288,7 +300,7 @@ $card-width: 100px;
       .card.tapped {
         transform: rotate(-90deg) translateX(100%);
         transform-origin: right bottom;
-        width: cardHeight($card-width);
+        width: $card-width; // 幅を固定する
       }
     }
   }

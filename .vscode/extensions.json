@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "johnsoncodehk.volar",
+    "MisterJ.vue-volar-extention-pack"
+  ],
+  "unwantedRecommendations": [
+    // https://github.com/johnsoncodehk/volar/discussions/471
+    "vscode.typescript-language-features"
+  ]
+}

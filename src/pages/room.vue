@@ -1,7 +1,8 @@
 <template>
   <Room
-    :upper-player="upperPlayer"
-    :lower-player="lowerPlayer"
+    :upper-player-id="upperPlayer"
+    :lower-player-id="lowerPlayer"
+    :room-id="roomId"
   ></Room>
 </template>
 
@@ -32,6 +33,9 @@ export default {
       this.$socket.emit("room", this.roomId);
       console.log("room" + this.roomId + "に入室しました")
     }
+  },
+  unmounted() {
+    this.$store.commit('resetGame');
   },
 }
 </script>

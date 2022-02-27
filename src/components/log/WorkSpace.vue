@@ -229,8 +229,8 @@
 <script lang="ts">
 // @ts-nocheck
 import { defineComponent } from "vue";
-import mixin from "../helpers/mixin.js";
-import { MarkTool } from "./index.js";
+import mixin from "@/helpers/mixin.js";
+import { MarkTool } from "@/components";
 
 export default defineComponent({
   components: { MarkTool },

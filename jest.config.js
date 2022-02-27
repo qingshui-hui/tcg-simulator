@@ -21,7 +21,7 @@ module.exports = {
     '^.+\\.tsx?$': require.resolve('ts-jest'),
   },
   transformIgnorePatterns: [
-    '/node_modules/(?!(steno)/)', // except for
+    '/node_modules/(?!(steno|lowdb)/)', // except for
     '/src/components/dropdown/',
   ],
   // support the same @ -> src alias mapping in source code

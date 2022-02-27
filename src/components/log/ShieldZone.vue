@@ -26,9 +26,7 @@
           <div
             v-if="card.groupId && group(card).cardIds.length > 1"
             class="shield-num"
-          >
-            {{ group(card).cardIds.length }}
-          </div>
+          >{{ group(card).cardIds.length }}</div>
         </div>
         <div v-if="cardIsSelected(card)" class="card_buttons">
           <o-button
@@ -42,8 +40,7 @@
                 single: true,
               })
             "
-            >確認</o-button
-          >
+          >確認</o-button>
         </div>
       </MarkTool>
     </div>
@@ -55,8 +52,8 @@
 import { defineComponent, PropType } from 'vue';
 import { Player } from 'types';
 // Dropdownを使うと、スクロールゾーンの中にメニューが表示されて何も見えない問題があった。
-import mixin from "../helpers/mixin";
-import MarkTool from "./mark-tool/MarkTool.vue";
+import mixin from "@/helpers/mixin";
+import { MarkTool } from "@/components";
 
 export default defineComponent({
   components: { MarkTool },

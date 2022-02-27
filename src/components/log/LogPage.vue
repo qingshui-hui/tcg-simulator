@@ -99,15 +99,15 @@ import ShieldZone from "./ShieldZone.vue";
 import CHeader from "./CHeader.vue";
 import DeckZone from "./DeckZone.vue";
 import ChojigenZone from "./ChojigenZone.vue";
-import { mapState } from "vuex";
-import moveCardsMixin from "./room/moveCardsMixin";
+import moveCardsMixin from "./mixins/moveCardsMixin";
 
 export default defineComponent({
-  name: "c-app",
+  name: "LogPage",
   props: {
     upperPlayerId: String,
     lowerPlayerId: String,
     roomId: String,
+    log: Object,
   },
   mixins: [moveCardsMixin],
   components: {
@@ -125,18 +125,22 @@ export default defineComponent({
   },
   data() {
     return {
+      historyIndex: this.log.gameHistories.length - 1,
       deckSelectorActive: false,
     };
   },
   computed: {
-    ...mapState({
-      players: (state) => state.room.players,
-    }),
+    players() {
+      return this.log.players;
+    },
+    gameHistories() {
+      return this.log.gameHistories;
+    },
     upperPlayer(): Player {
-      return this.$store.state.room.players[this.upperPlayerId];
+      return this.log.players[this.upperPlayerId];
     },
     lowerPlayer(): Player {
-      return this.$store.state.room.players[this.lowerPlayerId];
+      return this.log.players[this.lowerPlayerId];
     },
   },
   methods: {
@@ -160,24 +164,6 @@ export default defineComponent({
         [direction]: target.scrollWidth,
       });
     },
-    setMessage() {
-      //
-    },
-    async getRoomState() {
-      const res = await fetch(
-        `${this.useConfig().API_HOST}/api/rooms/${this.roomId}`
-      );
-      const room = await res.json();
-      if (room) {
-        this.$store.commit("setRoom", room);
-      }
-      // 片方がデッキ未選択であれば、モーダルを表示する。
-      if (!this.players.a.isReady || !this.players.b.isReady) {
-        this.deckSelectorActive = true;
-      } else {
-        this.deckSelectorActive = false;
-      }
-    },
     resetGame() {
       this.$store.commit("resetGame");
       window.scrollTo({
@@ -192,8 +178,6 @@ export default defineComponent({
     },
   },
   async mounted() {
-    // サーバーからデータを取得する。
-    await this.getRoomState();
     // デバッグのために公開
     window.$room = this;
   },

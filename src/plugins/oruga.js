@@ -1,4 +1,4 @@
-import { Modal, Icon, Dropdown, Button, Config, Input, Field, Tooltip, Notification } from '@oruga-ui/oruga-next/dist/esm'
+import { Modal, Icon, Dropdown, Button, Config, Input, Field, Tooltip, Notification } from '@oruga-ui/oruga-next'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import '../assets/scss/oruga.scss'
 

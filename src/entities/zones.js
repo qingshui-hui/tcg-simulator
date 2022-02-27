@@ -7,3 +7,8 @@ export const zones = {
   battleZone: 'battle-zone',
   specialZone: 'special-zone',
 }
+
+export const ZONE_GROUP_MAP = {
+  battleCards: "battleCardGroups",
+  shieldCards: "shieldCardGroups",
+};

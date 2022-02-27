@@ -76,23 +76,6 @@ export class Deck {
     } else {
       deck.chojigenCards = chojigenCards;
     }
-    //
-    // カードにテキストを追加
-    const cardMap = await Deck.fetchCardsData([
-      ...deck.cards,
-      ...deck.chojigenCards,
-    ]);
-    deck.cards.forEach((c) => {
-      if (Object.prototype.hasOwnProperty.call(cardMap, c.mainCardId)) {
-        c.text = c.text || cardMap[c.mainCardId].card_text;
-      }
-    });
-    deck.chojigenCards.forEach((c) => {
-      if (Object.prototype.hasOwnProperty.call(cardMap, c.mainCardId)) {
-        c.text = c.text || cardMap[c.mainCardId].card_text;
-      }
-    });
-    console.log("card data", cardMap);
     return deck
   }
 
