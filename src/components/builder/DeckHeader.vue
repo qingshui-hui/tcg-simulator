@@ -31,6 +31,7 @@
         >名前を変更</span
       >
       <span class="click" @click.stop="openModal('', 'create')">カードを追加</span>
+      <span class="click" @click.stop="modal.delete = true">デッキを削除</span>
     </div>
 
     <Modal
@@ -68,6 +69,23 @@
         <button @click.stop="addCard">追加</button>
       </template>
     </Modal>
+
+    <Modal
+      class="deck-header-modal"
+      v-if="modal.delete"
+      @close-modal="modal.delete = false"
+    >
+      <template v-slot:content>
+        <div>
+          <p>デッキを削除してもよろしいですか？</p>
+          <p style="font-size: 12px; margin-top:10px;">※削除後には画面のリロードが行われるため、変更の保存はあらかじめお済ませください。</p>
+        </div>
+      </template>
+      <template v-slot:footer>
+        <button style="margin-right: 8px" @click.stop="modal.delete = false">キャンセル</button>
+        <button @click.stop="deleteDeck">削除</button>
+      </template>
+    </Modal>
   </div>
 </template>
 
@@ -91,6 +109,7 @@ export default {
       modal: {
         create: false,
         update: false,
+        delete: false,
       },
     };
   },
@@ -137,6 +156,10 @@ export default {
     addCard() {
       this.$emit("update-deck", this.params, this.side);
       this.params.cardUrl = ""
+    },
+    deleteDeck() {
+      this.$emit("delete-deck", this.side);
+      this.modal.delete = false;
     },
   },
 };
