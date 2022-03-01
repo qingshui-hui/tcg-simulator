@@ -10,6 +10,7 @@
             :side="'left'"
             v-on:change-deck="changeDeck"
             v-on:update-deck="updateDeck"
+            @deleteDeck="deleteDeck"
           ></DeckHeader>
         </div>
         <div class="select-bar right">
@@ -20,6 +21,7 @@
             :side="'right'"
             v-on:change-deck="changeDeck"
             v-on:update-deck="updateDeck"
+            @deleteDeck="deleteDeck"
           ></DeckHeader>
         </div>
       </header>
@@ -177,6 +179,13 @@ export default {
           this.useConfig().IMAGE_HOST
         );
       }
+    },
+    deleteDeck(side) {
+      const decksCopy = this.$store.state.decks.data;
+      decksCopy.splice(this[side].deckIndex, 1);
+      this.$store.commit("decks/setData", decksCopy);
+      this.message = "";
+      location.reload();
     },
     totalNum(cards) {
       let result = 0;
