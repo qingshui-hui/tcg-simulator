@@ -178,6 +178,7 @@ export default {
           this.deckList["custom"][index],
           this.useConfig().IMAGE_HOST
         );
+        this[side].deckIndex = index;
       }
     },
     deleteDeck(side) {
